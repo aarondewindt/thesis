@@ -1,0 +1,7 @@
+[package]
+name = "quad_nav"
+version = "0.1.0"
+authors = ["Aaron M. de Windt <aaron.dewindt@gmail.com>"]
+
+[dependencies]
+rand = "0.5"

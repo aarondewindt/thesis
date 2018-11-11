@@ -1,0 +1,206 @@
+@article{mnih2013playing,
+	author = {Mnih, Volodymyr and Kavukcuoglu, Koray and Silver, David and Graves, Alex and Antonoglou, Ioannis and Wierstra, Daan and Riedmiller, Martin},
+	journal = {arXiv preprint arXiv:1312.5602},
+	localfile = {v_mnih_playing_atari_with_deep_reinforcement_learning.pdf},
+	title = {Playing atari with deep reinforcement learning},
+	x-color = {#0033ff},
+	year = {2013}
+}
+
+@article{franccois2015discount,
+	author = {Fran{\c c}ois-Lavet, Vincent and Fonteneau, Raphael and Ernst, Damien},
+	journal = {arXiv preprint arXiv:1512.02011},
+	localfile = {v_fran{\c c}ois-lavet_how_to_discount_deep_reinforcement_learning_towards_new_dynamic_strategies.pdf},
+	title = {How to discount deep reinforcement learning: Towards new dynamic strategies},
+	x-color = {#0033ff},
+	year = {2015}
+}
+
+@book{sutton2018reinforcement,
+	author = {Sutton, Richard S and Barto, Andrew G},
+	localfile = {r_sutton_reinforcement_learning:_an_introduction.pdf.pdf},
+	publisher = {MIT press},
+	title = {Reinforcement learning: An introduction},
+	x-color = {#cc3300},
+	year = {2018}
+}
+
+@inproceedings{junell2015reinforcement,
+	author = {Junell, Jaime L and {Van Kampen}, Erik-Jan and de Visser, Coen C and Chu, Q Ping},
+	booktitle = {AIAA Guidance, Navigation, and Control Conference},
+	localfile = {j_junell_reinforcement_learning_applied_to_a_quadrotor_guidance_law_in_autonomous_flight.pdf},
+	pages = {1990},
+	title = {Reinforcement learning applied to a quadrotor guidance law in autonomous flight},
+	x-color = {#0033ff},
+	year = {2015}
+}
+
+@article{junelladaptive,
+	author = {Junell, J and van Kampen, E},
+	localfile = {j_junell_adaptive_path_planning_for_a_vision-based_quadrotor_in_an_obstacle_field.pdf},
+	title = {Adaptive Path Planning for a Vision-Based quadrotor in an Obstacle Field},
+	x-color = {#0033ff}
+}
+
+@inproceedings{junell2016self,
+	author = {Junell, Jaime and Mannucci, Tommaso and Zhou, Ye and {Van Kampen}, Erik-Jan},
+	booktitle = {AIAA Guidance, Navigation, and Control Conference},
+	localfile = {j_junell_self-tuning_gains_of_a_quadrotor_using_a_simple_model_for_policy_gradient_reinforcement_learning.pdf},
+	pages = {1387},
+	title = {Self-tuning Gains of a Quadrotor using a Simple Model for Policy Gradient Reinforcement Learning},
+	x-color = {#0033ff},
+	year = {2016}
+}
+
+@misc{rubenfiszel,
+	author = {Fiszel, Ruben},
+	title = {Reinforcement Learning and DQN, learning to play from pixels},
+	url = {https://rubenfiszel.github.io/posts/rl4j/2016-08-24-Reinforcement-Learning-and-DQN.html},
+	x-color = {#0033ff},
+	year = {2016}
+}
+
+@article{arulkumaran2017brief,
+	author = {Arulkumaran, Kai and Deisenroth, Marc Peter and Brundage, Miles and Bharath, Anil Anthony},
+	journal = {arXiv preprint arXiv:1708.05866},
+	keywords = {survey},
+	localfile = {k_arulkumaran_a_brief_survey_of_deep_reinforcement_learning.pdf},
+	title = {A brief survey of deep reinforcement learning},
+	x-color = {#0033ff},
+	year = {2017}
+}
+
+@book{szepesvari2010algorithms,
+	author = {Szepesv{\'a}ri, Csaba},
+	journal = {Synthesis lectures on artificial intelligence and machine learning},
+	localfile = {c_szepesv{\'a}ri_algorithms_for_reinforcement_learning.pdf},
+	number = {1},
+	pages = {1--103},
+	publisher = {Morgan \& Claypool Publishers},
+	title = {Algorithms for reinforcement learning},
+	volume = {4},
+	x-color = {#0033ff},
+	year = {2010}
+}
+
+@book{poole2010artificial,
+	author = {Poole, David L and Mackworth, Alan K},
+	publisher = {Cambridge University Press},
+	title = {Artificial Intelligence: foundations of computational agents},
+	url = {https://artint.info/html/ArtInt.html#cicontents},
+	x-color = {#0033ff},
+	year = {2010}
+}
+
+@article{kaelbling1996reinforcement,
+	author = {Kaelbling, Leslie Pack and Littman, Michael L and Moore, Andrew W},
+	journal = {Journal of artificial intelligence research},
+	keywords = {survey},
+	localfile = {l_kaelbling_reinforcement_learning:_a_survey.pdf},
+	pages = {237--285},
+	title = {Reinforcement learning: A survey},
+	volume = {4},
+	x-color = {#0033ff},
+	year = {1996}
+}
+
+@article{keerthi1994tutorial,
+	author = {Keerthi, S Sathiya and Ravindran, B},
+	journal = {Sadhana},
+	keywords = {survey},
+	localfile = {s_keerthi_a_tutorial_survey_of_reinforcement_learning.pdf},
+	number = {6},
+	pages = {851--889},
+	publisher = {Springer},
+	title = {A tutorial survey of reinforcement learning},
+	volume = {19},
+	x-color = {#0033ff},
+	year = {1994}
+}
+
+@article{taylor2009transfer,
+	abstract = {The reinforcement learning paradigm is a popular way to address problems that have only limited environmental feedback, rather than correctly labeled examples, as is common in other machine learning contexts. While significant progress has been made to improve learning in a single task, the idea of transfer learning has only recently been applied to reinforcement learning tasks. The core idea of transfer is that experience gained in learning to perform one task can help improve learning performance in a related, but different, task. In this article we present a framework that classifies transfer learning methods in terms of their capabilities and goals, and then use it to survey the existing literature, as well as to suggest future directions for transfer learning work.},
+	author = {Taylor, Matthew E and Stone, Peter},
+	journal = {Journal of Machine Learning Research},
+	keywords = {transfer learning; reinforcement learning; multi-task learning; survey},
+	localfile = {m_taylor_transfer_learning_for_reinforcement_learning_domains:_a_survey.pdf},
+	number = {Jul},
+	pages = {1633--1685},
+	title = {Transfer learning for reinforcement learning domains: A survey},
+	volume = {10},
+	x-color = {#0033ff},
+	year = {2009}
+}
+
+@article{kober2013reinforcement,
+	abstract = {Reinforcement learning offers to robotics a framework and set of tools for the design of sophisticated and hard-to-engineer behaviors. Conversely, the challenges of robotic problems provide both inspiration, impact, and validation for developments in reinforcement learning. The relationship between disciplines has sufficient promise to be likened to that between physics and mathematics. In this article, we attempt to strengthen the links between the two research communities by providing a survey of work in reinforcement learning for behavior generation in robots. We highlight both key challenges in robot reinforcement learning as well as notable successes. We discuss how contributions tamed the complexity of the domain and study the role of algorithms, representations, and prior knowledge in achieving these successes. As a result, a particular focus of our paper lies on the choice between model-based and model-free as well as between value function-based and policy search methods. By analyzing a simple problem in some detail we demonstrate how reinforcement learning approaches may be profitably applied, and we note throughout open questions and the tremendous potential for future research.},
+	author = {Kober, Jens and Bagnell, J Andrew and Peters, Jan},
+	journal = {The International Journal of Robotics Research},
+	keywords = {reinforcement learning; robot; learning control; survey},
+	localfile = {j_kober_reinforcement_learning_in_robotics:_a_survey.pdf},
+	number = {11},
+	pages = {1238--1274},
+	publisher = {SAGE Publications Sage UK: London, England},
+	title = {Reinforcement learning in robotics: A survey},
+	volume = {32},
+	x-color = {#0033ff},
+	year = {2013}
+}
+
+@book{deisenroth2013survey,
+	abstract = {Policy search is a subfield in reinforcement learning which focuses on finding good parameters for a given policy parametrization. It is well suited for robotics as it can cope with high-dimensional state and action spaces, one of the main challenges in robot learning. We review recent successes of both model-free and model-based policy search in robot learning. Model-free policy search is a general approach to learn policies based on sampled trajectories. We classify model-free methods based on their policy evaluation strategy, policy update strategy and exploration strategy and present an unified view on existing algorithms. Learning a policy is often easier than learning an accurate forward model, and, hence, model-free methods are more frequently used in practice. However, for each sampled trajectory, it is necessary to interact with the robot, which can be time consuming and challenging in practice. Model-based policy search addresses this problem by first learning a simulator of the robot{\rq}s dynamics from data. Subsequently, the simulator generates trajectories that are used for policy learning. For both model-free and model-based policy search methods, we review their respective properties and their applicability to robotic systems.},
+	author = {Deisenroth, Marc Peter and Neumann, Gerhard and Peters, Jan and others},
+	journal = {Foundations and Trends{\textregistered} in Robotics},
+	keywords = {survey},
+	localfile = {m_deisenroth_ra_survey_on_policy_search_for_robotics.pdf},
+	number = {1--2},
+	pages = {1--142},
+	publisher = {Now Publishers, Inc.},
+	title = {A survey on policy search for robotics},
+	volume = {2},
+	x-color = {#0033ff},
+	year = {2013}
+}
+
+@article{minsky1961steps,
+	abstract = {The problems of heuristic programming-of making computers solve really difficult problems-are divided into five main areas: Search, Pattern-Recognition, Learning, Planning, and Induction. A computer can do, in a sense, only what it is told to do. But even when we do not know how to solve a certain problem, we may program a machine (computer) to Search through some large space of solution attempts. Unfortunately, this usually leads to an enormously inefficient process. With Pattern-Recognition techniques, efficiency can often be improved, by restricting the application of the machine's methods to appropriate problems. Pattern-Recognition, together with Learning, can be used to exploit generalizations based on accumulated experience, further reducing search. By analyzing the situation, using Planning methods, we may obtain a fundamental improvement by replacing the given search with a much smaller, more appropriate exploration. To manage broad classes of problems, machines will need to construct models of their environments, using some scheme for Induction. Wherever appropriate, the discussion is supported by extensive citation of the literature and by descriptions of a few of the most successful heuristic (problem-solving) programs constructed to date.},
+	author = {Minsky, Marvin},
+	journal = {Proceedings of the IRE},
+	keywords = {Foundational paper},
+	localfile = {m_minskyt_steps_toward_artificial_intelligence.pdf},
+	number = {1},
+	pages = {8--30},
+	publisher = {IEEE},
+	title = {Steps toward artificial intelligence},
+	volume = {49},
+	x-color = {#0033ff},
+	year = {1961}
+}
+
+@article{witten1977adaptive,
+	abstract = {This paper describes an adaptive controller for discrete-time stochastic environments. The controller receives the environment's current state and a reward signal which indicates the desirability of that state. In response, it selects an appropriate control action and notes its effect. The cycle repeats indefinitely. The control environments to be tackled include the well-known n-armed bandit problem, and the adaptive controller comprises an ensemble of n-armed bandit controllers, suitably interconnected. The design of these constituent elements is not discussed. It is shown that, under certain conditions, the controller's actions eventually become optimal for the particular controi task with which it is faced, in the sense that they maximize the expected reward obtained in the future.},
+	author = {Witten, Ian H},
+	journal = {Information and control},
+	keywords = {temporal difference; TD; Foundational paper},
+	localfile = {l_witten_an_adaptive_optimal_controller_for_discrete-time_markov_environments.pdf},
+	note = {Earliest publication on temporal-difference (TD) learning rule},
+	number = {4},
+	pages = {286--295},
+	publisher = {Elsevier},
+	title = {An adaptive optimal controller for discrete-time Markov environments},
+	volume = {34},
+	x-color = {#0033ff},
+	year = {1977}
+}
+
+@phdthesis{watkins1989learning,
+	abstract = {In behavioural ecology, stochastic dynamic programming may be used as a general method for calculating animals optimal behavioural policies. But how might the animals themselves learn optimal policies from their experience? The aim of this thesis is to give a systematic analysis of possible computational methods of learning effient behaviour. first, it is argued that it does follow from the optimality assumption that animals should learn optimal policies, even though they may not always follow them. Next, it is argued that Markov decision processes are a general formal model of an animal's behavioural choices in its enviroment. The conventional methods of determining optimal policies by dynamic programming are then described. It is not possible that animals carry out calculations of this type. However, there is a range of alternative methods of organising the dynamic programming calculation, in ways that are plausible computational models of aniaml learning. In particual, there is an incremental Monte-Carlo method that enables the optimal values (or canonical costs) of actions to be learned directly, without any requirement for the animal to model its environment, or to remember situations and actions for more than a short period of time. A poof is given that this learning method works. Learning methods of this type are also possible for hierarchical policies. Previously suggested learning methods are reviewed, and some even simpler learning methods are presented wihthout proof. Demonstration implementations of some of the learning methods are described.},
+	author = {Watkins, Christopher John Cornish Hellaby},
+	keywords = {Dynamic Programming; DP; Reinforcement Learning Methods},
+	localfile = {c_watkins_learning_from_delayed_rewards.pdf},
+	school = {King's College, Cambridge},
+	title = {Learning from delayed rewards},
+	x-color = {#0033ff},
+	year = {1989}
+}
+
