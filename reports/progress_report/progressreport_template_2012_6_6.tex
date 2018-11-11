@@ -1,0 +1,114 @@
+%%% This example illustrates the basic elements of a progress report
+%%%
+\documentclass[a4paper,11pt]{article}
+	\usepackage{a4wide}
+	\usepackage [final] {graphicx} % graphics package
+	\usepackage{psfrag}  % figure text formatting package
+	\usepackage{xcolor}  % graphics package
+	\usepackage{amssymb} % mathematical symbol package
+	\usepackage{amsmath} % mathematical symbol package
+	
+	\pagestyle{myheadings}
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%% You should edit this part appropriately
+	\newcommand{\Title}{Progress Report A. de Windt}
+	\newcommand{\Author}{A. de Windt}
+	\newcommand{\Date}{11-10-2018}
+	\newcommand{\Subject}{Policy Gradient Reinforcement Learning for quadrotor control}
+	\newcommand{\Mentors}{Dr.ir. Erik-Jan van Kampen}
+	
+	\newcommand{\Term}{09/2018 - 07/2019}
+	\newcommand{\Mail}{A.deWindt@student.tudelft.nl}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	\begin{document}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\markright{\footnotesize\textnormal{\textbf{\Title}}~~~\Author}
+	\thispagestyle{plain} \noindent
+	Delft University of Technology\\
+	Department of Control \& Simulation\\
+	\par\begin{center}
+	{\LARGE\textbf{\Title}}\par\bigskip{\large \Author}
+	\end{center}
+	\par\bigskip
+	\begin{center}{\small
+	\begin{tabular}{ll}\hline
+	\textbf{Date:}& \Date\\
+	\textbf{Subject:}& \Subject\\
+	\textbf{Supervisors:}& \Mentors\\
+	\textbf{Project term:} & \Term\\
+	\textbf{E-mail:} & \Mail\\\hline
+	\end{tabular}}
+	\end{center}
+	\par\bigskip
+	%%%  End Header
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	
+	\section*{Outcome of the previous meeting}
+	
+	\begin{itemize}
+	\item Look for more papers on topic or related topics.
+	\item Study the litrature provided and become familiar with Reinforcement Learning.
+	\item Create basic outline of litrature Study report.
+	\end{itemize}
+	
+	
+	
+	
+	\section*{Description of the results since last meeting}
+	
+	\begin{itemize}
+	\item Studied the papers and the first few chapters in "Richard S. Sutton, Reinforcement Learning: Introduction".
+	\item Implementing "Jaime Junell, Reinforcement Learning Applied to a Quadrotor Guidance Law in Autonomous Flight"
+	\end{itemize}
+	
+	
+	
+	
+	\section*{Plans for next 2 weeks}
+	\begin{enumerate}
+	\item Finish the implementation.
+	\item Focus more into continues problems.
+	\item Collect literature.
+	\end{enumerate}
+	
+	
+	
+	% \begin{appendix}
+	% \section{An example appendix}
+	% Here is an example of an inline equation: $a^2 = b^2 + c^2$. 
+	
+	% Here is an example of a display equation:
+	% \begin{equation}
+	% 	\mathbf{S} = \mathbf{G}^{-1} \mathbf{x} + n
+	% 	%B_{\kappa}^d(\mathbf{b}) := \frac{d!}{\kappa!}\mathbf{b}^{\kappa} ,
+	% \label{eq:sensormodel}
+	% \end{equation}
+	
+	% You can refer to the display equation using the label: Eq \ref{eq:sensormodel} references the above equation. Note that you have to rebuild the documents 3 times to update references. You can also refer to figures, as follows: Fig \ref{fig:splineWFR_costfnnorms} refers to the figure in the other appendix.
+	
+	
+	% \section{An example figure}
+	
+	% In this appendix an eps figure is printed. The figure was made in Matlab, and text captions are contained in the fig\_SplineFD\_NormComp\_G10.tex file. 
+	
+	% \begin{figure}
+	% 	 \centering
+	% 	 \begin{psfrags}%
+	% 	 \psfragscanon%
+	% 	 \include{figures/fig_SplineFD_NormComp_G10}
+	% 	 \resizebox{10cm}{!}{\includegraphics{figures/fig_SplineFD_NormComp_G10.eps}}%
+	%  %\includegraphics{figures/fig_CuRe_WavefrontXY_G21x21_NL15_NR1.eps}
+	% 	 \end{psfrags}
+	% 	 \caption{Linear estimator cost function partial norms for the Finite Difference and the Spline method.}
+	% 	 \label{fig:splineWFR_costfnnorms}
+	% \end{figure}
+	
+	
+	% \end{appendix}
+	
+	
+	\end{document}
+	
