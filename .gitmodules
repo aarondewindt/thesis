@@ -1,0 +1,6 @@
+[submodule "code/pole/extern_libs/eigen-git-mirror"]
+	path = code/pole/extern_libs/eigen-git-mirror
+	url = https://github.com/eigenteam/eigen-git-mirror.git
+[submodule "code/pole/extern_libs/random"]
+	path = code/pole/extern_libs/random
+	url = https://github.com/effolkronium/random.git

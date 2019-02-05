@@ -1,0 +1,105 @@
+from libcpp cimport bool
+from libcpp.vector cimport vector
+from libcpp.map cimport map
+from libcpp.string cimport string
+
+ctypedef vector[double]* dvec_ptr
+ctypedef map[string, dvec_ptr]* dvec_smap_ptr 
+
+cdef extern from "pole.h":
+    cdef cppclass c_Pole "Pole":
+        c_Pole(double mass, double length)
+        void act(double torque, double &reward, bool &is_terminal)
+        double theta
+        double theta_dot
+        double time
+        double dt
+        double mass
+        double length
+        double inertia
+
+cdef extern from "agent.h":
+    cdef cppclass c_Agent "Agent":
+        pass
+
+cdef extern from "pid_agent.h":
+    cdef cppclass c_PIDAgent "PIDAgent":
+        c_PIDAgent(double k_p, double k_i, double k_d)
+        bool run_step()
+        void run_episode(long max_steps)
+        void begin_episode()
+        void set_environment(c_Pole *pole)
+        c_Pole* set_environment()
+        map[string, dvec_ptr]* get_data()
+
+cdef extern from "season.h":
+    cdef cppclass c_Season "Season":
+        c_Season(c_Agent *agent)
+        map[long, dvec_smap_ptr]* get_data_log()
+        map[string, dvec_ptr]* get_scalar_data()
+        void clear_all_logs()
+        void run(long n_episodes, long n_record, long max_steps)
+
+cdef extern from "poly_rl_agent.h":
+    cdef cppclass c_PolyRLAgent "PolyRLAgent":
+        c_PolyRLAgent(
+            double eps,
+            double gamma,
+            double alpha,
+            double min_action,
+            double max_action,
+            double action_variance)
+        
+        # c_PolyRLAgent(
+        #     double eps,
+        #     double gamma,
+        #     double alpha,
+        #     double min_action,
+        #     double max_action,
+        #     double action_variance,
+        #     dvec_ptr initial_weights)
+
+        double eps
+        double gamma
+        double alpha
+        double min_action
+        double max_action
+        double action_variance
+
+        bool run_step()
+        void run_episode(long max_steps)
+        void begin_episode()
+        void set_environment(c_Pole *pole)
+        c_Pole* set_environment()
+        map[string, dvec_ptr]* get_data()
+
+
+cdef extern from "table_rl_agent.h":
+    cdef cppclass c_TableRLAgent "TableRLAgent":
+        c_TableRLAgent(
+            double min_theta,
+            double max_theta,
+            double min_theta_dot,
+            double max_theta_dot,
+            double min_torque,
+            double max_torque,
+            int n_theta,
+            int n_theta_dot,
+            int n_torque,
+            double epsilon,
+            double gamma,
+            double alpha,
+            int n_r)
+
+        double eps
+        double gamma
+        double alpha
+
+        bool run_step()
+        void run_episode(long max_steps)
+        void begin_episode()
+        void set_environment(c_Pole *pole)
+        c_Pole* set_environment()
+        map[string, dvec_ptr]* get_data()
+        double get_value(double theta, double theta_dot, double torque)
+        double choose_ideal_torque(double theta, double theta_dot)
