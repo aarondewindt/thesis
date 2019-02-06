@@ -16,9 +16,9 @@ min_theta_dot = -5
 max_theta_dot = 5
 min_torque = -0.5
 max_torque = 0.5
-n_theta = 21
-n_theta_dot = 21
-n_torque = 41
+n_theta = 41
+n_theta_dot = 41
+n_torque = 21
 agent = TableRLAgent(
     min_theta=min_theta,
     max_theta=max_theta,
@@ -42,9 +42,9 @@ season = Season(agent)
 episodes_per_season = 400
 season_inputs = {
     "eps":             [0.7, 0.8, 0.9, 1.0],
-    "gamma":           [0.90, 0.9,  0.9, 0.9],
-    "alpha":           [1.0, 1.0,  1.0, 0],
-    "n_episodes":      [10000, 3000, 1000, 1000]
+    "gamma":           [0.7, 0.7,  0.7, 0.7],
+    "alpha":           [1, 0.8,  0.8, 0],
+    "n_episodes":      [4000, 1, 1, 1000]
 }
 reward_sum = []
 for i in range(len(season_inputs["eps"])):
@@ -55,7 +55,7 @@ for i in range(len(season_inputs["eps"])):
 
     # Run season
     t0 = perf_counter()
-    season.run(season_inputs["n_episodes"][i], 1, 100)
+    season.run(season_inputs["n_episodes"][i], 1, 1000)
     print("dt", perf_counter() - t0)
 
     # Plot results
@@ -75,8 +75,8 @@ for i in range(len(season_inputs["eps"])):
     reward_sum.extend(scalar_data['reward_sum'])
 
 plt.figure()
-plt.plot(reward_sum)
-plt.plot(filter_signal(reward_sum))
+plt.plot(reward_sum, ".", markersize=2)
+plt.plot(filter_signal(reward_sum, wn=0.02))
 plt.title("Reward sum")
 
 
@@ -106,5 +106,3 @@ plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
 # cbar.add_lines([foo(min_torque, max_torque, n_torque, i) for i in range(n_torque)])
 plt.tight_layout()
 plt.show()
-
-

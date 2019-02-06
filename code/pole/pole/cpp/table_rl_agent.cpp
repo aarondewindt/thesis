@@ -132,11 +132,11 @@ bool TableRLAgent::run_step() {
         g = 0.0;
         // Calculate new value
 //        for (int i = n_r - 1; i >= 0; i--) {
-////            printf("%f ", past_rewards[i] * pow(gamma, n_r - i - 1));
+//           printf("%f ", past_rewards[i] * pow(gamma, n_r - i - 1));
 //            g += past_rewards[i] * pow(gamma, n_r - i - 1);
 //        }
 
-        g = *rewards + gamma * get_value(*past_theta, *past_theta_dot, *past_torque);
+        g = *rewards + gamma * get_max_value(pole->theta, pole->theta_dot);
 
         // Update value
         q_table[theta_idx][theta_dot_idx][torque_idx] += alpha * (g - value_0);
@@ -160,7 +160,6 @@ bool TableRLAgent::run_step() {
 }
 
 double TableRLAgent::choose_ideal_torque(double theta, double theta_dot) {
-
     int theta_idx, theta_dot_idx, _;
     q_table_prelookup(theta, theta_dot, 0.0, theta_idx, theta_dot_idx, _);
 
@@ -180,6 +179,23 @@ double TableRLAgent::get_value(double theta, double theta_dot, double torque) {
     int theta_idx, theta_dot_idx, torque_idx;
     q_table_prelookup(theta, theta_dot, torque, theta_idx, theta_dot_idx, torque_idx);
     return q_table[theta_idx][theta_dot_idx][torque_idx];
+}
+
+
+double TableRLAgent::get_max_value(double theta, double theta_dot) {
+    int theta_idx, theta_dot_idx, _;
+    q_table_prelookup(theta, theta_dot, 0.0, theta_idx, theta_dot_idx, _);
+
+    int best_torque_idx = 0;
+    double best_value = q_table[theta_idx][theta_dot_idx][0];
+    for (int i = 1; i < n_torque; i++) {
+        if (q_table[theta_idx][theta_dot_idx][i] > best_value) {
+            best_value = q_table[theta_idx][theta_dot_idx][i];
+            best_torque_idx = i;
+        }
+    }
+
+    return q_table[theta_idx][theta_dot_idx][best_torque_idx];
 }
 
 

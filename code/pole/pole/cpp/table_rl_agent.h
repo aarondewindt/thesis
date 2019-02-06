@@ -46,6 +46,8 @@ public:
 
     double choose_ideal_torque(double theta, double theta_dot);
     double get_value(double theta, double theta_dot, double torque);
+    double get_max_value(double theta, double theta_dot);
+
     void q_table_prelookup(double theta, double theta_dot, double torque,
                            int &theta_idx, int &theta_dot_idx, int &torque_idx);
 
