@@ -15,6 +15,7 @@ public:
     virtual std::map<std::string, std::vector<double>*>* get_data() = 0;
     virtual std::map<std::string, double> get_scalar_data() = 0;
     virtual void begin_episode() = 0;
+    virtual void end_episode() = 0;
     virtual void set_environment(Pole *pole) = 0;
     virtual Pole *get_environment() = 0;
 

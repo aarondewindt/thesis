@@ -16,6 +16,7 @@ public:
     bool run_step() override;
     void run_episode(long max_steps) override;
     void begin_episode() override;
+    inline void end_episode() override {};
 
     inline void set_environment(Pole *pole) override {
         this->pole = pole;

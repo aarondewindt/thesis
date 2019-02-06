@@ -3,7 +3,6 @@
 	journal = {arXiv preprint arXiv:1312.5602},
 	localfile = {v_mnih_playing_atari_with_deep_reinforcement_learning.pdf},
 	title = {Playing atari with deep reinforcement learning},
-	x-color = {#0033ff},
 	year = {2013}
 }
 
@@ -12,7 +11,6 @@
 	journal = {arXiv preprint arXiv:1512.02011},
 	localfile = {v_fran{\c c}ois-lavet_how_to_discount_deep_reinforcement_learning_towards_new_dynamic_strategies.pdf},
 	title = {How to discount deep reinforcement learning: Towards new dynamic strategies},
-	x-color = {#0033ff},
 	year = {2015}
 }
 
@@ -21,7 +19,6 @@
 	localfile = {r_sutton_reinforcement_learning:_an_introduction.pdf.pdf},
 	publisher = {MIT press},
 	title = {Reinforcement learning: An introduction},
-	x-color = {#cc3300},
 	year = {2018}
 }
 
@@ -31,15 +28,13 @@
 	localfile = {j_junell_reinforcement_learning_applied_to_a_quadrotor_guidance_law_in_autonomous_flight.pdf},
 	pages = {1990},
 	title = {Reinforcement learning applied to a quadrotor guidance law in autonomous flight},
-	x-color = {#0033ff},
 	year = {2015}
 }
 
 @article{junelladaptive,
 	author = {Junell, J and van Kampen, E},
 	localfile = {j_junell_adaptive_path_planning_for_a_vision-based_quadrotor_in_an_obstacle_field.pdf},
-	title = {Adaptive Path Planning for a Vision-Based quadrotor in an Obstacle Field},
-	x-color = {#0033ff}
+	title = {Adaptive Path Planning for a Vision-Based quadrotor in an Obstacle Field}
 }
 
 @inproceedings{junell2016self,
@@ -48,7 +43,6 @@
 	localfile = {j_junell_self-tuning_gains_of_a_quadrotor_using_a_simple_model_for_policy_gradient_reinforcement_learning.pdf},
 	pages = {1387},
 	title = {Self-tuning Gains of a Quadrotor using a Simple Model for Policy Gradient Reinforcement Learning},
-	x-color = {#0033ff},
 	year = {2016}
 }
 
@@ -56,7 +50,6 @@
 	author = {Fiszel, Ruben},
 	title = {Reinforcement Learning and DQN, learning to play from pixels},
 	url = {https://rubenfiszel.github.io/posts/rl4j/2016-08-24-Reinforcement-Learning-and-DQN.html},
-	x-color = {#0033ff},
 	year = {2016}
 }
 
@@ -66,7 +59,6 @@
 	keywords = {survey},
 	localfile = {k_arulkumaran_a_brief_survey_of_deep_reinforcement_learning.pdf},
 	title = {A brief survey of deep reinforcement learning},
-	x-color = {#0033ff},
 	year = {2017}
 }
 
@@ -79,7 +71,6 @@
 	publisher = {Morgan \& Claypool Publishers},
 	title = {Algorithms for reinforcement learning},
 	volume = {4},
-	x-color = {#0033ff},
 	year = {2010}
 }
 
@@ -88,7 +79,6 @@
 	publisher = {Cambridge University Press},
 	title = {Artificial Intelligence: foundations of computational agents},
 	url = {https://artint.info/html/ArtInt.html#cicontents},
-	x-color = {#0033ff},
 	year = {2010}
 }
 
@@ -100,7 +90,6 @@
 	pages = {237--285},
 	title = {Reinforcement learning: A survey},
 	volume = {4},
-	x-color = {#0033ff},
 	year = {1996}
 }
 
@@ -114,7 +103,6 @@
 	publisher = {Springer},
 	title = {A tutorial survey of reinforcement learning},
 	volume = {19},
-	x-color = {#0033ff},
 	year = {1994}
 }
 
@@ -128,7 +116,6 @@
 	pages = {1633--1685},
 	title = {Transfer learning for reinforcement learning domains: A survey},
 	volume = {10},
-	x-color = {#0033ff},
 	year = {2009}
 }
 
@@ -143,7 +130,6 @@
 	publisher = {SAGE Publications Sage UK: London, England},
 	title = {Reinforcement learning in robotics: A survey},
 	volume = {32},
-	x-color = {#0033ff},
 	year = {2013}
 }
 
@@ -158,7 +144,6 @@
 	publisher = {Now Publishers, Inc.},
 	title = {A survey on policy search for robotics},
 	volume = {2},
-	x-color = {#0033ff},
 	year = {2013}
 }
 
@@ -173,7 +158,6 @@
 	publisher = {IEEE},
 	title = {Steps toward artificial intelligence},
 	volume = {49},
-	x-color = {#0033ff},
 	year = {1961}
 }
 
@@ -189,7 +173,6 @@
 	publisher = {Elsevier},
 	title = {An adaptive optimal controller for discrete-time Markov environments},
 	volume = {34},
-	x-color = {#0033ff},
 	year = {1977}
 }
 
@@ -200,7 +183,257 @@
 	localfile = {c_watkins_learning_from_delayed_rewards.pdf},
 	school = {King's College, Cambridge},
 	title = {Learning from delayed rewards},
-	x-color = {#0033ff},
 	year = {1989}
+}
+
+@article{bradtke1996linear,
+	abstract = {We introduce two new temporal difference (TD) algorithms based on the theory of linear leastsquares function approximation. We define an algorithm we call Least-Squares TD (LS TD) for which we prove probability-one convergence when it is used with a function approximator linear in the adjustable parameters. We then define a recursive version of this algorithm, Recursive Least-Squares TD (RLS TD). Although these new TD algorithms require more computation per time-step than do Sutton's TD(A) algorithms, they are more efficient in a statistical sense because they extract more information from training experiences. We describe a simulation experiment showing the substantial improvement in learning rate achieved by RLS TD in an example Markov prediction problem. To quantify this improvement, we introduce the TD error variance of a Markov chain, arc,, and experimentally conclude that the convergence rate of a TD algorithm depends linearly on ~ro. In addition to converging more rapidly, LS TD and RLS TD do not have control parameters, such as a learning rate parameter, thus eliminating the possibility of achieving poor performance by an unlucky choice of parameters.},
+	author = {Bradtke, Steven J and Barto, Andrew G},
+	journal = {Machine learning},
+	keywords = {Reinforcement learning; Markov Decision Problems; Temporal Difference Methods; Least-Squares},
+	localfile = {s_bradtke_linear_least-squares_algorithms_for_temporal_difference_learning.pdf},
+	number = {1-3},
+	pages = {33--57},
+	publisher = {Springer},
+	title = {Linear least-squares algorithms for temporal difference learning},
+	volume = {22},
+	year = {1996}
+}
+
+@inproceedings{lagoudakis2002model,
+	author = {Lagoudakis, Michail G and Parr, Ronald},
+	booktitle = {Advances in neural information processing systems},
+	localfile = {m_lagoudakis_model-free_least_squares_policy_iteration.pdf},
+	pages = {1547--1554},
+	title = {Model-free least-squares policy iteration},
+	url = {https://www2.cs.duke.edu/research/AI/LSPI/},
+	year = {2002}
+}
+
+@inproceedings{sutton2000policy,
+	abstract = {Function approximation is essential to reinforcement learning, but the standard approach of approximating a value function and determining a policy from it has so far proven theoretically intractable. In this paper we explore an alternative approach in which the policy is explicitly represented by its own function approximator, independent of the value function, and is updated according to the gradient of expected reward with respect to the policy parameters. Williams's REINFORCE method and actor-critic methods are examples of this approach. Our main new result is to show that the gradient can be written in a form suitable for estimation from experience aided by an approximate action-value or advantage function. Using this result, we prove for the first time that a version of policy iteration with arbitrary differentiable function approximation is convergent to a locally optimal policy.},
+	author = {Sutton, Richard S and McAllester, David A and Singh, Satinder P and Mansour, Yishay},
+	booktitle = {Advances in neural information processing systems},
+	keywords = {Policy Gradient},
+	localfile = {r_sutton_policy_gradient_methods_for_reinforcement_learning_with_function_approximation.pdf},
+	pages = {1057--1063},
+	title = {Policy gradient methods for reinforcement learning with function approximation},
+	year = {2000}
+}
+
+@inproceedings{peters2005natural,
+	abstract = {Abstract. This paper investigates a novel model-free reinforcement learning architecture, the Natural Actor-Critic. The actor updates are based on stochastic policy gradients employing Amari{\rq}s natural gradient approach, while the critic obtains both the natural policy gradient and additional parameters of a value function simultaneously by linear regression. We show that actor improvements with natural policy gradients are particularly appealing as these are independent of coordinate frame of the chosen policy representation, and can be estimated more efficiently than regular policy gradients. The critic makes use of a special basis function parameterization motivated by the policy-gradient compatible function approximation. We show that several well-known reinforcement learning methods such as the original Actor-Critic and Bradtke{\rq}s Linear Quadratic Q-Learning are in fact Natural Actor-Critic algorithms. Empirical evaluations illustrate the effectiveness of our techniques in comparison to previous methods, and also demonstrate their applicability for learning control on an anthropomorphic robot arm.},
+	author = {Peters, Jan and Vijayakumar, Sethu and Schaal, Stefan},
+	booktitle = {European Conference on Machine Learning},
+	keywords = {Policy Search; Policy Gradient},
+	localfile = {j_peters_pnatural_actor-critic.pdf},
+	organization = {Springer},
+	pages = {280--291},
+	title = {Natural actor-critic},
+	year = {2005}
+}
+
+@inproceedings{kober2009policy,
+	abstract = {This paper investigates a novel model-free reinforcement learning architecture, the Natural Actor-Critic. The actor updates are based on stochastic policy gradients employing Amari{\rq}s natural gradient approach, while the critic obtains both the natural policy gradient and additional parameters of a value function simultaneously by linear regression. We show that actor improvements with natural policy gradients are particularly appealing as these are independent of coordinate frame of the chosen policy representation, and can be estimated more efficiently than regular policy gradients. The critic makes use of a special basis function parameterization motivated by the policy-gradient compatible function approximation. We show that several well-known reinforcement learning methods such as the original Actor-Critic and Bradtke{\rq}s Linear Quadratic Q-Learning are in fact Natural Actor-Critic algorithms. Empirical evaluations illustrate the effectiveness of our techniques in comparison to previous methods, and also demonstrate their applicability for learning control on an anthropomorphic robot arm.},
+	author = {Kober, Jens and Peters, Jan R},
+	booktitle = {Advances in neural information processing systems},
+	keywords = {Actor-Critic; Natural Actor-Critic; Policy Search; Policy Gradient},
+	localfile = {j_kober_policy_search_for_motor_primitives_in_robotics.pdf},
+	pages = {849--856},
+	title = {Policy search for motor primitives in robotics},
+	year = {2009}
+}
+
+@inproceedings{peters2010relative,
+	abstract = {Policy search is a successful approach to reinforcement learning. However, policy improvements often result in the loss of information. Hence, it has been marred by premature convergence and implausible solutions. As first suggested in the context of covariant policy gradients (Bagnell and Schneider 2003), many of these problems may be addressed by constraining the information loss. In this paper, we continue this path of reasoning and suggest the Relative Entropy Policy Search (REPS) method. The resulting method differs significantly from previous policy gradient approaches and yields an exact update step. It works well on typical reinforcement learning benchmark problems.},
+	author = {Peters, Jan and M{\"u}lling, Katharina and Altun, Yasemin},
+	booktitle = {AAAI},
+	localfile = {j_peters_relative_entropy_policy_search.pdf},
+	organization = {Atlanta},
+	pages = {1607--1612},
+	title = {Relative Entropy Policy Search.},
+	year = {2010}
+}
+
+@article{stulp2012path,
+	abstract = {There has been a recent focus in reinforcement learning on addressing continuous state and action problems by optimizing parameterized policies. PI2 is a recent example of this approach. It combines a derivation from first principles of stochastic optimal control with tools from statistical estimation theory. In this paper, we consider PI2 as a member of the wider family of methods which share the concept of probability-weighted averaging to iteratively update parameters to optimize a cost function. We compare PI2 to other members of the same family -- Cross-Entropy Methods and CMAES -- at the conceptual level and in terms of performance. The comparison suggests the derivation of a novel algorithm which we call PI2 -CMA for ``Path Integral Policy Improvement with Covariance Matrix Adaptation''. PI2 -CMA{\rq}s main advantage is that it determines the magnitude of the exploration noise automatically.},
+	author = {Stulp, Freek and Sigaud, Olivier},
+	journal = {arXiv preprint arXiv:1206.4621},
+	keywords = {Policy Search; PI2-CMA; Policy Gradient},
+	localfile = {f_stulp_path_integral_policy_improvement_with_covariance_matrix_adaptation.pdf},
+	title = {Path integral policy improvement with covariance matrix adaptation},
+	year = {2012}
+}
+
+@inproceedings{kohl2004policy,
+	abstract = {This paper presents a machine learning approach to optimizing a quadrupedal trot gait for forward speed. Given a parameterized walk designed for a specific robot, we propose using a form of policy gradient reinforcement learning to automatically search the set of possible parameters with the goal of finding the fastest possible walk. We implement and test our approach on a commercially available quadrupedal robot platform, namely the Sony Aibo robot. After about three hours of learning, all on the physical robots and with no human intervention other than to change the batteries, the robots achieved a gait faster than any previously known gait for the Aibo, significantly outperforming a variety of existing hand-coded and learned solutions.},
+	author = {Kohl, Nate and Stone, Peter},
+	booktitle = {Robotics and Automation, 2004. Proceedings. ICRA'04. 2004 IEEE International Conference on},
+	keywords = {Learning Control; Walking Robots; Multi Legged Robots},
+	localfile = {n_kohl_policy_gradient_reinforcement_learning_for_fast_quadrupedal_locomotion.pdf},
+	organization = {IEEE},
+	pages = {2619--2624},
+	title = {Policy gradient reinforcement learning for fast quadrupedal locomotion},
+	volume = {3},
+	year = {2004}
+}
+
+@inproceedings{deisenroth2011pilco,
+	abstract = {In this paper, we introduce pilco, a practical, data-efficient model-based policy search method. Pilco reduces model bias, one of the key problems of model-based reinforcement learning, in a principled way. By learning a probabilistic dynamics model and explicitly incorporating model uncertainty into long-term planning, pilco can cope with very little data and facilitates learning from scratch in only a few trials. Policy evaluation is performed in closed form using state-ofthe-art approximate inference. Furthermore, policy gradients are computed analytically for policy improvement. We report unprecedented learning efficiency on challenging and high-dimensional control tasks.},
+	author = {Deisenroth, Marc and Rasmussen, Carl E},
+	booktitle = {Proceedings of the 28th International Conference on machine learning (ICML-11)},
+	keywords = {model-based; policy search; Pilco},
+	localfile = {m_deisenroth_pilco:_a_model-based_and_data-efficient_approach_to_policy_search.pdf},
+	pages = {465--472},
+	title = {PILCO: A model-based and data-efficient approach to policy search},
+	year = {2011}
+}
+
+@inproceedings{kuindersma2011learning,
+	abstract = {The biomechanics community has recently made progress toward understanding the role of rapid arm movements in human stability recovery. However, comparatively little work has been done exploring this type of control in humanoid robots. We provide a summary of recent insights into the functional contributions of arm recovery motions in humans and experimentally demonstrate advantages of this behavior on a dynamically stable mobile manipulator. Using Bayesian optimization, the robot efficiently discovers policies that reduce total energy expenditure and recovery footprint, and increase ability to stabilize after large impacts.},
+	author = {Kuindersma, Scott and Grupen, Roderic and Barto, Andrew},
+	booktitle = {2011 11th IEEE-RAS International Conference on Humanoid Robots},
+	keywords = {Bayesian optimization; Policy Search},
+	localfile = {s_kuindersma_learning_dynamic_arm_motions_for_postural_recovery.pdf},
+	organization = {IEEE},
+	pages = {7--12},
+	title = {Learning dynamic arm motions for postural recovery},
+	year = {2011}
+}
+
+@inproceedings{chatzilygeroudis2017black,
+	abstract = {The most data-efficient algorithms for reinforcement learning (RL) in robotics are based on uncertain dynamical models: after each episode, they first learn a dynamical model of the robot, then they use an optimization algorithm to find a policy that maximizes the expected return given the model and its uncertainties. It is often believed that this optimization can be tractable only if analytical, gradient-based algorithms are used; however, these algorithms require using specific families of reward functions and policies, which greatly limits the flexibility of the overall approach. In this paper, we introduce a novel model-based RL algorithm, called BlackDROPS (Black-box Data-efficient RObot Policy Search) that: (1) does not impose any constraint on the reward function or the policy (they are treated as black-boxes), (2) is as dataefficient as the state-of-the-art algorithm for data-efficient RL in robotics, and (3) is as fast (or faster) than analytical approaches when several cores are available. The key idea is to replace the gradient-based optimization algorithm with a parallel, blackbox algorithm that takes into account the model uncertainties. We demonstrate the performance of our new algorithm on two standard control benchmark problems (in simulation) and a low-cost robotic manipulator (with a real robot).},
+	author = {Chatzilygeroudis, Konstantinos and Rama, Roberto and Kaushik, Rituraj and Goepp, Dorian and Vassiliades, Vassilis and Mouret, Jean-Baptiste},
+	booktitle = {Intelligent Robots and Systems (IROS), 2017 IEEE/RSJ International Conference on},
+	keywords = {model-based; Learning and Adaptive Systems; DataEfficient Learning},
+	localfile = {k_chatzilygeroudis_black-box_data-efficient_policy_search_for_robotics.pdf},
+	organization = {IEEE},
+	pages = {51--58},
+	title = {Black-box data-efficient policy search for robotics},
+	url = {https://github.com/resibots/blackdrops},
+	year = {2017}
+}
+
+@article{sutton1999between,
+	abstract = {Learning, planning, and representing knowledge at multiple levels of temporal abstraction are key, longstanding challenges for AI. In this paper we consider how these challenges can be addressed within the mathematical framework of reinforcement learning and Markov decision processes (MDPs). We extend the usual notion of action in this framework to include options---closed-loop policies for taking action over a period of time. Examples of options include picking up an object, going to lunch, and traveling to a distant city, as well as primitive actions such as muscle twitches and joint torques. Overall, we show that options enable temporally abstract knowledge and action to be included in the reinforcement learning framework in a natural and general way. In particular, we show that options may be used interchangeably with primitive actions in planning methods such as dynamic programming and in learning methods such as Q-learning. Formally, a set of options defined over an MDP constitutes a semi-Markov decision process (SMDP), and the theory of SMDPs provides the foundation for the theory of options. However, the most interesting issues concern the interplay between the underlying MDP and the SMDP and are thus beyond SMDP theory. We present results for three such cases: (1) we show that the results of planning with options can be used during execution to interrupt options and thereby perform even better than planned, (2) we introduce new intra-option methods that are able to learn about an option from fragments of its execution, and (3) we propose a notion of subgoal that can be used to improve the options themselves. All of these results have precursors in the existing literature; the contribution of this paper is to establish them in a simpler and more general setting with fewer changes to the existing reinforcement learning framework. In particular, we show that these results can be obtained without committing to (or ruling out) any particular approach to state abstraction, hierarchy, function approximation, or the macroutility problem},
+	author = {Sutton, Richard S and Precup, Doina and Singh, Satinder},
+	journal = {Artificial intelligence},
+	keywords = {Hierarchical RL},
+	localfile = {r_sutton_between_mdps_and_semi-mdps:_a_framework_for_temporal_abstraction_in_reinforcement_learning.pdf},
+	number = {1-2},
+	pages = {181--211},
+	publisher = {Elsevier},
+	title = {Between MDPs and semi-MDPs: A framework for temporal abstraction in reinforcement learning},
+	volume = {112},
+	year = {1999}
+}
+
+@inproceedings{konidaris2007building,
+	abstract = {The options framework provides methods for reinforcement learning agents to build new high-level skills. However, since options are usually learned in the same state space as the problem the agent is solving, they cannot be used in other tasks that are similar but have different state spaces. We introduce the notion of learning options in agentspace, the space generated by a feature set that is present and retains the same semantics across successive problem instances, rather than in problemspace. Agent-space options can be reused in later tasks that share the same agent-space but have different problem-spaces. We present experimental results demonstrating the use of agent-space options in building transferrable skills, and show that they perform best when used in conjunction with problem-space options.},
+	author = {Konidaris, George and Barto, Andrew G},
+	booktitle = {IJCAI},
+	keywords = {Hierarchical RL},
+	localfile = {g_konidaris_building_portable_options:_skill_transfer_in_reinforcement_learning.pdf},
+	pages = {895--900},
+	title = {Building Portable Options: Skill Transfer in Reinforcement Learning.},
+	volume = {7},
+	year = {2007}
+}
+
+@article{mnih2015human,
+	abstract = {The theory of reinforcement learning provides a normative account1, deeply rooted in psychological2 and neuroscientific3 perspectives on animal behaviour, of how agents may optimize their control of an environment. To use reinforcement learning successfully in situations approaching real-world complexity, however, agents are confronted with a difficult task: they must derive efficient representations of the environment from high-dimensional sensory inputs, and use these to generalize past experience to new situations. Remarkably, humans and other animals seem to solve this problem through a harmonious combination of reinforcement learning and hierarchical sensory processing systems4,5, the former evidenced by a wealth of neural data revealing notable parallels between the phasic signals emitted by dopaminergic neurons and temporal difference reinforcement learning algorithms3. While reinforcement learning agents have achieved some successes in a variety of domains6,7,8, their applicability has previously been limited to domains in which useful features can be handcrafted, or to domains with fully observed, low-dimensional state spaces. Here we use recent advances in training deep neural networks9,10,11 to develop a novel artificial agent, termed a deep Q-network, that can learn successful policies directly from high-dimensional sensory inputs using end-to-end reinforcement learning. We tested this agent on the challenging domain of classic Atari 2600 games12. We demonstrate that the deep Q-network agent, receiving only the pixels and the game score as inputs, was able to surpass the performance of all previous algorithms and achieve a level comparable to that of a professional human games tester across a set of 49 games, using the same algorithm, network architecture and hyperparameters. This work bridges the divide between high-dimensional sensory inputs and actions, resulting in the first artificial agent that is capable of learning to excel at a diverse array of challenging tasks.},
+	author = {Mnih, Volodymyr and Kavukcuoglu, Koray and Silver, David and Rusu, Andrei A and Veness, Joel and Bellemare, Marc G and Graves, Alex and Riedmiller, Martin and Fidjeland, Andreas K and Ostrovski, Georg and others},
+	journal = {Nature},
+	number = {7540},
+	pages = {529},
+	publisher = {Nature Publishing Group},
+	title = {Human-level control through deep reinforcement learning},
+	volume = {518},
+	year = {2015}
+}
+
+@inproceedings{guo2014deep,
+	abstract = {The combination of modern Reinforcement Learning and Deep Learning approaches holds the promise of making significant progress on challenging applications requiring both rich perception and policy-selection. The Arcade Learning Environment (ALE) provides a set of Atari games that represent a useful benchmark set of such applications. A recent breakthrough in combining model-free reinforcement learning with deep learning, called DQN, achieves the best realtime agents thus far. Planning-based approaches achieve far higher scores than the best model-free approaches, but they exploit information that is not available to human players, and they are orders of magnitude slower than needed for real-time play. Our main goal in this work is to build a better real-time Atari game playing agent than DQN. The central idea is to use the slow planning-based agents to provide training data for a deep-learning architecture capable of real-time play. We proposed new agents based on this idea and show that they outperform DQN.},
+	author = {Guo, Xiaoxiao and Singh, Satinder and Lee, Honglak and Lewis, Richard L and Wang, Xiaoshi},
+	booktitle = {Advances in neural information processing systems},
+	pages = {3338--3346},
+	title = {Deep learning for real-time Atari game play using offline Monte-Carlo tree search planning},
+	year = {2014}
+}
+
+@article{levine2016end,
+	abstract = {Policy search methods can allow robots to learn control policies for a wide range of tasks, but practical applications of policy search often require hand-engineered components for perception, state estimation, and low-level control. In this paper, we aim to answer the following question: does training the perception and control systems jointly end-toend provide better performance than training each component separately? To this end, we develop a method that can be used to learn policies that map raw image observations directly to torques at the robot{\rq}s motors. The policies are represented by deep convolutional neural networks (CNNs) with 92,000 parameters, and are trained using a partially observed guided policy search method, which transforms policy search into supervised learning, with supervision provided by a simple trajectory-centric reinforcement learning method. We evaluate our method on a range of real-world manipulation tasks that require close coordination between vision and control, such as screwing a cap onto a bottle, and present simulated comparisons to a range of prior policy search methods.},
+	author = {Levine, Sergey and Finn, Chelsea and Darrell, Trevor and Abbeel, Pieter},
+	journal = {The Journal of Machine Learning Research},
+	keywords = {Reinforcement Learning; Optimal Control; Vision; Neural Networks},
+	localfile = {s_levine_end-to-end_training_of_deep_visuomotor_policies.pdf},
+	number = {1},
+	pages = {1334--1373},
+	publisher = {JMLR. org},
+	title = {End-to-end training of deep visuomotor policies},
+	volume = {17},
+	year = {2016}
+}
+
+@article{schaul2015prioritized,
+	abstract = {Experience replay lets online reinforcement learning agents remember and reuse experiences from the past. In prior work, experience transitions were uniformly sampled from a replay memory. However, this approach simply replays transitions at the same frequency that they were originally experienced, regardless of their significance. In this paper we develop a framework for prioritizing experience, so as to replay important transitions more frequently, and therefore learn more efficiently. We use prioritized experience replay in Deep Q-Networks (DQN), a reinforcement learning algorithm that achieved human-level performance across many Atari games. DQN with prioritized experience replay achieves a new stateof-the-art, outperforming DQN with uniform replay on 42 out of 57 games.},
+	author = {Schaul, Tom and Quan, John and Antonoglou, Ioannis and Silver, David},
+	journal = {arXiv preprint arXiv:1511.05952},
+	keywords = {Deep Learning},
+	localfile = {t_schaul_prioritized_experience_replay.pdf},
+	title = {Prioritized experience replay},
+	year = {2015}
+}
+
+@inproceedings{van2016deep,
+	abstract = {The popular Q-learning algorithm is known to overestimate action values under certain conditions. It was not previously known whether, in practice, such overestimations are common, whether they harm performance, and whether they can generally be prevented. In this paper, we answer all these questions affirmatively. In particular, we first show that the recent DQN algorithm, which combines Q-learning with a deep neural network, suffers from substantial overestimations in some games in the Atari 2600 domain. We then show that the idea behind the Double Q-learning algorithm, which was introduced in a tabular setting, can be generalized to work with large-scale function approximation. We propose a specific adaptation to the DQN algorithm and show that the resulting algorithm not only reduces the observed overestimations, as hypothesized, but that this also leads to much better performance on several games.},
+	author = {{Van Hasselt}, Hado and Guez, Arthur and Silver, David},
+	booktitle = {AAAI},
+	localfile = {h_hasselt_deep_reinforcement_learning_with_double_q-learning.pdf},
+	organization = {Phoenix, AZ},
+	pages = {5},
+	title = {Deep Reinforcement Learning with Double Q-Learning.},
+	volume = {2},
+	year = {2016}
+}
+
+@inproceedings{mnih2016asynchronous,
+	abstract = {We propose a conceptually simple and lightweight framework for deep reinforcement learning that uses asynchronous gradient descent for optimization of deep neural network controllers. We present asynchronous variants of four standard reinforcement learning algorithms and show that parallel actor-learners have a stabilizing effect on training allowing all four methods to successfully train neural network controllers. The best performing method, an asynchronous variant of actor-critic, surpasses the current state-of-the-art on the Atari domain while training for half the time on a single multi-core CPU instead of a GPU. Furthermore, we show that asynchronous actor-critic succeeds on a wide variety of continuous motor control problems as well as on a new task of navigating random 3D mazes using a visual input.},
+	author = {Mnih, Volodymyr and Badia, Adria Puigdomenech and Mirza, Mehdi and Graves, Alex and Lillicrap, Timothy and Harley, Tim and Silver, David and Kavukcuoglu, Koray},
+	booktitle = {International conference on machine learning},
+	localfile = {v_mnih_asynchronous_methods_for_deep_reinforcement_learning.pdf},
+	pages = {1928--1937},
+	title = {Asynchronous methods for deep reinforcement learning},
+	year = {2016}
+}
+
+@article{schmitt2018kickstarting,
+	abstract = {We present a method for using previously-trained {\lq}teacher{\rq} agents to kickstart the training of a new {\lq}student{\rq} agent. To this end, we leverage ideas from policy distillation (Rusu et al., 2015; Parisotto et al., 2015) and population based training (Jaderberg et al., 2017). Our method places no constraints on the architecture of the teacher or student agents, and it regulates itself to allow the students to surpass their teachers in performance. We show that, on a challenging and computationally-intensive multi-task benchmark (Beattie et al., 2016), kickstarted training improves the data efficiency of new agents, making it significantly easier to iterate on their design. We also show that the same kickstarting pipeline can allow a single student agent to leverage multiple {\lq}expert{\rq} teachers which specialise on individual tasks. In this setting kickstarting yields surprisingly large gains, with the kickstarted agent matching the performance of an agent trained from scratch in almost 10× fewer steps, and surpassing its final performance by 42\%. Kickstarting is conceptually simple and can easily be incorporated into reinforcement learning experiments.},
+	author = {Schmitt, Simon and Hudson, Jonathan J and Zidek, Augustin and Osindero, Simon and Doersch, Carl and Czarnecki, Wojciech M and Leibo, Joel Z and Kuttler, Heinrich and Zisserman, Andrew and Simonyan, Karen and others},
+	journal = {arXiv preprint arXiv:1803.03835},
+	localfile = {s_schmitt_kickstarting_deep_reinforcement_learning.pdf},
+	title = {Kickstarting Deep Reinforcement Learning},
+	year = {2018}
+}
+
+@inproceedings{abbeel2007application,
+	author = {Abbeel, Pieter and Coates, Adam and Quigley, Morgan and Ng, Andrew Y},
+	booktitle = {Advances in neural information processing systems},
+	keywords = {differential dynamic programming; DDP},
+	localfile = {p_abbeel_an_application_of_reinforcement_learning_to_aerobatic_helicopter_flight.pdf},
+	pages = {1--8},
+	title = {An application of reinforcement learning to aerobatic helicopter flight},
+	year = {2007}
+}
+
+@inproceedings{bagnell2001autonomous,
+	abstract = {Many control problems in the robotics field can be cast as partially observed Markovian decision problems (POMDPs), an optimal control formalism. Finding optimal solutions to such problems in general, however is known to be intractable. It has often been observed that in practice, simple structured controllers suffice for good sub-optimal control, and recent research in the artificial intelligence community has focused on policy search methods as techniques for finding sub-optimal controllers when such structured controllers do exist. Traditional model-based reinforcement learning algorithms make a certainty equivalence assumption on their learned models and calculate optimal policies for a maximum-likelihood Markovian model. We consider algorithms that evaluate and synthesize controllers under distributions of Markovian models. Previous work has demonstrated that algorithms that maximize mean reward with respect to model uncertainty leads to safer and more robust controllers. We consider briefly other performance criterion that emphasize robustness and exploration in the search for controllers, and note the relation with experiment design and active learning. To validate the power of the approach on a robotic application we demonstrate the presented learning control algorithm by flying an autonomous helicopter. We show that the controller learned is robust and delivers good performance in this real-world domain.},
+	author = {Bagnell, J Andrew and Schneider, Jeff G},
+	booktitle = {Proceedings 2001 ICRA. IEEE International Conference on Robotics and Automation (Cat. No. 01CH37164)},
+	organization = {IEEE},
+	pages = {1615--1620},
+	title = {Autonomous helicopter control using reinforcement learning policy search methods},
+	volume = {2},
+	year = {2001}
 }
 

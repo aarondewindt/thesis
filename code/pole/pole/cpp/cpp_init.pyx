@@ -231,7 +231,7 @@ cdef class TableRLAgent(Agent):
                   epsilon,
                   gamma,
                   alpha,
-                  n_r):
+                  n_bootstrapping):
         self.thisptr = new c_TableRLAgent(
             min_theta,
             max_theta,
@@ -245,7 +245,7 @@ cdef class TableRLAgent(Agent):
             epsilon,
             gamma,
             alpha,
-            n_r)
+            n_bootstrapping)
 
     cdef c_Agent* get_agent_ptr(self):
         return <c_Agent*>self.thisptr

@@ -38,8 +38,11 @@ public:
     bool run_step() override;
     void run_episode(long max_steps) override;
     void begin_episode() override;
+
     std::map<std::string, std::vector<double>*>* get_data() override;
     std::map<std::string, double> get_scalar_data() override;
+
+    inline void end_episode() override {}
 
     inline void set_environment(Pole *pole) override {
         this->pole = pole;

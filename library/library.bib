@@ -437,3 +437,23 @@
 	year = {2001}
 }
 
+@inproceedings{sherstov2005function,
+	abstract = {Reinforcement learning (RL) is a powerful abstraction of sequential decision making that has an established theoretical foundation and has proven effective in a variety of small, simulated domains. The success of RL on realworld problems with large, often continuous state and action spaces hinges on effective function approximation. Of the many function approximation schemes proposed, tile coding strikes an empirically successful balance among representational power, computational cost, and ease of use and has been widely adopted in recent RL work. This paper demonstrates that the performance of tile coding is quite sensitive to parameterization. We present detailed experiments that isolate the effects of parameter choices and provide guidance to their setting. We further illustrate that no single parameterization achieves the best performance throughout the learning curve, and contribute an automated technique for adjusting tile-coding parameters online. Our experimental findings confirm the superiority of adaptive parameterization to fixed settings. This work aims to automate the choice of approximation scheme not only on a problem basis but also throughout the learning process, eliminating the need for a substantial tuning effort.},
+	author = {Sherstov, Alexander A and Stone, Peter},
+	booktitle = {International Symposium on Abstraction, Reformulation, and Approximation},
+	keywords = {tile coding; tile},
+	organization = {Springer},
+	pages = {194--205},
+	title = {Function approximation via tile coding: Automating parameter choice},
+	year = {2005}
+}
+
+@book{whiteson2007adaptive,
+	abstract = {Reinforcement learning problems are commonly tackled by estimating the optimal value function. In many real-world problems, learning this value function requires a function approximator, which maps states to values via a parameterized function. In practice, the success of function approximators depends on the ability of the human designer to select an appropriate representation for the value function. This paper presents adaptive tile coding, a novel method that automates this design process for tile coding, a popular function approximator, by beginning with a simple representation with few tiles and refining it during learning by splitting existing tiles into smaller ones. In addition to automatically discovering effective representations, this approach provides a natural way to reduce the function approximator{\rq}s level of generalization over time. Empirical results in multiple domains compare two different criteria for deciding which tiles to split and verify that adaptive tile coding can automatically discover effective representations and that its speed of learning is competitive with the best fixed representations.},
+	author = {Whiteson, Shimon and Taylor, Matthew E and Stone, Peter and others},
+	keywords = {Tile Coding; Adaptive},
+	publisher = {Computer Science Department, University of Texas at Austin},
+	title = {Adaptive tile coding for value function approximation},
+	year = {2007}
+}
+

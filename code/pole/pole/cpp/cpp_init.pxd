@@ -89,7 +89,7 @@ cdef extern from "table_rl_agent.h":
             double epsilon,
             double gamma,
             double alpha,
-            int n_r)
+            int n_bootstrapping)
 
         double eps
         double gamma

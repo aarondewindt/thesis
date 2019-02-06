@@ -178,7 +178,7 @@ class TableRLAgent(Agent):
                   epsilon, 
                   gamma, 
                   alpha, 
-                  n_r):
+                  n_bootstrapping):
         ...
 
     def run_step(self):

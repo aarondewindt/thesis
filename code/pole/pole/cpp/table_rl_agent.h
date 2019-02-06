@@ -25,13 +25,14 @@ public:
         double epsilon,
         double gamma,
         double alpha,
-        int n_r);
+        int n_bootstrapping);
 
     ~TableRLAgent();
 
     bool run_step() override;
     void run_episode(long max_steps) override;
     void begin_episode() override;
+    void end_episode() override;
 
     inline void set_environment(Pole *pole) override {
         this->pole = pole;
@@ -57,9 +58,9 @@ public:
     double gamma;
     double alpha;
     double *rewards;
-    double *past_theta;
-    double *past_theta_dot;
-    double *past_torque;
+    int *past_theta_idx;
+    int *past_theta_dot_idx;
+    int *past_torque_idx;
     double ***q_table;
 
     // do not change.
@@ -72,7 +73,7 @@ public:
     int n_theta;
     int n_theta_dot;
     int n_torque;
-    int n_r;
+    int n_bootstrapping;
 private:
     Pole *pole;
     std::map<std::string, std::vector<double>*> data_map;
