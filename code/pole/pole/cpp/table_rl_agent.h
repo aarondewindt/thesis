@@ -62,6 +62,7 @@ public:
     int *past_theta_dot_idx;
     int *past_torque_idx;
     double ***q_table;
+    unsigned long **visit_count;
 
     // do not change.
     double min_theta;

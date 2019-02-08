@@ -51,6 +51,12 @@ TableRLAgent::TableRLAgent(
         }
     }
 
+    // Initialize visit count. Set all values to 0.
+    visit_count = new unsigned long*[q_table_size_theta];
+    for (int i = 0; i < q_table_size_theta; i++) {
+        visit_count[i] = new unsigned long[q_table_size_theta_dot]();
+    }
+
     // Initialize data map.
      data_map["time"] = new std::vector<double>();
      data_map["theta"] = new std::vector<double>();
@@ -118,6 +124,7 @@ bool TableRLAgent::run_step() {
         past_theta_idx[0] = theta_idx;
         past_theta_dot_idx[0] = theta_dot_idx;
         past_torque_idx[0] = torque_idx;
+        visit_count[theta_idx][theta_dot_idx] += 1;
     }
 
     // Perform action
@@ -166,9 +173,10 @@ double TableRLAgent::choose_ideal_torque(double theta, double theta_dot) {
     int theta_idx, theta_dot_idx, _;
     q_table_prelookup(theta, theta_dot, 0.0, theta_idx, theta_dot_idx, _);
 
-    int best_torque_idx = 0;
-    double best_value = q_table[theta_idx][theta_dot_idx][0];
-    for (int i = 1; i < n_torque; i++) {
+    int best_torque_idx = irand(0, n_torque - 1);
+    double best_value = q_table[theta_idx][theta_dot_idx][best_torque_idx];
+    for (int i = 0; i < n_torque; i++) {
+        if (i == best_torque_idx) continue;
         if (q_table[theta_idx][theta_dot_idx][i] > best_value) {
             best_value = q_table[theta_idx][theta_dot_idx][i];
             best_torque_idx = i;
@@ -207,7 +215,7 @@ void TableRLAgent::q_table_prelookup(double theta, double theta_dot, double torq
     if (theta > max_theta) theta = max_theta;
     if (theta < min_theta) theta = min_theta;
     if (theta_dot > max_theta_dot) theta_dot = max_theta_dot;
-    if (theta_dot < min_theta_dot) theta_dot = min_theta;
+    if (theta_dot < min_theta_dot) theta_dot = min_theta_dot;
     if (torque > max_torque) torque = max_torque;
     if (torque < min_torque) torque = min_torque;
 

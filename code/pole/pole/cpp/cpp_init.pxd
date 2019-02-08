@@ -94,6 +94,17 @@ cdef extern from "table_rl_agent.h":
         double eps
         double gamma
         double alpha
+        unsigned long **visit_count
+        double min_theta;
+        double max_theta;
+        double min_theta_dot;
+        double max_theta_dot;
+        double min_torque;
+        double max_torque;
+        int n_theta;
+        int n_theta_dot;
+        int n_torque;
+        int n_bootstrapping;
 
         bool run_step()
         void run_episode(long max_steps)

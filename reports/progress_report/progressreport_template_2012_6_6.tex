@@ -14,14 +14,14 @@
 	%%% You should edit this part appropriately
 	\newcommand{\Title}{Progress Report A. de Windt}
 	\newcommand{\Author}{A. de Windt}
-	\newcommand{\Date}{21-01-2019}
+	\newcommand{\Date}{07-02-2019}
 	\newcommand{\Subject}{Policy Gradient Reinforcement Learning for quadrotor control}
 	\newcommand{\Mentors}{Dr.ir. Erik-Jan van Kampen}
 	
 	\newcommand{\Term}{09/2018 - 07/2019}
 	\newcommand{\Mail}{A.deWindt@student.tudelft.nl}
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	
+	\setlength\parindent{0pt}
 	\begin{document}
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\markright{\footnotesize\textnormal{\textbf{\Title}}~~~\Author}
@@ -56,33 +56,84 @@
 
 	\subsection*{Short version}
 	\begin{itemize}
-		\item Asside from reading a few papers, I didn't do much progress.
+		\item Pole example with tabular Q-learning working.
+		\item n-step bootstrapping implemented, but it's seems to make things worse.
+		\item Very rough outline of literature study report.
 	\end{itemize}
 	
 	\section*{Plans for next 2 weeks}
 	% Same as last week, since I havn't been able to progress.
 	\begin{enumerate}
-	\item Finish inverted pendulum example.
-	\item Try out modifications to the example. (Use Neural Network, etc)
-	\item Read through literature again and filter out the most relevant and summize them. 
-	\item Start writing report. (Explain RL examples, literature summaries)
+		\item Implement RL agent with value function approximation (eg. tile-coding or fourier)
+		\item Focus more on policy gradient methods. I didn't understand these initially, so I 
+			  have not looked much into this.
+		\item Write the literature study report. 
 	\end{enumerate}
 	
-	
+	\newpage
 	
 	\begin{appendix}
-	% 	\section{Simulation results}
-	% \begin{figure}[h]
-	% 	\caption{Sum of rewards at each episode.}
-	% 	\centering
-	% 	\includegraphics[width=0.9\textwidth]{figures/r_sum}
-	% \end{figure}
+		\section{Simulation results}
+		I managed to get a tabular Q-learning RL agent to control the pole. The results shown below are for an agent with 1681 different states (41 $\theta$ and 41 $\dot{\theta}$) and 41 different actions. So 68921 different state-action combinations. It's possible to get the agent working just fine with considerably less state-value combinations and simulations. These plots just look nicer.\\
 
-	% \begin{figure}[h]
-	% 	\caption{First episode.}
-	% 	\centering
-	% 	\includegraphics[width=0.9\textwidth]{figures/first_episode}
-	% \end{figure}
+		To train the agent I first ran 40000, 1 second simulations with $\epsilon=0.7$, $\gamma=0.7$ and constant $\alpha=0.9$. On the second batch of 5000 cases I increased $\epsilon$ to $0.9$. On the last batch I increased $\epsilon$ to $1.0$ and decreased $\alpha$ to $0.0$ in order to see the ideal policy of the agent without any learning.\\
+
+		Figure \ref{fig:ideal} shows the ideal action for each state. As it can be seen the agent is showing the expected behaviour. However it doesn't seem like it's learning properly when $\dot{\theta}\approx0$. 
+		\begin{itemize}
+			\item It applies a positive torque when $\theta$ is negative and vice-versa.
+			\item It chooses a lower torque if the pole is already moving towards the center and increases the torque if it's moving away.
+		\end{itemize}
+
+		% The total reward sum and learning rate are low for the first few iterations as shown in Figures \ref{fig:learn} and \ref{fig:reward}. But as the agent learns more it's able to stay alive for longer, so it's able to reach more states, thus increasing the learning rate and reward sum.
+
+		% At some point the learning rate peaks and decreases indicating that it does not have much more to learn. Both the total reward sum and learning rate settle to a "constant" value after about 15000 iterations.
+
+		% When the second batch batch starts with $\epsilon=0.9$ the reward increases and the learning rate decreases.
+
+		% When running without any learning ($\epsilon=1$ and $\alpha=0$) the average reward sum goes to around 70. The theoretical maximum it can reach is 80.
+
+		\begin{figure}[ht]			
+			\centering
+			\includegraphics[width=1.2\textwidth]{figures/ideal_action}			
+			\caption{Ideal action at each state.}
+			\label{fig:ideal}
+		\end{figure}
+		\begin{figure}[ht]		
+			\centering
+			\includegraphics[width=0.7\textwidth]{figures/learn}
+			\caption{The sum of the changes made to the value table on each episode.}
+			\label{fig:learn}
+		\end{figure}
+		\begin{figure}[ht]		
+			\centering
+			\includegraphics[width=0.7\textwidth]{figures/reward}
+			\caption{The total reward sum for each episode.}
+			\label{fig:reward}
+		\end{figure}
+		\begin{figure}[ht]		
+			\centering
+			\includegraphics[width=0.7\textwidth]{figures/eps07_0}
+			\caption{Simulation result of the first case ($\epsilon=0.7$, $\gamma=0.7$ and $\alpha=0.9$). }
+			\label{fig:reward}
+		\end{figure}
+		\begin{figure}[ht]		
+			\centering
+			\includegraphics[width=0.7\textwidth]{figures/eps07_1}
+			\caption{Simulation result of the last case of the first batch ($\epsilon=0.7$, $\gamma=0.7$ and $\alpha=0.9$). }
+			\label{fig:reward}
+		\end{figure}
+		\begin{figure}[ht]		
+			\centering
+			\includegraphics[width=0.7\textwidth]{figures/eps09}
+			\caption{Simulation result of the last case of the second batch ($\epsilon=0.9$, $\gamma=0.7$ and $\alpha=0.9$). }
+			\label{fig:reward}
+		\end{figure}
+		\begin{figure}[ht]		
+			\centering
+			\includegraphics[width=0.7\textwidth]{figures/eps10}
+			\caption{Simulation result of the ideal policy without any learning ($\epsilon=1.0$, $\gamma=0.7$ and $\alpha=0$). }
+			\label{fig:reward}
+		\end{figure}
 	
 	% \begin{figure}[h]
 	% 	\caption{Last episode.}

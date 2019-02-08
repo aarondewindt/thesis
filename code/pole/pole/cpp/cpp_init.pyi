@@ -181,6 +181,9 @@ class TableRLAgent(Agent):
                   n_bootstrapping):
         ...
 
+    def foo(min_x,  max_x,  n_x,  idx):
+        ...
+
     def run_step(self):
         ...
 
@@ -224,5 +227,13 @@ class TableRLAgent(Agent):
 
     @alpha.setter
     def alpha(self,  value):
+        ...
+
+    @property
+    def ideal_torque(self):
+        ...
+
+    @property
+    def visit_count(self):
         ...
 

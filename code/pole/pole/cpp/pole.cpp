@@ -5,7 +5,7 @@
 #include "pole.h"
 #include <cmath>
 
-#define MAX_THETA 0.523598776  // 30 degrees
+#define MAX_THETA 3.141592653589793 // 0.523598776  // 30 degrees
 
 const double pi = 3.141592653589793;
 const double pi2 = 6.283185307179586;
@@ -34,11 +34,14 @@ void Pole::act(double torque, double &reward, bool &is_terminal) {
 
     theta = fmod(fmod(theta + pi, pi2) + pi2, pi2) - pi;
 
-    if (fabs(theta) > MAX_THETA) {
-        reward = -1.0;
-        is_terminal = true;
-    } else {
-        reward = pow((MAX_THETA - fabs(theta)) / MAX_THETA, 16) - 0.2;
-        is_terminal = false;
-    }
+    reward = pow((MAX_THETA - fabs(theta)) / MAX_THETA, 4) - 0.2;
+    is_terminal = false;
+
+//    if (fabs(theta) > MAX_THETA) {
+//        reward = -1.0;
+//        is_terminal = true;
+//    } else {
+//        reward = pow((MAX_THETA - fabs(theta)) / MAX_THETA, 16) - 0.2;
+//        is_terminal = false;
+//    }
 }

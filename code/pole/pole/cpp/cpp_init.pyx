@@ -1,6 +1,8 @@
 from libcpp cimport bool
 from cython.operator import dereference, postincrement
-from xarray import Dataset
+import xarray as xr
+from itertools import product
+import numpy as np
 
 
 def hello_cython():
@@ -127,12 +129,12 @@ cdef data_map_to_dataset(dvec_smap_ptr data_map, bool delete_data):
 
     data_dict = dict(data_generator())
     if "time" in data_dict:
-        return Dataset(
+        return xr.Dataset(
             data_vars={key: (("time",), vector) for key, vector in data_dict.items() if key != "time"},
             coords={"time": data_dict["time"]}
         )
     else:
-        return Dataset(data_vars={key: (("episode",), vector) for key, vector in data_dict.items()})
+        return xr.Dataset(data_vars={key: (("episode",), vector) for key, vector in data_dict.items()})
 
 cdef class PolyRLAgent(Agent):
     cdef c_PolyRLAgent *thisptr
@@ -217,6 +219,9 @@ cdef class PolyRLAgent(Agent):
 
 cdef class TableRLAgent(Agent):
     cdef c_TableRLAgent *thisptr
+    cdef list thetas
+    cdef list theta_dots
+    cdef list torques
 
     def __cinit__(self,
                   min_theta,
@@ -246,6 +251,14 @@ cdef class TableRLAgent(Agent):
             gamma,
             alpha,
             n_bootstrapping)
+
+        # Calculates the value for a specific index.
+        def foo(min_x, max_x, n_x, idx):
+            return idx * (max_x - min_x) / (n_x - 1) + min_x
+
+        self.thetas = [foo(min_theta, max_theta, n_theta, i) for i in range(n_theta)]
+        self.theta_dots = [foo(min_theta_dot, max_theta_dot, n_theta_dot, i) for i in range(n_theta_dot)]
+        self.torques = [foo(min_torque, max_torque, n_torque, i) for i in range(n_torque)]
 
     cdef c_Agent* get_agent_ptr(self):
         return <c_Agent*>self.thisptr
@@ -292,3 +305,34 @@ cdef class TableRLAgent(Agent):
     @alpha.setter
     def alpha(self, value):
         self.thisptr.alpha = value
+
+    @property
+    def ideal_torque(self):
+        ideal_torque = np.ones((len(self.thetas), len(self.theta_dots))) * np.nan
+        for (idx_theta, theta), (idx_theta_dot, theta_dot) in product(enumerate(self.thetas), enumerate(self.theta_dots)):
+            ideal_torque[idx_theta, idx_theta_dot] = self.choose_ideal_torque(theta, theta_dot)
+
+        return xr.DataArray(
+            ideal_torque,
+            coords={
+                'theta': self.thetas,
+                'theta_dot': self.theta_dots
+            },
+            dims=['theta', 'theta_dot']
+        )
+        
+
+    @property
+    def visit_count(self):
+        visit_count = np.ones((len(self.thetas), len(self.theta_dots)))
+        for idx_theta, idx_theta_dot in product(range(len(self.thetas)), range(len(self.theta_dots))):
+            visit_count[idx_theta, idx_theta_dot] = self.thisptr.visit_count[idx_theta][idx_theta_dot]
+        return xr.DataArray(
+            visit_count,
+            coords={
+                'theta': self.thetas,
+                'theta_dot': self.theta_dots
+            },
+            dims=['theta', 'theta_dot']
+        )
+        
