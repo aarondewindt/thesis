@@ -266,7 +266,7 @@ cdef class TableRLAgent(Agent):
     def run_step(self):
         return self.thisptr.run_step()
 
-    def run_episode(self, max_steps):
+    def run_episode(self, int max_steps):
         self.thisptr.run_episode(max_steps)
 
     def begin_episode(self):

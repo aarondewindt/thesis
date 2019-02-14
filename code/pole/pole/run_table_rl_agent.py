@@ -13,13 +13,13 @@ pole.dt = 0.01
 # # Configure RL agent
 min_theta = radians(-180)
 max_theta = radians(180)
-min_theta_dot = -20
-max_theta_dot = 20
-min_torque = -1
-max_torque = 1
+min_theta_dot = -5
+max_theta_dot = 5
+min_torque = -0.18
+max_torque = 0.18
 n_theta = 81
-n_theta_dot = 21
-n_torque = 11
+n_theta_dot = 41
+n_torque = 5
 agent = TableRLAgent(
     min_theta=min_theta,
     max_theta=max_theta,
@@ -42,10 +42,10 @@ agent.set_environment(pole)
 # Create season and choose inputs.
 season = Season(agent)
 season_inputs = {
-    "eps":             [0.7, 0.8, 0.9, 1.0],
-    "gamma":           [0.7, 0.7,  0.7, 0.7],
-    "alpha":           [1.0, 1.0,  1, 0],
-    "n_episodes":      [10000, 5000, 5000, 1000]
+    "eps":             [0.7, 1.0],
+    "gamma":           [0.9, 0.9],
+    "alpha":           [1.0, 0],
+    "n_episodes":      [100000, 2]
 }
 
 # Loop through
@@ -59,7 +59,7 @@ for i in range(len(season_inputs["eps"])):
 
     # Run season
     t0 = perf_counter()
-    season.run(season_inputs["n_episodes"][i], 1, 200)
+    season.run(season_inputs["n_episodes"][i], 1, 10000)
     print("dt", perf_counter() - t0)
 
     # Plot results

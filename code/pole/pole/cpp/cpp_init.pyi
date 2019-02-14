@@ -187,7 +187,7 @@ class TableRLAgent(Agent):
     def run_step(self):
         ...
 
-    def run_episode(self,  max_steps):
+    def run_episode(self, max_steps):
         ...
 
     def begin_episode(self):

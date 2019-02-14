@@ -1,1 +1,2 @@
-add_executable(eigen_exp eigen_exp.cpp)
+add_executable(spike_eigen_exp eigen_exp.cpp)
+add_executable(spike_conditional_template conditional_template.cpp)

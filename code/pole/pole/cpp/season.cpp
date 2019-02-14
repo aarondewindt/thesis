@@ -21,7 +21,7 @@ void Season::run(long n_episodes, long n_record, long max_steps) {
 
         // Reset pole
         pole->theta = frand(-3.14, 3.14);  // 0.0872
-        pole->theta_dot = frand(-15, 15);
+        pole->theta_dot = frand(-5, 5);
         pole->time = 0;
 
 //        std::printf("%f %f\n", pole->theta, pole->theta_dot);
