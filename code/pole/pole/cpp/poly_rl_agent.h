@@ -1,6 +1,9 @@
 //
 // Created by elvieto on 25-11-18.
 //
+// Note: This code will not be used anymore, but it I keeping it for now
+//       as reference for some stuff I did here.
+//
 
 #ifndef POLE_POLY_RL_AGENT_H
 #define POLE_POLY_RL_AGENT_H

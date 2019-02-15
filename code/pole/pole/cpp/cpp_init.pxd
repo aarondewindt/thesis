@@ -49,15 +49,6 @@ cdef extern from "poly_rl_agent.h":
             double min_action,
             double max_action,
             double action_variance)
-        
-        # c_PolyRLAgent(
-        #     double eps,
-        #     double gamma,
-        #     double alpha,
-        #     double min_action,
-        #     double max_action,
-        #     double action_variance,
-        #     dvec_ptr initial_weights)
 
         double eps
         double gamma
@@ -114,3 +105,33 @@ cdef extern from "table_rl_agent.h":
         map[string, dvec_ptr]* get_data()
         double get_value(double theta, double theta_dot, double torque)
         double choose_ideal_torque(double theta, double theta_dot)
+
+
+cdef extern from "tile_coding_agent.h":
+    cdef cppclass c_TileCodingAgent "TileCodingAgent":
+        c_TileCodingAgent(
+            vector[double] center,
+            vector[double] tile_size,
+            int tilings,
+            double default_weight,
+            bool random_offsets,
+            double min_action,
+            double max_action,
+            int n_actions,
+            double epsilon,
+            double gamma,
+            double alpha)
+
+        double epsilon;
+        double gamma;
+        double alpha;
+        double *actions;
+        int n_actions;
+        int tilings;
+
+        bool run_step()
+        void run_episode(long max_steps)
+        void begin_episode()
+        void set_environment(c_Pole *pole)
+        c_Pole* set_environment()
+        map[string, dvec_ptr]* get_data()

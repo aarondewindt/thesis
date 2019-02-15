@@ -336,3 +336,67 @@ cdef class TableRLAgent(Agent):
             dims=['theta', 'theta_dot']
         )
         
+cdef class TileCodingAgent(Agent):
+    cdef c_TileCodingAgent *thisptr
+    cdef list actions
+
+    def __cinit__(
+                self, 
+                center,
+                tile_size,
+                tilings,
+                default_weight,
+                random_offsets,
+                min_action,
+                max_action,
+                n_actions,
+                epsilon,
+                gamma,
+                alpha) :
+
+        self.thisptr = new c_TileCodingAgent(
+            center, tile_size, tilings, default_weight, random_offsets,
+            min_action, max_action, n_actions, epsilon, gamma, alpha)
+
+        self.actions = [self.thisptr.actions[i] for i in range(n_actions)]
+
+    def run_step(self):
+        return self.thisptr.run_step()
+
+    def run_episode(self, int max_steps):
+        self.thisptr.run_episode(max_steps)
+
+    def begin_episode(self):
+        self.thisptr.begin_episode()
+
+    def set_environment(self, Pole pole: Pole):
+        self.thisptr.set_environment(pole.thisptr)
+
+    def get_data(self) -> dict:
+        data = self.thisptr.get_data()
+        return data_map_to_dataset(data, True)
+
+    @property
+    def epsilon(self):
+        return self.thisptr.epsilon
+    @epsilon.setter
+    def epsilon(self, value):
+        self.thisptr.epsilon = value
+
+    @property
+    def gamma(self):
+        return self.thisptr.gamma
+    @gamma.setter
+    def gamma(self, value):
+        self.thisptr.gamma = value
+
+    @property
+    def alpha(self):
+        return self.thisptr.alpha
+    @alpha.setter
+    def alpha(self, value):
+        self.thisptr.alpha = value
+
+    @property
+    def tilings(self):
+        return self.thisptr.tilings

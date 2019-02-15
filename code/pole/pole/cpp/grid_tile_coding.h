@@ -13,6 +13,7 @@
 #include <cmath>
 #include "rand.h"
 #include <inttypes.h>
+#include <vector>
 
 
 template <int _rank, class T = uint64_t>
@@ -35,6 +36,7 @@ public:
         } elements;
     };
 
+    // Holds the value and the keys of the tiles holding the value.
     struct ValueTileKeys {
         double value;
         uint64_t *tile_keys;

@@ -7,7 +7,7 @@ add_library(libpole
         pid_agent.cpp pid_agent.h
         poly_rl_agent.cpp poly_rl_agent.h
         table_rl_agent.cpp table_rl_agent.h
-        grid_tile_coding.cpp grid_tile_coding.h
+        grid_tile_coding.h
         tile_coding_agent.cpp tile_coding_agent.h
         )
 

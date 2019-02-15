@@ -1,6 +1,9 @@
 //
 // Created by elvieto on 25-11-18.
 //
+// Note: This code will not be used anymore, but it I keeping it for now
+//       as reference for some stuff I did here.
+//
 
 #include "poly_rl_agent.h"
 #include "rand.h"

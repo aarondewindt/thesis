@@ -8,7 +8,6 @@
 #include "rand.h"
 #include <printf.h>
 
-
 #define GET_IDX(min, interval, value) (int)(std::round(value / interval) - (min / interval))
 #define GET_VALUE(min, max, n, idx) idx * ((max - min) / (n - 1)) + min
 
@@ -58,13 +57,13 @@ TableRLAgent::TableRLAgent(
     }
 
     // Initialize data map.
-     data_map["time"] = new std::vector<double>();
-     data_map["theta"] = new std::vector<double>();
-     data_map["theta_dot"] = new std::vector<double>();
-     data_map["error"] = new std::vector<double>();
-     data_map["torque"] = new std::vector<double>();
-     data_map["reward"] = new std::vector<double>();
-     data_map["learn_rate"] = new std::vector<double>();
+    data_map["time"] = new std::vector<double>();
+    data_map["theta"] = new std::vector<double>();
+    data_map["theta_dot"] = new std::vector<double>();
+    data_map["error"] = new std::vector<double>();
+    data_map["torque"] = new std::vector<double>();
+    data_map["reward"] = new std::vector<double>();
+    data_map["learn_rate"] = new std::vector<double>();
 
     // Initialize past rewards and states.
     rewards = new double[n_bootstrapping]();
