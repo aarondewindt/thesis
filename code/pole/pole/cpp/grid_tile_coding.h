@@ -11,32 +11,37 @@
 #include <printf.h>
 #include <limits>
 #include <cmath>
+#include "rand.h"
+#include <inttypes.h>
 
 
-template <int _rank, int _tilings, class T = uint64_t>
+template <int _rank, class T = uint64_t>
 class GridTileCoding {
 public:
     /// 1D array with the length of rank. Aka the number of input values.
     typedef Eigen::Array<double, 1, _rank> XArray;
 
-    /// 1D array with the length being the number of tilings.
-    typedef Eigen::Array<double, 1, _tilings> TArray;
-
-    // The keys we will use to identify each tile is a uint64_t, where the first
-    // 7 bytes are used to store the indices in x_c and the last byte to store the
+    // The keys we will use to identify each tile are of type uint64_t, where the first
+    // 6 bytes are used to store the indices in x_c and the last two bytes to store the
     // tiling index.
     // This union is used to build this key.
+    typedef uint16_t TilingIdxType;
+    typedef int8_t XIdxType;
     union TileKeyUnion{
         uint64_t tile_key;
         struct {
-            int8_t x_idx[7];
-            uint8_t tiling_idx;
+            XIdxType x_idx[6];
+            TilingIdxType tiling_idx;
         } elements;
     };
 
     struct ValueTileKeys {
         double value;
-        uint64_t tile_keys[_tilings];
+        uint64_t *tile_keys;
+
+        ~ValueTileKeys() {
+            delete tile_keys;
+        }
     };
 
     struct TileInfo {
@@ -50,55 +55,67 @@ public:
     GridTileCoding(
             const double *center_coordinate,
             const double *tile_size,
-            double default_weight) : default_weight(default_weight)
+            int tilings,
+            double default_weight,
+            bool random_offsets) : default_weight(default_weight), tilings(tilings)
     {
         // Copy the data to the local arrays.
-        auto center_coordinate_data = this->center_coordinate.data();
-        auto tile_size_data = this->tile_size.data();
+        XArray cc;
         for (int i = 0; i < _rank; i++) {
-            center_coordinate_data[i] = center_coordinate[i];
-            tile_size_data[i] = tile_size[i];
+            cc(0, i) = center_coordinate[i];
+            this->tile_size(0, i) = tile_size[i];
         }
-        tiling_offset = this->tile_size / tilings;
 
-                     // Center coordinate of the first tiling.
-        min_x = this->center_coordinate
+        // Choose the center coordinates for each tiling.
+        // The first tiling will be placed at the center, the rest will be around it.
+        // We will also look vor the min, max area covered by the tilings.
+        center_coordinates = new XArray[tilings];
+        center_coordinates[0] = cc;
+        min_x = cc;
+        max_x = cc;
+        for (int i = 1; i < tilings; i++) {
+            if (random_offsets){
+                // Random offsets.
+                center_coordinates[i] = cc + this->tile_size * frand(-0.5, 0.5);
+            }else{
+                // Uniform offsets.
+                center_coordinates[i] = cc + (this->tile_size / tilings) * i;
+            }
 
-                     // Add offset of last tiling to get the center coordinate of the last tiling.
-                     + (this->tile_size - tiling_offset)
 
-                     // Get the center coordinates of the lowest tile in the tiling
-                     + (this->tile_size * std::numeric_limits<int8_t>::min())
+            // The minimum coordinate will be given by the most positive coordinates.
+            // And the other way around for the max coordinate.
+            min_x = min_x.cwiseMax(center_coordinates[i]);
+            max_x + max_x.cwiseMin(center_coordinates[i]);
+        }
 
-                     // Remove half the tile size to get the lower corner of the tile.
-                     // This is the lowest possible value covered by all tilings.
-                     - (this->tile_size / 2);
+        // Now we add/substract the total tiling size to get the extremes of the area
+        // covered by the tilings.
+        min_x += std::numeric_limits<XIdxType>::min() * this->tile_size - (this->tile_size / 2);
+        max_x += std::numeric_limits<XIdxType>::max() * this->tile_size + (this->tile_size / 2);
+    }
 
-                     // Center coordinate of the first tiling
-        max_x = this->center_coordinate
-
-                     // Center coordinate of the last tile of the first tiling
-                     + (this->tile_size * std::numeric_limits<int8_t>::max())
-
-                     // Add half a tile size to get the upper corner.
-                     // This is the max value.
-                     + (this->tile_size / 2);
-
+    ~GridTileCoding() {
+        delete center_coordinates;
+        for (auto const &item : tiles) {
+            delete item.second;
+        }
     }
 
     /// Returns a ValueTileKey struct containing the value at x and the keys of the
     /// triggered tiles.
     /// \param x State(-action pair)
     /// \return Value
-    inline ValueTileKeys get_value_and_tile_keys(XArray x) {
+    inline ValueTileKeys get_value_and_tile_keys(XArray &x) {
         // Create new value tile key struct.
         ValueTileKeys value_tile_keys;
+        value_tile_keys.tile_keys = new uint64_t[tilings];
         value_tile_keys.value = 0;
 
         // Loop through triggered keys and calculate the value and store tile keys.
-        for (uint8_t i = 0; i < tilings; i++) {
+        for (TilingIdxType i = 0; i < tilings; i++) {
             value_tile_keys.tile_keys[i] = get_tile_key(x, i);
-            value_tile_keys.value += get_tile_info(value_tile_keys.tile_keys[i]).weight;
+            value_tile_keys.value += get_tile_info(value_tile_keys.tile_keys[i])->weight;
         }
 
         return value_tile_keys;
@@ -108,49 +125,37 @@ public:
     ///
     /// \param value
     /// \param value_tile_key
-    inline void update_weights(double value, const ValueTileKeys value_tile_key) {
+    inline void update_weights(double value, ValueTileKeys &value_tile_key) {
         update_weights(value, value_tile_key.tile_keys);
     }
 
     /// Update the tiles at x by the given value.
-    inline void update_weights(double value, XArray x) {
-        for (uint8_t i = 0; i < tilings; i++) {
-            TileInfo tile_info = tiles[get_tile_key(x, i)];
-            tile_info.weight += value;
-            tile_info.visit_count += 1;
+    inline void update_weights(double value, XArray &x) {
+        for (TilingIdxType i = 0; i < tilings; i++) {
+            TileInfo *tile_info = get_tile_info(get_tile_key(x, i));
+            tile_info->weight += value;
+            tile_info->visit_count += 1;
         }
     }
 
-    /// Update the triggered tiles by the given value.
+    /// Update the weights of the triggered tiles with the given value. The
+    /// value added to each tile will be divided with the number of tilings.
     /// \param value
     /// \param tile_keys
     inline void update_weights(double value, const uint64_t *tile_keys) {
+        value /= tilings;
         for (int i = 0; i < tilings; i++) {
-            TileInfo tile_info = tiles[tile_keys[i]];
-            tile_info.weight += value;
-            tile_info.visit_count += 1;
+            TileInfo *tile_info = get_tile_info(tile_keys[i]);
+            tile_info->weight += value;
+            tile_info->visit_count += 1;
         }
-    }
-
-    /// Get the weights of the triggered tiles at x.
-    /// \param x
-    /// \return
-    TArray get_weights(XArray x) {
-        static TArray weights;
-
-        // Loop through each tiling and get the weight if the target tile on that tiling.
-        for (uint8_t i = 0; i < tilings; i++) {
-            weights(0, i) = get_tile_info(get_tile_key(x, i)).weight;
-        }
-
-        return weights;
     }
 
     /// Get the tile key for the tile on tiling_idx triggered at x.
     /// \param x Input state.
     /// \param tiling_idx
     /// \return
-    inline uint64_t get_tile_key(XArray x, uint8_t tiling_idx) {
+    inline uint64_t get_tile_key(XArray &x, TilingIdxType tiling_idx) {
         TileKeyUnion tile_key_union;
 
         // Set tiling index
@@ -163,46 +168,44 @@ public:
         // Calculated the "indices" of the triggered tile.
         // These are still doubles and need to rounded to the nearest integer,
         // but we do that later when inserting them into the union.
-        XArray x_idx = ((x - (center_coordinate + (tiling_idx * tiling_offset))) / tile_size);
+        XArray x_idx = ((x - (center_coordinates[tiling_idx])) / tile_size);
 
         // Copy the indices into the union
         for (int i = 0; i < rank; i++) {
-            tile_key_union.elements.x_idx[i] = static_cast<int8_t>(std::lround(x_idx(0, i)));
+            tile_key_union.elements.x_idx[i] = static_cast<XIdxType>(std::lround(x_idx(0, i)));
+        }
+
+        // Set the remaining indices to 0. There are in total 6 indices in the key.
+        for (int i = rank; i < 6; i++) {
+            tile_key_union.elements.x_idx[i] = 0;
         }
 
         return tile_key_union.tile_key;
     }
 
-    inline TileInfo get_tile_info(uint64_t tile_key) {
+    inline TileInfo* get_tile_info(uint64_t tile_key) {
         auto item = tiles.find(tile_key);
         if (item != tiles.end()) {
+            printf("found 0x%016" PRIx64 "\n", tile_key);
             return item->second;
         } else {
-            TileInfo tile_info = TileInfo({default_weight, 0});
+            printf("nound 0x%016" PRIx64 "\n", tile_key);
+            auto *tile_info = new TileInfo({default_weight, 0});
             tiles[tile_key] = tile_info;
             return tile_info;
         }
     }
 
-//    /// Get the weight for a tile by it's tile_key. If the tile has not been
-//    /// accessed before create it;s entry in the tiles hash map and set it's value
-//    /// to default_value.
-//    ///
-//    /// \param tile_key Tile key of the target tile.
-//    /// \return Weight of the tile
-//    inline double get_weight(uint64_t tile_key) {
-//        return get_tile_info(tile_key).weight;
-//    }
-
-    std::unordered_map<uint64_t, TileInfo> tiles;
-    XArray center_coordinate;
+    XArray *center_coordinates;
     XArray tile_size;
-    XArray tiling_offset;
     XArray min_x;
     XArray max_x;
     int rank = _rank;
-    int tilings = _tilings;
+    int tilings;
     double default_weight;
+
+private:
+    std::unordered_map<uint64_t, TileInfo*> tiles;
 };
 
 

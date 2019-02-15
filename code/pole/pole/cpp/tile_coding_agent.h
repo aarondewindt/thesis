@@ -6,19 +6,19 @@
 #define POLE_TILE_CODING_AGENT_H
 
 #include "grid_tile_coding.h"
+#include "agent.h"
 
 
-//template <int tilings>
-//class TileCodingAgent {
-//public:
-//    typedef GridTileCoding<2, tilings>
-//
-//    TileCodingAgent();
-//
-//
-//    GridTileCoding tiles;
-//
-//};
+class TileCodingAgent : Agent {
+public:
+    typedef GridTileCoding<2>::XArray XArray;
+
+    TileCodingAgent();
+
+
+    GridTileCoding<2> tiles;
+
+};
 
 
 #endif //POLE_TILE_CODING_AGENT_H

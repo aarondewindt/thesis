@@ -2,23 +2,59 @@
 #include "pole.h"
 #include "grid_tile_coding.h"
 #include <printf.h>
+#include <inttypes.h>
+
+typedef GridTileCoding<4>::XArray XArray;
+typedef GridTileCoding<4>::ValueTileKeys ValueTileKeys;
+typedef GridTileCoding<4>::TileKeyUnion TileKeyUnion;
+
+int tilings = 2;
+
+
+void print_value_tile_keys(ValueTileKeys &value_tiles) {
+    printf("value: %f\n", value_tiles.value);
+    TileKeyUnion *tile_keys = (TileKeyUnion*)value_tiles.tile_keys;
+    for (int i = 0; i < tilings; i++) {
+        printf("0x%016" PRIx64 " - %hu - ", tile_keys[i].tile_key, tile_keys[i].elements.tiling_idx);
+        for (int j = 0; j < 4; j++) {
+            printf("%i ", tile_keys[i].elements.x_idx[j]);
+        }
+        printf("\n");
+    }
+}
 
 int main() {
     double center_coordinate[4] = {0, 0, 0, 0};
-    double tile_size[4] = {3, 6, 9, 12};
+    double tile_size[4] = {1, 1, 1, 1};
 
-    typedef GridTileCoding<4, 3>::XArray ValueArray;
-    typedef GridTileCoding<4, 3>::XArray GridArray;
+    GridTileCoding<4> gtc(center_coordinate, tile_size, tilings, 0.0, false);
 
-    GridTileCoding<4, 3> gtc(center_coordinate, tile_size, 0.0);
+    printf("Center coordinates.\n");
+    for (int i = 0; i < tilings; i++) {
+        std::cout << gtc.center_coordinates[i] << std::endl;
+    }
+    std::cout << "\n";
 
-    std::cout << gtc.center_coordinate << std::endl;
-    std::cout << gtc.tile_size << std::endl;
-    std::cout << gtc.tiling_offset << std::endl << std::endl;
+    std::cout << "min: " << gtc.min_x << "\nmax: " << gtc.max_x << std::endl;
 
 
-    ValueArray values = {4.6, 0.5, -0.5, 7};
-    gtc.get_weights(values);
-
+    {
+        XArray values = {0.25, 0.25, .0, 0};
+        ValueTileKeys value_tiles = gtc.get_value_and_tile_keys(values);
+        print_value_tile_keys(value_tiles);
+        gtc.update_weights(5, value_tiles);
+    }
+    {
+        XArray values = {0, 0, .0, 0};
+        ValueTileKeys value_tiles = gtc.get_value_and_tile_keys(values);
+        print_value_tile_keys(value_tiles);
+//        gtc.update_weights(-6, value_tiles);
+    }
+    {
+        XArray values = {0.25, 0.25, .0, 0};
+        ValueTileKeys value_tiles = gtc.get_value_and_tile_keys(values);
+        print_value_tile_keys(value_tiles);
+//        gtc.update_weights(5, value_tiles);
+    }
     return 0;
 }
