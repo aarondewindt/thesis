@@ -41,8 +41,16 @@ public:
         double value;
         uint64_t *tile_keys;
 
+        ValueTileKeys(double value, int tilings) {
+            this->value = value;
+            tile_keys = new uint64_t[tilings];
+        }
+
         ~ValueTileKeys() {
-            delete tile_keys;
+            if (tile_keys != nullptr) {
+                delete [] tile_keys;
+                tile_keys = nullptr;
+            }
         }
     };
 
@@ -78,7 +86,8 @@ public:
         for (int i = 1; i < tilings; i++) {
             if (random_offsets){
                 // Random offsets.
-                center_coordinates[i] = cc + this->tile_size * frand(-0.5, 0.5);
+                XArray offset_factors = XArray::Random() * 0.5;
+                center_coordinates[i] = cc + this->tile_size * offset_factors;
             }else{
                 // Uniform offsets.
                 center_coordinates[i] = cc + (this->tile_size / tilings) * i;
@@ -108,16 +117,14 @@ public:
     /// triggered tiles.
     /// \param x State(-action pair)
     /// \return Value
-    inline ValueTileKeys get_value_and_tile_keys(XArray &x) {
+    inline ValueTileKeys* get_value_and_tile_keys(XArray &x) {
         // Create new value tile key struct.
-        ValueTileKeys value_tile_keys;
-        value_tile_keys.tile_keys = new uint64_t[tilings];
-        value_tile_keys.value = 0;
+        ValueTileKeys *value_tile_keys = new ValueTileKeys(0.0, tilings);
 
         // Loop through triggered keys and calculate the value and store tile keys.
         for (TilingIdxType i = 0; i < tilings; i++) {
-            value_tile_keys.tile_keys[i] = get_tile_key(x, i);
-            value_tile_keys.value += get_tile_info(value_tile_keys.tile_keys[i])->weight;
+            value_tile_keys->tile_keys[i] = get_tile_key(x, i);
+            value_tile_keys->value += get_tile_info(value_tile_keys->tile_keys[i])->weight;
         }
 
         return value_tile_keys;
@@ -127,8 +134,8 @@ public:
     ///
     /// \param value
     /// \param value_tile_key
-    inline void update_weights(double value, ValueTileKeys &value_tile_key) {
-        update_weights(value, value_tile_key.tile_keys);
+    inline void update_weights(double value, ValueTileKeys* value_tile_key) {
+        update_weights(value, value_tile_key->tile_keys);
     }
 
     /// Update the tiles at x by the given value.
@@ -163,18 +170,20 @@ public:
         // Set tiling index
         tile_key_union.elements.tiling_idx = tiling_idx;
 
-        // Saturate values between min_values and max values.
-        x = x.cwiseMax(min_x);
-        x = x.cwiseMin(max_x);
+//        // Saturate values between min_values and max values.
+//        x = x.cwiseMax(min_x);
+//        x = x.cwiseMin(max_x);
+//
+//        // Calculated the "indices" of the triggered tile.
+//        // These are still doubles and need to rounded to the nearest integer,
+//        // but we do that later when inserting them into the union.
+//        XArray x_idx = ((x - (center_coordinates[tiling_idx])) / tile_size);
 
-        // Calculated the "indices" of the triggered tile.
-        // These are still doubles and need to rounded to the nearest integer,
-        // but we do that later when inserting them into the union.
-        XArray x_idx = ((x - (center_coordinates[tiling_idx])) / tile_size);
+        double x_idx_data[_rank] = {0};
 
         // Copy the indices into the union
         for (int i = 0; i < rank; i++) {
-            tile_key_union.elements.x_idx[i] = static_cast<XIdxType>(std::lround(x_idx(0, i)));
+            tile_key_union.elements.x_idx[i] = static_cast<XIdxType>(std::lround(x_idx_data[0]));
         }
 
         // Set the remaining indices to 0. There are in total 6 indices in the key.
@@ -186,12 +195,12 @@ public:
     }
 
     inline TileInfo* get_tile_info(uint64_t tile_key) {
+//        static auto tile_info = new TileInfo({default_weight, 0});
+//        return tile_info;
         auto item = tiles.find(tile_key);
         if (item != tiles.end()) {
-            printf("found 0x%016" PRIx64 "\n", tile_key);
             return item->second;
         } else {
-            printf("nound 0x%016" PRIx64 "\n", tile_key);
             auto *tile_info = new TileInfo({default_weight, 0});
             tiles[tile_key] = tile_info;
             return tile_info;

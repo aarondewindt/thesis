@@ -38,7 +38,7 @@ cdef extern from "season.h":
         map[long, dvec_smap_ptr]* get_data_log()
         map[string, dvec_ptr]* get_scalar_data()
         void clear_all_logs()
-        void run(long n_episodes, long n_record, long max_steps)
+        void run(long n_episodes, long n_record, long max_steps) nogil
 
 cdef extern from "poly_rl_agent.h":
     cdef cppclass c_PolyRLAgent "PolyRLAgent":

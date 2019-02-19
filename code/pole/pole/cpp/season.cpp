@@ -13,7 +13,7 @@ void Season::run(long n_episodes, long n_record, long max_steps) {
 
     bool log_whole;
     for (int i = 0; i < n_episodes; i++) {
-        if (i % 100 == 0) {
+        if (i % 1 == 0) {
             std::printf("E %d\n", i);
         }
         // log the episode results if neccesary or if its the last one.
@@ -49,6 +49,7 @@ void Season::run(long n_episodes, long n_record, long max_steps) {
             }
             scalar_data[item.first]->push_back(item.second);
         }
+
     }
 }
 

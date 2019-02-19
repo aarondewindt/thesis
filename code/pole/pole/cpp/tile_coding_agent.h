@@ -46,7 +46,7 @@ public:
 
 
     void greedy_action(double theta, double theta_dot,
-                       double &best_action, ValueTileKeys &best_value);
+                       double &best_action, ValueTileKeys* &best_value);
 
     GridTileCoding<3> tiles;
     Pole *pole;

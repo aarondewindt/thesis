@@ -52,7 +52,7 @@ bool TileCodingAgent::run_step() {
 
     // Choose action
     // Holds the value and tile keys at state_0.
-    ValueTileKeys value_keys_0;
+    ValueTileKeys *value_keys_0 = nullptr;
     double action;
     if (frand(0, 1) > epsilon) {
         // Choose random action.
@@ -72,12 +72,12 @@ bool TileCodingAgent::run_step() {
     // Learn
     // We are gonna do Q-learning here.
     // So find the greedy action of the state we are currently in.
-    ValueTileKeys value_keys_1;
-    double _; // I don't case about the action.
+    ValueTileKeys *value_keys_1 = nullptr;
+    double _; // I don't care about the action here.
     greedy_action(pole->theta, pole->theta_dot, _, value_keys_1);
 
     // Calculate the amount with which we need to update the tile weights with.
-    double update_value = alpha * (reward + gamma * value_keys_1.value - value_keys_0.value);
+    double update_value = alpha * (reward + gamma * value_keys_1->value - value_keys_0->value);
     tiles.update_weights(update_value, value_keys_0);
 
     // Log results
@@ -89,18 +89,21 @@ bool TileCodingAgent::run_step() {
     data_map["reward"]->push_back(reward);
     data_map["learn_rate"]->push_back(update_value);
 
+    delete value_keys_0;
+    delete value_keys_1;
+
     return is_terminal;
 }
 
 void TileCodingAgent::greedy_action(double theta, double theta_dot,
-                                    double &best_action, ValueTileKeys &best_value) {
+                                    double &best_action, ValueTileKeys* &best_value) {
     // Randomly choose an action as the best one. this will ensure that
     // it will pick one of them if they are all the same.
     best_action = actions[irand(0, n_actions)];
     XArray x = {theta, theta_dot, best_action};
     best_value = tiles.get_value_and_tile_keys(x);
 
-    ValueTileKeys value_keys;
+    ValueTileKeys *value_keys;
 
     // Loop through all actions.
     for (int i = 0; i < n_actions; i++) {
@@ -109,11 +112,9 @@ void TileCodingAgent::greedy_action(double theta, double theta_dot,
         value_keys = tiles.get_value_and_tile_keys(x);
 
         // If it's better then update the state value.
-        if (value_keys.value > best_value.value) {
-            best_value.value = value_keys.value;
-            for (int j = 0; j < tilings; j++) {
-                best_value.tile_keys[j] = value_keys.tile_keys[j];
-            }
+        if (value_keys->value > best_value->value) {
+            delete best_value;
+            best_value = value_keys;
         }
     }
 }
@@ -158,8 +159,9 @@ std::map<std::string, double> TileCodingAgent::get_scalar_data() {
 void TileCodingAgent::run_episode(long max_steps) {
     begin_episode();
     for (;max_steps--;){
-        if (run_step())
+        if (run_step()) {
             break;
+        }
     }
     end_episode();
 }

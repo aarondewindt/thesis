@@ -85,7 +85,7 @@ class Season:
     def get_scalar_data(self):
         ...
 
-    def run(self,  n_episodes,  n_record,  max_steps):
+    def run(self, n_episodes, n_record, max_steps):
         ...
 
 
@@ -235,5 +235,65 @@ class TableRLAgent(Agent):
 
     @property
     def visit_count(self):
+        ...
+
+
+class TileCodingAgent(Agent):
+    def __init__(
+                self,  
+                center, 
+                tile_size, 
+                tilings, 
+                default_weight, 
+                random_offsets, 
+                min_action, 
+                max_action, 
+                n_actions, 
+                epsilon, 
+                gamma, 
+                alpha) :
+        ...
+
+    def run_step(self):
+        ...
+
+    def run_episode(self, max_steps):
+        ...
+
+    def begin_episode(self):
+        ...
+
+    def set_environment(self, pole: Pole):
+        ...
+
+    def get_data(self) -> dict:
+        ...
+
+    @property
+    def epsilon(self):
+        ...
+
+    @epsilon.setter
+    def epsilon(self,  value):
+        ...
+
+    @property
+    def gamma(self):
+        ...
+
+    @gamma.setter
+    def gamma(self,  value):
+        ...
+
+    @property
+    def alpha(self):
+        ...
+
+    @alpha.setter
+    def alpha(self,  value):
+        ...
+
+    @property
+    def tilings(self):
         ...
 

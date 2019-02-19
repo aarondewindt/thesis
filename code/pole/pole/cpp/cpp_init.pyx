@@ -113,8 +113,9 @@ cdef class Season:
         data = self.thisptr.get_scalar_data()
         return data_map_to_dataset(data, True)
 
-    def run(self, n_episodes, n_record, max_steps):
-        self.thisptr.run(n_episodes, n_record, max_steps)
+    def run(self, int n_episodes, int n_record, int max_steps):
+        with nogil:
+            self.thisptr.run(n_episodes, n_record, max_steps)
 
 cdef data_map_to_dataset(dvec_smap_ptr data_map, bool delete_data):
     def data_generator():
@@ -338,7 +339,7 @@ cdef class TableRLAgent(Agent):
         
 cdef class TileCodingAgent(Agent):
     cdef c_TileCodingAgent *thisptr
-    cdef list actions
+    cdef readonly list actions
 
     def __cinit__(
                 self, 
@@ -359,6 +360,9 @@ cdef class TileCodingAgent(Agent):
             min_action, max_action, n_actions, epsilon, gamma, alpha)
 
         self.actions = [self.thisptr.actions[i] for i in range(n_actions)]
+
+    cdef c_Agent* get_agent_ptr(self):
+        return <c_Agent*>self.thisptr
 
     def run_step(self):
         return self.thisptr.run_step()
