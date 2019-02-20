@@ -1,4 +1,5 @@
 from libcpp cimport bool
+from libc.stdlib cimport malloc, free
 from cython.operator import dereference, postincrement
 import xarray as xr
 from itertools import product
@@ -340,6 +341,8 @@ cdef class TableRLAgent(Agent):
 cdef class TileCodingAgent(Agent):
     cdef c_TileCodingAgent *thisptr
     cdef readonly list actions
+    cdef readonly list thetas
+    cdef readonly list theta_dots
 
     def __cinit__(
                 self, 
@@ -353,13 +356,28 @@ cdef class TileCodingAgent(Agent):
                 n_actions,
                 epsilon,
                 gamma,
-                alpha) :
-
+                alpha,
+                vc_min_theta,
+                vc_max_theta,
+                vc_n_theta,
+                vc_min_theta_dot,
+                vc_max_theta_dot,
+                vc_n_theta_dot) :
+ 
         self.thisptr = new c_TileCodingAgent(
             center, tile_size, tilings, default_weight, random_offsets,
-            min_action, max_action, n_actions, epsilon, gamma, alpha)
+            min_action, max_action, n_actions, epsilon, gamma, alpha,
+            vc_min_theta, vc_max_theta, vc_n_theta, vc_min_theta_dot, 
+            vc_max_theta_dot, vc_n_theta_dot,)
 
         self.actions = [self.thisptr.actions[i] for i in range(n_actions)]
+
+        # Calculates the value for a specific index.
+        def foo(min_x, max_x, n_x, idx):
+            return idx * (max_x - min_x) / (n_x - 1) + min_x
+
+        self.thetas = [foo(vc_min_theta, vc_max_theta, vc_n_theta, i) for i in range(vc_n_theta)]
+        self.theta_dots = [foo(vc_min_theta_dot, vc_max_theta_dot, vc_n_theta_dot, i) for i in range(vc_n_theta_dot)]
 
     cdef c_Agent* get_agent_ptr(self):
         return <c_Agent*>self.thisptr
@@ -379,6 +397,65 @@ cdef class TileCodingAgent(Agent):
     def get_data(self) -> dict:
         data = self.thisptr.get_data()
         return data_map_to_dataset(data, True)
+
+    def get_visit_count(self):
+        visit_count = np.ones((len(self.thetas), len(self.theta_dots)))
+        for idx_theta, idx_theta_dot in product(range(len(self.thetas)), range(len(self.theta_dots))):
+            visit_count[idx_theta, idx_theta_dot] = self.thisptr.visit_count[idx_theta][idx_theta_dot]
+        return xr.DataArray(
+            visit_count,
+            coords={
+                'theta': self.thetas,
+                'theta_dot': self.theta_dots
+            },
+            dims=['theta', 'theta_dot']
+        )
+
+    def get_greedy_action(self):
+        # Generate greedy action map and get the pointer.
+        cdef double **greedy_action_ptr = self.thisptr.greedy_action_map()
+
+        # Move data from the pointer to a numpy array.
+        greedy_action = np.ones((len(self.thetas), len(self.theta_dots)))
+        for idx_theta, idx_theta_dot in product(range(len(self.thetas)), range(len(self.theta_dots))):
+            greedy_action[idx_theta, idx_theta_dot] = greedy_action_ptr[idx_theta][idx_theta_dot]
+
+        # Create DataArray
+        data_array =  xr.DataArray(
+            greedy_action,
+            coords={
+                'theta': self.thetas,
+                'theta_dot': self.theta_dots
+            },
+            dims=['theta', 'theta_dot']
+        )
+
+        # Delete pointer and return DataArray.
+        free(greedy_action_ptr)
+        return data_array;
+
+    def get_update_count(self):
+        # Generate greedy action map and get the pointer.
+        cdef double **update_count_ptr = self.thisptr.update_count_map()
+
+        # Move data from the pointer to a numpy array.
+        update_count = np.ones((len(self.thetas), len(self.theta_dots)))
+        for idx_theta, idx_theta_dot in product(range(len(self.thetas)), range(len(self.theta_dots))):
+            update_count[idx_theta, idx_theta_dot] = update_count_ptr[idx_theta][idx_theta_dot]
+
+        # Create DataArray
+        data_array =  xr.DataArray(
+            update_count,
+            coords={
+                'theta': self.thetas,
+                'theta_dot': self.theta_dots
+            },
+            dims=['theta', 'theta_dot']
+        )
+
+        # Delete pointer and return DataArray.
+        free(update_count_ptr)
+        return data_array;
 
     @property
     def epsilon(self):

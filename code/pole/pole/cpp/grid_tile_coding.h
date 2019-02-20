@@ -5,6 +5,7 @@
 #ifndef POLE_GRID_TILE_CODING_H
 #define POLE_GRID_TILE_CODING_H
 
+#include <iostream>
 #include <Eigen/Dense>
 #include <unordered_map>
 #include <array>
@@ -14,6 +15,7 @@
 #include "rand.h"
 #include <inttypes.h>
 #include <vector>
+#include <cstring>
 
 
 template <int _rank, class T = uint64_t>
@@ -63,47 +65,59 @@ public:
     /// \param tile_size The tile size
     /// \param default_weight Initial weight for new tiles.
     GridTileCoding(
-            const double *center_coordinate,
-            const double *tile_size,
+            double *center_coordinate,
+            double *tile_size,
             int tilings,
             double default_weight,
-            bool random_offsets) : default_weight(default_weight), tilings(tilings)
+            bool random_offsets) :
+            default_weight(default_weight), tilings(tilings)
     {
+
+        center_coordinates = new double*[tilings];
+
         // Copy the data to the local arrays.
         XArray cc;
+        XArray tcc;
+        XArray ts;
+
+        center_coordinates[0] = new double[rank];
         for (int i = 0; i < _rank; i++) {
+            this->center_coordinates[0][i] = center_coordinate[i];
+            this->tile_size[i] = tile_size[i];
             cc(0, i) = center_coordinate[i];
-            this->tile_size(0, i) = tile_size[i];
+            ts(0, i) = tile_size[i];
         }
 
         // Choose the center coordinates for each tiling.
         // The first tiling will be placed at the center, the rest will be around it.
         // We will also look vor the min, max area covered by the tilings.
-        center_coordinates = new XArray[tilings];
-        center_coordinates[0] = cc;
-        min_x = cc;
-        max_x = cc;
+        XArray temp_min_x = cc;
+        XArray temp_max_x = cc;
         for (int i = 1; i < tilings; i++) {
             if (random_offsets){
                 // Random offsets.
                 XArray offset_factors = XArray::Random() * 0.5;
-                center_coordinates[i] = cc + this->tile_size * offset_factors;
+                tcc = cc + ts * offset_factors;
             }else{
                 // Uniform offsets.
-                center_coordinates[i] = cc + (this->tile_size / tilings) * i;
+                tcc = cc + (ts / tilings) * i;
             }
 
+            this->center_coordinates[i] = new double[rank];
+            memcpy(this->center_coordinates[i], tcc.data(), sizeof(double) * rank);
 
             // The minimum coordinate will be given by the most positive coordinates.
             // And the other way around for the max coordinate.
-            min_x = min_x.cwiseMax(center_coordinates[i]);
-            max_x + max_x.cwiseMin(center_coordinates[i]);
+            temp_min_x = temp_min_x.cwiseMax(tcc);
+            temp_max_x + temp_max_x.cwiseMin(tcc);
         }
 
         // Now we add/substract the total tiling size to get the extremes of the area
         // covered by the tilings.
-        min_x += std::numeric_limits<XIdxType>::min() * this->tile_size - (this->tile_size / 2);
-        max_x += std::numeric_limits<XIdxType>::max() * this->tile_size + (this->tile_size / 2);
+        temp_min_x += std::numeric_limits<XIdxType>::min() * ts - (ts / 2);
+        temp_max_x += std::numeric_limits<XIdxType>::max() * ts + (ts / 2);
+        memcpy(min_x, temp_min_x.data(), sizeof(double) * rank);
+        memcpy(max_x, temp_max_x.data(), sizeof(double) * rank);
     }
 
     ~GridTileCoding() {
@@ -117,9 +131,9 @@ public:
     /// triggered tiles.
     /// \param x State(-action pair)
     /// \return Value
-    inline ValueTileKeys* get_value_and_tile_keys(XArray &x) {
+    inline ValueTileKeys* get_value_and_tile_keys(double* x) {
         // Create new value tile key struct.
-        ValueTileKeys *value_tile_keys = new ValueTileKeys(0.0, tilings);
+        auto *value_tile_keys = new ValueTileKeys(0.0, tilings);
 
         // Loop through triggered keys and calculate the value and store tile keys.
         for (TilingIdxType i = 0; i < tilings; i++) {
@@ -139,7 +153,7 @@ public:
     }
 
     /// Update the tiles at x by the given value.
-    inline void update_weights(double value, XArray &x) {
+    inline void update_weights(double value, double *x) {
         for (TilingIdxType i = 0; i < tilings; i++) {
             TileInfo *tile_info = get_tile_info(get_tile_key(x, i));
             tile_info->weight += value;
@@ -164,26 +178,23 @@ public:
     /// \param x Input state.
     /// \param tiling_idx
     /// \return
-    inline uint64_t get_tile_key(XArray &x, TilingIdxType tiling_idx) {
+    inline uint64_t get_tile_key(double *x, TilingIdxType tiling_idx) {
         TileKeyUnion tile_key_union;
 
         // Set tiling index
         tile_key_union.elements.tiling_idx = tiling_idx;
 
-//        // Saturate values between min_values and max values.
-//        x = x.cwiseMax(min_x);
-//        x = x.cwiseMin(max_x);
-//
-//        // Calculated the "indices" of the triggered tile.
-//        // These are still doubles and need to rounded to the nearest integer,
-//        // but we do that later when inserting them into the union.
-//        XArray x_idx = ((x - (center_coordinates[tiling_idx])) / tile_size);
-
-        double x_idx_data[_rank] = {0};
-
-        // Copy the indices into the union
+        // Loop through each element
         for (int i = 0; i < rank; i++) {
-            tile_key_union.elements.x_idx[i] = static_cast<XIdxType>(std::lround(x_idx_data[0]));
+            // Saturate
+            if (x[i] < min_x[i]) {
+                x[i] = min_x[i];
+            } else if (x[i] > max_x[i]) {
+                x[i] = max_x[i];
+            }
+
+            // Calculate tile index.
+            tile_key_union.elements.x_idx[i] = (XIdxType)std::lround((x[i] - center_coordinates[tiling_idx][i]) / tile_size[i]);
         }
 
         // Set the remaining indices to 0. There are in total 6 indices in the key.
@@ -207,10 +218,10 @@ public:
         }
     }
 
-    XArray *center_coordinates;
-    XArray tile_size;
-    XArray min_x;
-    XArray max_x;
+    double **center_coordinates;
+    double  tile_size[_rank];
+    double min_x[_rank];
+    double max_x[_rank];
     int rank = _rank;
     int tilings;
     double default_weight;

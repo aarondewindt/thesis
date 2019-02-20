@@ -12,19 +12,31 @@ from cw.context import time_it
 pole = Pole(0.500, 0.100)
 pole.dt = 0.01
 
+config = 1
+configs = [
+    (1, 5, [radians(4.44), 0.244, 0.02]),
+    (20, 5, [radians(10), 0.5, 0.08]),
+    (1, 5, [radians(4.44), 0.244, 0.02]),
+]
 
 agent = TileCodingAgent(
     center=[0, 0, 0],
-    tile_size=[radians(1.5), 0.5, 0.1],
-    tilings=50,
+    tile_size=configs[config][2],
+    tilings=configs[config][0],
     default_weight=0.0,
     random_offsets=True,
-    min_action=-0.3,
-    max_action=0.3,
-    n_actions=11,
+    min_action=-0.18,
+    max_action=0.18,
+    n_actions=configs[config][1],
     epsilon=0.9,
     gamma=0.9,
     alpha=0.2,
+    vc_min_theta=radians(-180),
+    vc_max_theta=radians(180),
+    vc_n_theta=256,
+    vc_min_theta_dot=-20,
+    vc_max_theta_dot=20,
+    vc_n_theta_dot=256,
 )
 
 print(agent.actions)
@@ -34,10 +46,10 @@ agent.set_environment(pole)
 # Create season and choose inputs.
 season = Season(agent)
 season_inputs = {
-    "eps":             [0.7],
-    "gamma":           [0.9],
-    "alpha":           [0.9],
-    "n_episodes":      [5]
+    "eps":             [0.7, 1.0],
+    "gamma":           [0.7, 0],
+    "alpha":           [0.2, 0],
+    "n_episodes":      [10000, 2],
 }
 
 # Loop through
@@ -80,9 +92,15 @@ plt.plot(learn_rate_sum, ".", markersize=1, alpha=0.2)
 plt.plot(filter_signal(learn_rate_sum, wn=0.01))
 plt.title("learn_rate sum")
 
-# plt.figure()
-# agent.ideal_torque.plot()
-#
-# plt.figure()
-# xr.apply_ufunc(np.log10, agent.visit_count).plot()
+plt.figure()
+agent.get_greedy_action().plot()
+
+plt.figure()
+plt.title("Tile update count")
+xr.apply_ufunc(np.log10, agent.get_update_count()).plot()
+
+plt.figure()
+plt.title("Visit count")
+xr.apply_ufunc(np.log10, agent.get_visit_count()).plot()
+
 plt.show()

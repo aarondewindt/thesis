@@ -2,6 +2,7 @@ from libcpp cimport bool
 from libcpp.vector cimport vector
 from libcpp.map cimport map
 from libcpp.string cimport string
+from libc.stdint cimport uint64_t
 
 ctypedef vector[double]* dvec_ptr
 ctypedef map[string, dvec_ptr]* dvec_smap_ptr 
@@ -120,7 +121,13 @@ cdef extern from "tile_coding_agent.h":
             int n_actions,
             double epsilon,
             double gamma,
-            double alpha)
+            double alpha,
+            double vc_min_theta,
+            double vc_max_theta,
+            int vc_n_theta,
+            double vc_min_theta_dot,
+            double vc_max_theta_dot,
+            int vc_n_theta_dot)
 
         double epsilon;
         double gamma;
@@ -128,6 +135,10 @@ cdef extern from "tile_coding_agent.h":
         double *actions;
         int n_actions;
         int tilings;
+        uint64_t **visit_count
+
+        double **greedy_action_map()
+        double **update_count_map()
 
         bool run_step()
         void run_episode(long max_steps)

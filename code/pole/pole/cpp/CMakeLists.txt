@@ -11,6 +11,8 @@ add_library(libpole
         tile_coding_agent.cpp tile_coding_agent.h
         )
 
+target_compile_options(libpole PUBLIC -march=native)
+
 set_source_files_properties(cpp_init.pyx PROPERTIES CYTHON_IS_CXX TRUE)
 cython_add_module(cpp_init cpp_init.pyx)
 target_link_libraries(cpp_init libpole)

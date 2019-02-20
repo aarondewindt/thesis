@@ -222,6 +222,8 @@ void TableRLAgent::q_table_prelookup(double theta, double theta_dot, double torq
     static double interval_theta_dot = (max_theta_dot - min_theta_dot) / (n_theta_dot - 1);
     static double interval_torque = (max_torque - min_torque) / (n_torque - 1);
 
+
+
     theta_idx = GET_IDX(min_theta, interval_theta, theta);
     theta_dot_idx = GET_IDX(min_theta_dot, interval_theta_dot, theta_dot);
     torque_idx = GET_IDX(min_torque, interval_torque, torque);

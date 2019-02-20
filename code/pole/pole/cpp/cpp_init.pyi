@@ -251,7 +251,16 @@ class TileCodingAgent(Agent):
                 n_actions, 
                 epsilon, 
                 gamma, 
-                alpha) :
+                alpha, 
+                vc_min_theta, 
+                vc_max_theta, 
+                vc_n_theta, 
+                vc_min_theta_dot, 
+                vc_max_theta_dot, 
+                vc_n_theta_dot) :
+        ...
+
+    def foo(min_x,  max_x,  n_x,  idx):
         ...
 
     def run_step(self):
@@ -267,6 +276,15 @@ class TileCodingAgent(Agent):
         ...
 
     def get_data(self) -> dict:
+        ...
+
+    def get_visit_count(self):
+        ...
+
+    def get_greedy_action(self):
+        ...
+
+    def get_update_count(self):
         ...
 
     @property

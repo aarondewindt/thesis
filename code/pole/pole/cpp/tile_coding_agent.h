@@ -12,8 +12,8 @@
 
 class TileCodingAgent : Agent {
 public:
-    typedef GridTileCoding<3>::XArray XArray;
     typedef GridTileCoding<3>::ValueTileKeys ValueTileKeys;
+    typedef GridTileCoding<3>::TileInfo TileInfo;
 
     TileCodingAgent(
             std::vector<double> center,
@@ -26,7 +26,15 @@ public:
             int n_actions,
             double epsilon,
             double gamma,
-            double alpha);
+            double alpha,
+            double vc_min_theta,
+            double vc_max_theta,
+            int vc_n_theta,
+            double vc_min_theta_dot,
+            double vc_max_theta_dot,
+            int vc_n_theta_dot
+
+            );
 
     bool run_step() override;
     void run_episode(long max_steps) override;
@@ -48,6 +56,9 @@ public:
     void greedy_action(double theta, double theta_dot,
                        double &best_action, ValueTileKeys* &best_value);
 
+    double **greedy_action_map();
+    double **update_count_map();
+
     GridTileCoding<3> tiles;
     Pole *pole;
     std::map<std::string, std::vector<double>*> data_map;
@@ -58,6 +69,14 @@ public:
     double *actions;
     int n_actions;
     int tilings;
+
+    uint64_t **visit_count;
+    double vc_min_theta;
+    double vc_max_theta;
+    int vc_n_theta;
+    double vc_min_theta_dot;
+    double vc_max_theta_dot;
+    int vc_n_theta_dot;
 };
 
 
