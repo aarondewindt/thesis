@@ -12,11 +12,13 @@ from cw.context import time_it
 pole = Pole(0.500, 0.100)
 pole.dt = 0.01
 
-config = 1
+config = 4
 configs = [
     (1, 5, [radians(4.44), 0.244, 0.02]),
-    (20, 5, [radians(10), 0.5, 0.08]),
-    (1, 5, [radians(4.44), 0.244, 0.02]),
+    (20, 5, [radians(10), 0.5, 0.08]),  # 10 000
+    (40, 11, [radians(20), 1, 0.08]),   # 20 000
+    (100, 5, [radians(60), 10, 0.1]),    #  1 000
+    (100, 5, [radians(20), 10, 0.1]),    #  1 000
 ]
 
 agent = TileCodingAgent(
@@ -33,10 +35,10 @@ agent = TileCodingAgent(
     alpha=0.2,
     vc_min_theta=radians(-180),
     vc_max_theta=radians(180),
-    vc_n_theta=256,
-    vc_min_theta_dot=-20,
-    vc_max_theta_dot=20,
-    vc_n_theta_dot=256,
+    vc_n_theta=512,
+    vc_min_theta_dot=-30,
+    vc_max_theta_dot=30,
+    vc_n_theta_dot=512,
 )
 
 print(agent.actions)
@@ -47,9 +49,9 @@ agent.set_environment(pole)
 season = Season(agent)
 season_inputs = {
     "eps":             [0.7, 1.0],
-    "gamma":           [0.7, 0],
+    "gamma":           [0.9, 0],
     "alpha":           [0.2, 0],
-    "n_episodes":      [10000, 2],
+    "n_episodes":      [1000, 2],
 }
 
 # Loop through

@@ -1,0 +1,68 @@
+\chapter{Basics of Reinforcement learning}
+
+\begin{comment}
+    What is reinforcement learning in words, no equation or algorithms.
+    
+    How it is different from other types of machine learning.
+     - Supervised learning
+     - Unsupervised learning
+    
+    The different elements in reinforcement learning.
+     - markov decision process
+     - exploration
+     - exploitation
+     - agent   
+     - environment
+      • state
+      • action
+      • reward
+     - policy
+      • e-greedy
+     - value
+     - reward
+      • different approaches to define rewards
+        · continuos rewards
+        · reward only at goal
+        · negative reward while still alive
+     - optional model
+     - on/off policy
+     - etc
+
+    Very simple example of reinforcement learning.
+     - tic-tac-toe
+     - 1D travel (1D grid world, wins if it reaches one end, dies if it reaches the other.)
+     - quad grid nav (this is more complex that what I would like to have here)
+\end{comment}
+
+
+% Introduction
+\acrfull{rl} is a method of machine learning different from other machine learning methods such as supervised learning which uses a set of labeled examples from a knowledgeable supervisor, and unsupervised learning which is typically used to find hidden patterns in unlabeled data. In \gls{rl} the learner is not told what action to take to achieve its goal, but instead it maps situations and actions by trying them out and discovering the most valuable. It does this by not only looking at the reward it received by it's latest action, but it also takes into account any future rewards it could receive in the future by taking that action.
+
+\section{Finite Marcov Decision Process}
+
+\begin{comment}
+
+  process that gives mathematical framework that can be used to describe problems where learners learn from their actions to reach a goal.
+
+  Two main parts
+  agent: decides, interacts with environment and learns
+  environment everything else
+
+  They constantly interact.
+  agent decides and does action -> environment changes state and gives reward to agent -> agent learns.
+
+  The probability of going from state to state only depends on the current state and the action, past states have no influence.
+
+
+\end{comment}
+
+
+A \acrfull{mdp} is a stochastic process that provides a mathematical framework used to describe problems where a learner learns from its actions to achieve an end goal. This framework is used in many areas, such robotics, economics, manufacturing and in the case of this report, \acrlong{rl}. 
+
+The two main components of an \gls{mdp} are the agent, which makes decisions, interacts with its environment and learns. And the environment which consists of everything else. The two are constantly interacting with each other, the agent will perform an action which changes the state of the environment and the environment responds by giving it a reward. The goal of the agent is to maximize the reward it receives.
+
+This happens in a sequence of discrete time steps. At the beginning of each time step the environment is at a certain state $S$. The agent then decides which action $A$ to take which in turn changes the environment to the new state $S'$. In order for it to be a \gls{mdp} this transition must satisfy the Marcov property, which means it needs to be memoryless and thus the environment's behavior must be independent of its past states. In other words, the probability of the environment to go from state $S$ to $S'$ and the rewards it gives back to the agent, must only be dependent on the initial state $S$ and action $A$.
+
+
+
+
