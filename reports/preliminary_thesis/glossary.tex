@@ -1,4 +1,5 @@
 \newglossary[tlg]{greek}{tld}{tdn}{Greek symbols}
+\newglossary[slg]{symbols}{sld}{sdn}{Symbols}
 \makeglossaries
 
 % \gls
@@ -21,6 +22,181 @@
 %     name = $\hat {\bar \epsilon}_{k+1, k}$,
 %     description =  State prediction error. $[\hat {\bar x}_{k+1, k} - \bar x_{k+1}]$,
 % }
+
+% Symbols
+\newglossaryentry{mdp_s}{
+    type=symbols,
+    name = $s$,
+    description =  a state,
+}
+\newglossaryentry{mdp_a}{
+    type=symbols,
+    name = $a$,
+    description = an action,
+}
+\newglossaryentry{mdp_r}{
+    type=symbols,
+    name = $r$,
+    description = a reward,
+}
+\newglossaryentry{mdp_s_set}{
+    type=symbols,
+    name = $\mathcal{S}$,
+    description = set of all states,
+}
+
+\newglossaryentry{mdp_s_set_term}{
+    type=symbols,
+    name = $\mathcal{S}^+$,
+    description = {set of all states, including the terminal state},
+}
+
+\newglossaryentry{mdp_a_set}{
+    type=symbols,
+    name = $\mathcal{A}$,
+    description = set of all actions,
+}
+
+\newglossaryentry{mdp_r_set}{
+    type=symbols,
+    name = $\mathcal{R}$,
+    description = {set of all possible rewards, a finite subset of $\mathbb{R}$},
+}
+
+\newglossaryentry{subset}{
+    type=symbols,
+    name = $\subset$,
+    description = {subset, e.g., $\mathcal{R} \subset \mathbb{R}$},
+}
+
+\newglossaryentry{element_in}{
+    type=symbols,
+    name = $\in$,
+    description = {is an element of, e.g., $s \in \mathcal{S}$},
+}
+
+\newglossaryentry{n_element}{
+    type=symbols,
+    name = $\left | \mathcal{S} \right |$,
+    description = { number of elements in $\mathcal{S}$},
+}
+
+\newglossaryentry{policy}{
+    type=greek,
+    name = $\pi$,
+    description = { policy, decision-making rule},
+}
+
+\newglossaryentry{policy_s}{
+    type=greek,
+    name = $\pi\left(s\right)$,
+    description = { action taken in state $s$ under \emph{deterministic} policy $\pi$},
+}
+
+\newglossaryentry{policy_as}{
+    type=greek,
+    name = $\pi\left(a|s\right)$,
+    description = { probablity of taking action $a$ in state $s$ under \emph{stochastic} policy $\pi$},
+}
+
+\newglossaryentry{policy_astheta}{
+    type=greek,
+    name = {$\pi\left(a|s,\ \bm{\theta}\right )$},
+    description = { probability of taking action $a$ in state $s$ given parameter $\bm{\theta}$},
+}
+
+\newglossaryentry{return}{
+    type=symbols,
+    name = {$G_t$},
+    description = {return (cumulative discounted reward) following time $t$},
+}
+
+\newglossaryentry{return_h}{
+    type=symbols,
+    name = {$G_{t:h}$},
+    description = {flat return (uncorrected, undiscounted) from $t+1$ to $h$},
+}
+
+\newglossaryentry{returnlambdas}{
+    type=symbols,
+    name = {$G_t^{\lambda s}$},
+    description = {$\lambda$-return, corrected by estimated state values},
+}
+
+\newglossaryentry{returnlambdaa}{
+    type=symbols,
+    name = {$G_t^{\lambda a}$},
+    description = {$\lambda$-return, corrected by estimated action values},
+}
+
+\newglossaryentry{returnlambdash}{
+    type=symbols,
+    name = {$G_{t:h}^{\lambda s}$},
+    description = {truncated, corrected $\lambda$-return, with state values},
+}
+
+\newglossaryentry{returnlambdaah}{
+    type=symbols,
+    name = {$G_{t:h}^{\lambda a}$},
+    description = {truncated, corrected $\lambda$-return, with action values},
+}
+
+\newglossaryentry{trans_prob_r}{
+    type=symbols,
+    name = {$p\left( s',r|s,a\right)$},
+    description = {probability of transition to state $s'$ with reward $r$, from state $s$ and action $a$},
+}
+
+\newglossaryentry{trans_prob}{
+    type=symbols,
+    name = {$p\left( s'|s,a\right)$},
+    description = {probability of transition to state $s'$, from state $s$ and action $a$},
+}
+
+\newglossaryentry{exp_rew}{
+    type=symbols,
+    name = {$r\left( s,a, s'\right)$},
+    description = {expected immediate reward on transition from $s$ to $s'$ under action $a$},
+}
+
+\newglossaryentry{val_pi_s}{
+    type=symbols,
+    name = {$v_\pi \left( s \right)$},
+    description = {value of state s under the optimal policy $\pi$ (expected return)},
+}
+
+\newglossaryentry{val_optimal_s}{
+    type=symbols,
+    name = {$v_* \left( s \right)$},
+    description = {value of state s under optimal policy},
+}
+
+\newglossaryentry{q_pi_s}{
+    type=symbols,
+    name = {$q_\pi \left( s, a \right)$},
+    description = {value taking action $a$ in state $s$ under policy $\pi$},
+}
+
+\newglossaryentry{q_optimal_s}{
+    type=symbols,
+    name = {$q_* \left( s, a \right)$},
+    description = {value taking action $a$ in state $s$ under the optimal policy},
+}
+
+\newglossaryentry{v_array}{
+    type=symbols,
+    name = {$V, V_t$},
+    description = {array estimates of state-value function $v_\pi$ or $v_*$},
+}
+
+\newglossaryentry{q_array}{
+    type=symbols,
+    name = {$Q, Q_t$},
+    description = {array estimates of action-value function $q_\pi$ or $q_*$},
+}
+
+
+
 
 % Acronyms
 % \newacronym{gcd}{GCD}{Greatest Common Divisor}

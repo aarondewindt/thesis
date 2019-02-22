@@ -59,10 +59,24 @@
 
 A \acrfull{mdp} is a stochastic process that provides a mathematical framework used to describe problems where a learner learns from its actions to achieve an end goal. This framework is used in many areas, such robotics, economics, manufacturing and in the case of this report, \acrlong{rl}. 
 
+\subsection*{The agent and environment}
+
+% intro and wiki
 The two main components of an \gls{mdp} are the agent, which makes decisions, interacts with its environment and learns. And the environment which consists of everything else. The two are constantly interacting with each other, the agent will perform an action which changes the state of the environment and the environment responds by giving it a reward. The goal of the agent is to maximize the reward it receives.
 
-This happens in a sequence of discrete time steps. At the beginning of each time step the environment is at a certain state $S$. The agent then decides which action $A$ to take which in turn changes the environment to the new state $S'$. In order for it to be a \gls{mdp} this transition must satisfy the Marcov property, which means it needs to be memoryless and thus the environment's behavior must be independent of its past states. In other words, the probability of the environment to go from state $S$ to $S'$ and the rewards it gives back to the agent, must only be dependent on the initial state $S$ and action $A$.
+This happens in a sequence of discrete time steps. At the beginning of each time step the environment is at a certain state $s$. The agent then decides based on its policy $\pi$ which action $a$ to take, this in turn changes the environment to the new state $s'$ and the environment then gives the agent a certain reward $r$. In order for it to be a \gls{mdp} this transition and the reward must satisfy the Marcov property, which means it needs to be memoryless and thus the environment's behavior must be independent of its past states. In other words, the probability of the environment to go from state $s$ to $s'$ and the reward $r$ it gives back to the agent, must only be dependent on the initial state $s$ and action $a$.
 
+\subsection*{Policy}
 
+% intro
+The main goal when solving a \gls{mdp} problem is to find a policy $\pi$ that defines the action $\pi\left(s\right)$ the agent will take in order to maximize the sum of rewards it receives. It characterizes the way in which the agent will behave at a given time by mapping the agents perceived state of the environment to the actions taken in those states. This policy may be as simple as a table or consist of several Neural Networks. The policy is the core of the agent in that it alone defines the behavior of the agent.
+
+\subsection*{Reward signal}
+
+On each time step the environment will send the agent a reward. The goal of the agent is to maximize this reward in the long run. Thus this reward is used to tell the agent which states are good or bad. If the agent receives a low reward for a certain action it can change the policy so it takes a different action in the future.
+
+\subsection*{Value}
+
+The reward signal tells the agent what the immediate effects of its action are. However, its goal is to maximize the cumulative sum of rewards it receives over time, and thus in order for it to receive higher rewards in the future, it might be necessary for the agent to take actions that yield lower rewards with the promise that it will receive higher rewards later. Thus the value is an indication of the reward the agent can expect to receive in the future by taking a certain action. 
 
 

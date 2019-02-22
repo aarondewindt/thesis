@@ -3,10 +3,12 @@
 \usepackage{changes}
 
 % My preamble
-\usepackage{todonotes}
+\usepackage[textwidth=2.7cm]{todonotes}
 \usepackage{verbatim}
 \usepackage{parskip}
 \usepackage[acronym]{glossaries}
+\usepackage{eucal}
+\usepackage{bm}
 
 \input{glossary}
 \setlength{\parindent}{0cm}
@@ -73,8 +75,8 @@
 \listoftables
 \printglossary[type=\acronymtype, nonumberlist]
 
-\printglossary[title=Symbols, nonumberlist]
-\printglossary[type=greek]
+\printglossary[type=symbols, nonumberlist]
+\printglossary[type=greek, nonumberlist]
 
 
 \tableofcontents
