@@ -14,7 +14,7 @@
 	%%% You should edit this part appropriately
 	\newcommand{\Title}{Progress Report A. de Windt}
 	\newcommand{\Author}{A. de Windt}
-	\newcommand{\Date}{14-02-2019}
+	\newcommand{\Date}{13-03-2019}
 	\newcommand{\Subject}{Policy Gradient Reinforcement Learning for quadrotor control}
 	\newcommand{\Mentors}{Dr.ir. Erik-Jan van Kampen}
 	
@@ -49,53 +49,50 @@
 	\section*{Outcome of the previous meeting}
 	
 	\begin{itemize}
-		\item Pole example with tabular Q-learning working.
-		\item n-step bootstrapping implemented, but it's seems to make things worse.
-		\item Very rough outline of literature study report.
+		\item There was not much progress.
 	\end{itemize}
 	
 	\section*{Description of the results since last meeting}
 
 	\subsection*{Short version}
 	\begin{itemize}
-		\item Read more on policy gradient
-		\item Started to make a Tile-Coding RL agent for the pole example, with the idea that it would eventually be used in an actor-critic RL agent, however I made quite a big mistake while writing the tile-coding code and I need to rewrite it.
-		\item Modified the pole simulations so it can turn 360 and trained the tabular q-learning agent to control it. More info in the appendix
-		\item I created the latex project for the report.
-		\item Made a more detailed description of the report structure.
-		\item Starting writing the Basic RL introduction chapter.
+		\item Continued writing the report
 	\end{itemize}
 	
 	\section*{Plans for next 2 weeks}
 	% Same as last week, since I haven't been able to progress.
 	\begin{enumerate}
 		\item Finish first report draft.
-		\item Finish tile-coding rl agent.
-		\item Make policy gradient rl agent.
-		\item Make actor-critic rl agent.
+		\item Work on preliminary thesis example.
 	\end{enumerate}
 	
 	\newpage
 	
-	\begin{appendix}
-		\section{Simulation results}
-		I modified the pole simulation so it's able to turn the full 360 degrees and tried to make the tabular q-learning agent learn to control it. At first it didn't work, so I decided to increase the size of the tables since the greedy action plot wasn't showing a clear pattern and it kept changing between runs. I ran it with 400 $\theta$, 400 $\dot{\theta}$ and I forgot how many options for the torque, but this was some 2 digit number. The greedy action for this case is shown in figure \ref{fig:ideal400}. At this point it became clear that my limits on $\dot{\theta}$ where to small and I increased it and ran it again in a smaller grid. Figure \ref{fig:ideal21} shows the ideal policy for an agent with 21 $\theta$, 11 $\dot{\theta}$ and 11 torque options.
+	% \begin{appendix}
+	% 	\section{Simulation results}
+	% 	The tile coding based agent is working, I've played around a little bit with it and these are some of the results I've been getting.
+	% 	\begin{figure}[ht]			
+	% 		\centering
+	% 		\includegraphics[width=1.2\textwidth]{figures/greedy_action_0}			
+	% 		\caption{Greedy action for 20 tilings with tile sizes of $10^{\circ}$ by $0.5\ [rad\ s^{-1}]$ by $0.08 [Nm]$.}
+	% 		\label{fig:ideal400}
+	% 	\end{figure}
 
-		\begin{figure}[ht]			
-			\centering
-			\includegraphics[width=1.2\textwidth]{figures/ideal_action}			
-			\caption{Ideal action with the 400x400 table.}
-			\label{fig:ideal400}
-		\end{figure}
+	% 	\begin{figure}[ht]			
+	% 		\centering
+	% 		\includegraphics[width=1.2\textwidth]{figures/greedy_action_1}			
+	% 		\caption{Greedy action for 40 tilings with tile sizes of $20^{\circ}$ by $1\ [rad\ s^{-1}]$ by $0.08\ [Nm]$.}
+	% 		\label{fig:ideal21}
+	% 	\end{figure}
 
-		\begin{figure}[ht]			
-			\centering
-			\includegraphics[width=1.2\textwidth]{figures/ia}			
-			\caption{Ideal action with the 21x11 table.}
-			\label{fig:ideal21}
-		\end{figure}
+	% 	\begin{figure}[ht]			
+	% 		\centering
+	% 		\includegraphics[width=1.2\textwidth]{figures/greedy_action_2}			
+	% 		\caption{Greedy action for 100 tilings with tile sizes of $60^{\circ}$ by $10\ [rad\ s^{-1}]$ by $0.1\ [Nm]$.}
+	% 		\label{fig:ideal21}
+	% 	\end{figure}
 
-	\end{appendix}
+	% \end{appendix}
 
 
 	% \section{An example appendix}

@@ -14,11 +14,11 @@ pole.dt = 0.01
 
 config = 4
 configs = [
-    (1, 5, [radians(4.44), 0.244, 0.02]),
-    (20, 5, [radians(10), 0.5, 0.08]),  # 10 000
-    (40, 11, [radians(20), 1, 0.08]),   # 20 000
-    (100, 5, [radians(60), 10, 0.1]),    #  1 000
-    (100, 5, [radians(20), 10, 0.1]),    #  1 000
+    (1, 5, [radians(4.44), 0.244, 0.02], 1000, 0.3),
+    (20, 5, [radians(10), 0.5, 0.08], 10000, 0.3),        # 10 000
+    (40, 11, [radians(20), 1, 0.08], 20000, 0.3),         # 20 000
+    (100, 5, [radians(60), 10, 0.1], 1000, 0.3),         #  1 000
+    (100, 5, [radians(20), 10, 0.1], 5000, 0.18),         #  1 000
 ]
 
 agent = TileCodingAgent(
@@ -27,8 +27,8 @@ agent = TileCodingAgent(
     tilings=configs[config][0],
     default_weight=0.0,
     random_offsets=True,
-    min_action=-0.18,
-    max_action=0.18,
+    min_action=-configs[config][4],
+    max_action=configs[config][4],
     n_actions=configs[config][1],
     epsilon=0.9,
     gamma=0.9,
@@ -51,7 +51,7 @@ season_inputs = {
     "eps":             [0.7, 1.0],
     "gamma":           [0.9, 0],
     "alpha":           [0.2, 0],
-    "n_episodes":      [1000, 2],
+    "n_episodes":      [configs[config][3], 2],
 }
 
 # Loop through
