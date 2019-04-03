@@ -12,8 +12,8 @@
 
 class TileCodingAgent : Agent {
 public:
-    typedef GridTileCoding<3>::ValueTileKeys ValueTileKeys;
-    typedef GridTileCoding<3>::TileInfo TileInfo;
+    typedef GridTileCoding<3, 1>::ValueTileKeys ValueTileKeys;
+    typedef GridTileCoding<3, 1>::TileInfo TileInfo;
 
     TileCodingAgent(
             std::vector<double> center,
@@ -52,14 +52,13 @@ public:
     std::map<std::string, std::vector<double>*>* get_data() override;
     std::map<std::string, double> get_scalar_data() override;
 
-
     void greedy_action(double theta, double theta_dot,
                        double &best_action, ValueTileKeys* &best_value);
 
     double **greedy_action_map();
     double **update_count_map();
 
-    GridTileCoding<3> tiles;
+    GridTileCoding<3, 1> tiles;
     Pole *pole;
     std::map<std::string, std::vector<double>*> data_map;
 

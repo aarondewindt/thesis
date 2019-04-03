@@ -12,10 +12,11 @@ from cw.context import time_it
 pole = Pole(0.500, 0.100)
 pole.dt = 0.01
 
-config = 4
+config = 1
+# tilings, n_actions, tile_size, n_episodes, min/max_action
 configs = [
     (1, 5, [radians(4.44), 0.244, 0.02], 1000, 0.3),
-    (20, 5, [radians(10), 0.5, 0.08], 10000, 0.3),        # 10 000
+    (20, 5, [radians(10), 0.5, 0.08], 1000, 0.3),        # 10 000
     (40, 11, [radians(20), 1, 0.08], 20000, 0.3),         # 20 000
     (100, 5, [radians(60), 10, 0.1], 1000, 0.3),         #  1 000
     (100, 5, [radians(20), 10, 0.1], 5000, 0.18),         #  1 000
@@ -41,7 +42,7 @@ agent = TileCodingAgent(
     vc_n_theta_dot=512,
 )
 
-print(agent.actions)
+# print(agent.actions)
 
 # Connect the agent to the environment.
 agent.set_environment(pole)

@@ -1,6 +1,6 @@
 from typing import Sequence, Tuple, Dict, Optional, Union, Iterable
-import numpy as np
 from os import PathLike
+import numpy as np
 
 
 class Pole:

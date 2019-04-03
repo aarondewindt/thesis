@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.12)
-project(pole)
+cmake_minimum_required(VERSION 3.13)
+project(f16)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -30,9 +30,6 @@ add_subdirectory(extern_libs/random) # path to the 'random' library root
 link_libraries(effolkronium_random) # add include path to a compiler
 
 # Add spikes and the main library.
+add_subdirectory(f16/cpp)
 add_subdirectory(spike)
-add_subdirectory(pole/cpp)
-
-# Add the main excutable.
-add_executable(pole_main pole/cpp/main.cpp)
-target_link_libraries(pole_main libpole)
+add_subdirectory(test)

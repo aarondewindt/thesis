@@ -42,8 +42,10 @@ public:
     struct ValueTileKeys {
         double values[_n_values];
         uint64_t *tile_keys;
+        uint8_t tilings;
 
         ValueTileKeys(double const *values, int tilings) {
+            this->tilings = tilings;
             for (int i = 0; i < _n_values; i++) {
                 this->values[i] = values[i];
             }
@@ -51,6 +53,7 @@ public:
         }
 
         ValueTileKeys(double value, int tilings){
+            this->tilings = tilings;
             for (int i = 0; i < _n_values; i++) {
                 this->values[i] = value;
             }
@@ -61,6 +64,22 @@ public:
             if (tile_keys != nullptr) {
                 delete [] tile_keys;
                 tile_keys = nullptr;
+            }
+        }
+
+        void print() {
+            printf("value:");
+            for (double value : this->values) {
+                printf(" %f", value);
+            }
+            printf("\n");
+            auto *tile_keys = (TileKeyUnion*)this->tile_keys;
+            for (int i = 0; i < tilings; i++) {
+                printf("0x%016" PRIx64 " - %hu - ", tile_keys[i].tile_key, tile_keys[i].elements.tiling_idx);
+                for (int j = 0; j < _rank; j++) {
+                    printf("%i ", tile_keys[i].elements.x_idx[j]);
+                }
+                printf("\n");
             }
         }
     };

@@ -107,7 +107,7 @@ bool TileCodingAgent::run_step() {
     greedy_action(pole->theta, pole->theta_dot, _, value_keys_1);
 
     // Calculate the amount with which we need to update the tile weights with.
-    double update_value = alpha * (reward + (gamma * value_keys_1->value) - value_keys_0->value);
+    double update_value[1] = {alpha * (reward + (gamma * *value_keys_1->values) - *value_keys_0->values)};
     tiles.update_weights(update_value, value_keys_0);
 
     // Log results
@@ -117,7 +117,7 @@ bool TileCodingAgent::run_step() {
     data_map["error"]->push_back(-pole->theta);
     data_map["torque"]->push_back(action);
     data_map["reward"]->push_back(reward);
-    data_map["learn_rate"]->push_back(update_value);
+    data_map["learn_rate"]->push_back(*update_value);
 
     delete value_keys_0;
     delete value_keys_1;
@@ -142,7 +142,7 @@ void TileCodingAgent::greedy_action(double theta, double theta_dot,
         value_keys = tiles.get_value_and_tile_keys(x);
 
         // If it's better then update the state value.
-        if (value_keys->value > best_value->value) {
+        if (*value_keys->values > *best_value->values) {
             delete best_value;
             best_value = value_keys;
             best_action = x[2];
