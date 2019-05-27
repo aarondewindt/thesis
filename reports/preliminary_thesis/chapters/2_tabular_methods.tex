@@ -1,10 +1,13 @@
 \chapter{Tabular Methods}
 
 \begin{comment}
-
     Short description of what tabular methods are.
      - They keep the value function in a table
      - Discreet states and actions
+
+    Explain k-armed bandit agent from previous chapter.
+
+    Upper confidence bound
 
     Dynamic programming
 
@@ -12,9 +15,9 @@
 
     Temporal difference
      - Sarsa
-     - Expected Sarsa 
+     - Expected Sarsa
      - Q-learning
-     - Double Q-learning     
+     - Double Q-learning
 
     n-step bootstrapping
 
@@ -22,6 +25,8 @@
      - models and planning
      - dyna
 
+    Policy gradient
+    
     Working example(s)
      - Discreet state and action space
      - model
@@ -30,3 +35,7 @@
        • some other thing I haven't made yet
 
 \end{comment}
+
+The action-value function estimate $Q_t(s, a)$ holds the current estimate of the real action-value function $q_*(a)$. If the \gls{rl}-agent is to achieve it's goal, $Q_t(s, a)$ needs to be as close to $q_*(a)$ as possible. The actual function used to represent $Q_t(s, a)$ can be different depending on the application, and the methods used to estimate $Q_t(s, a)$ can be different depending on the underling function and application. 
+
+This chapter will focus on methods where $q_*(a)$ is estimated using tables of discreet values. These methods are useful with small discreet state- and action-spaces and can be used to explain different concepts.

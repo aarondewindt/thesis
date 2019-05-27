@@ -11,23 +11,43 @@
 #include <sstream>
 
 
-template <class T>
+template <class T, class Y>
 class _PArrayApprox : public Catch::MatcherBase<T*> {
     std::vector<T> correct;
-    double relative_tolerance;
-    double absolute_tolerance;
+    Y relative_tolerance;
+    Y absolute_tolerance;
 
 public:
     _PArrayApprox(
             std::vector<T> &correct,
-            T relative_tolerance,
-            T absolute_tolerance) :
+            Y relative_tolerance,
+            Y absolute_tolerance) :
                 correct( correct ),
                 relative_tolerance(relative_tolerance),
                 absolute_tolerance(absolute_tolerance) {}
 
-    // Performs the test for this matcher
+    // Match for number of T type.
     bool match( T* const& real ) const override {
+        bool pass = true;
+        // Iterate from 0 to the last index in the correct vector.
+        for (int i = 0; i < correct.size(); i++){
+            // Calculate the absolute error.
+            Y error = fabs(real[i] - correct[i]);
+
+            if (correct[i] == 0) {
+                // Only check the absolute tolerance if the correct value is 0.
+                pass = pass && (error <= absolute_tolerance);
+            } else {
+                // Otherwise check both the relative and absolute tolerance.
+                pass = pass && ((error / correct[i]) <= relative_tolerance) && (error <= absolute_tolerance);
+            }
+        }
+        return pass;
+    }
+
+    // Match for all other number types.
+    template <class U>
+    bool match( U* const& real ) const {
         bool pass = true;
         // Iterate from 0 to the last index in the correct vector.
         for (int i = 0; i < correct.size(); i++){
@@ -56,16 +76,16 @@ public:
 };
 
 template <class T>
-inline _PArrayApprox<T> PArrayApprox(std::initializer_list<T> correct) {
+inline _PArrayApprox<T, double> PArrayApprox(std::initializer_list<T> correct) {
     std::vector<T> v(correct);
-    return _PArrayApprox<T>(v, 1e-20, 0.0);
+    return _PArrayApprox<T, double>(v, 1e-20, 0.0);
 }
 
-template <class T>
-inline _PArrayApprox<T> PArrayApprox(std::initializer_list<T> correct, T relative_tolerance,
-                                     T absolute_tolerance) {
+template <class T, class Y>
+inline _PArrayApprox<T, Y> PArrayApprox(std::initializer_list<T> correct, Y relative_tolerance,
+                                     Y absolute_tolerance) {
     std::vector<T> v(correct);
-    return _PArrayApprox<T>(v, relative_tolerance, absolute_tolerance);
+    return _PArrayApprox<T, Y>(v, relative_tolerance, absolute_tolerance);
 }
 
 #endif //F16_MATCH_POINTER_ARRAY_H

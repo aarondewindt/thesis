@@ -29,6 +29,12 @@ include_directories(extern_libs/eigen-git-mirror)
 add_subdirectory(extern_libs/random) # path to the 'random' library root
 link_libraries(effolkronium_random) # add include path to a compiler
 
+find_package( BLAS REQUIRED )
+message( STATUS BLAS found: ${BLAS_LIBRARIES} )
+
+add_subdirectory(extern_libs/msgpack11)
+link_libraries(msgpack11)
+
 # Add spikes and the main library.
 add_subdirectory(f16/cpp)
 add_subdirectory(spike)

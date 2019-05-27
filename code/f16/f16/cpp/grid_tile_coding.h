@@ -18,11 +18,16 @@
 #include <cstring>
 
 
-template <int _rank, int _n_values, class T = uint64_t>
+template <int _rank,
+          int _n_values,
+          class ValueType=float,
+          class WeightType=ValueType,
+          class CoordinateType=ValueType,
+          class VisitCountType = uint64_t>
 class GridTileCoding {
 public:
     /// 1D array with the length of rank. Aka the number of input values.
-    typedef Eigen::Array<double, 1, _rank> XArray;
+    typedef Eigen::Array<CoordinateType, 1, _rank> XArray;
 
     // The keys we will use to identify each tile are of type uint64_t, where the first
     // 6 bytes are used to store the indices in x_c and the last two bytes to store the
@@ -40,11 +45,15 @@ public:
 
     // Holds the value and the keys of the tiles holding the value.
     struct ValueTileKeys {
-        double values[_n_values];
+        ValueType values[_n_values];
         uint64_t *tile_keys;
         uint8_t tilings;
 
-        ValueTileKeys(double const *values, int tilings) {
+        /// \brief Initializes new ValueTileKeys from pointer array.
+        ///
+        /// \param values Pointer to array of values.
+        /// \param tilings Number of tilings.
+        ValueTileKeys(ValueType const *values, uint8_t tilings) {
             this->tilings = tilings;
             for (int i = 0; i < _n_values; i++) {
                 this->values[i] = values[i];
@@ -52,7 +61,11 @@ public:
             tile_keys = new uint64_t[tilings];
         }
 
-        ValueTileKeys(double value, int tilings){
+        /// \brief Initializes new ValueTileKeys with all values set to the same value.
+        ///
+        /// \param value Initiatal value.
+        /// \param tilings Number of tilings.
+        ValueTileKeys(ValueType value, uint8_t tilings){
             this->tilings = tilings;
             for (int i = 0; i < _n_values; i++) {
                 this->values[i] = value;
@@ -67,9 +80,10 @@ public:
             }
         }
 
+        /// \brief Prints the value and tile keys to stdout.
         void print() {
             printf("value:");
-            for (double value : this->values) {
+            for (ValueType value : this->values) {
                 printf(" %f", value);
             }
             printf("\n");
@@ -85,10 +99,11 @@ public:
     };
 
     struct TileInfo {
-        double weights[_n_values];
-        T visit_count;
+        WeightType weights[_n_values];
+        VisitCountType visit_count;
 
-        TileInfo(double weight, T visit_count) : visit_count(visit_count) {
+        /// \brief Initializes new TileInfo with all weights set at the same value.
+        TileInfo(WeightType weight, VisitCountType visit_count) : visit_count(visit_count) {
             for (int i = 0; i < _n_values; i++) {
                 this->weights[i] = weight;
             }
@@ -99,22 +114,22 @@ public:
     /// \param tile_size The tile size
     /// \param default_weight Initial weight for new tiles.
     GridTileCoding(
-            double *center_coordinate,
-            double *tile_size,
+            CoordinateType const* center_coordinate,
+            CoordinateType const* tile_size,
             int tilings,
-            double default_weight,
+            WeightType default_weight,
             bool random_offsets) :
             default_weight(default_weight), tilings(tilings)
     {
 
-        center_coordinates = new double*[tilings];
+        center_coordinates = new CoordinateType*[tilings];
 
         // Copy the data to the local arrays.
         XArray cc;
         XArray tcc;
         XArray ts;
 
-        center_coordinates[0] = new double[rank];
+        center_coordinates[0] = new CoordinateType[rank];
         for (int i = 0; i < _rank; i++) {
             this->center_coordinates[0][i] = center_coordinate[i];
             this->tile_size[i] = tile_size[i];
@@ -137,8 +152,8 @@ public:
                 tcc = cc + (ts / tilings) * i;
             }
 
-            this->center_coordinates[i] = new double[rank];
-            memcpy(this->center_coordinates[i], tcc.data(), sizeof(double) * rank);
+            this->center_coordinates[i] = new CoordinateType[rank];
+            memcpy(this->center_coordinates[i], tcc.data(), sizeof(CoordinateType) * rank);
 
             // The minimum coordinate will be given by the most positive coordinates.
             // And the other way around for the max coordinate.
@@ -150,8 +165,8 @@ public:
         // covered by the tilings.
         temp_min_x += std::numeric_limits<XIdxType>::min() * ts - (ts / 2);
         temp_max_x += std::numeric_limits<XIdxType>::max() * ts + (ts / 2);
-        memcpy(min_x, temp_min_x.data(), sizeof(double) * rank);
-        memcpy(max_x, temp_max_x.data(), sizeof(double) * rank);
+        memcpy(min_x, temp_min_x.data(), sizeof(CoordinateType) * rank);
+        memcpy(max_x, temp_max_x.data(), sizeof(CoordinateType) * rank);
     }
 
     ~GridTileCoding() {
@@ -164,9 +179,9 @@ public:
     /// Returns a ValueTileKey struct containing the value at x and the keys of the
     /// triggered tiles.
     ///
-    /// \param x State(-action pair)
+    /// \param x Coordinate
     /// \return Value
-    inline ValueTileKeys* get_value_and_tile_keys(double* x) {
+    inline ValueTileKeys* get_value_and_tile_keys(CoordinateType* x) {
         // Create new value tile key struct.
         auto *value_tile_keys = new ValueTileKeys(0.0, tilings);
 
@@ -185,12 +200,12 @@ public:
     ///
     /// \param value
     /// \param value_tile_key
-    inline void update_weights(double *values, ValueTileKeys* value_tile_key) {
+    inline void update_weights(ValueType *values, ValueTileKeys* value_tile_key) {
         update_weights(values, value_tile_key->tile_keys);
     }
 
     /// Update the tiles at x by the given value.
-    inline void update_weights(double *values, double *x) {
+    inline void update_weights(ValueType *values, CoordinateType *x) {
         for (TilingIdxType i = 0; i < tilings; i++) {
             TileInfo *tile_info = get_tile_info(get_tile_key(x, i));
             for (int j = 0; j < _n_values; j++) {
@@ -205,7 +220,7 @@ public:
     ///
     /// \param value
     /// \param tile_keys
-    inline void update_weights(double *values, const uint64_t *tile_keys) {
+    inline void update_weights(ValueType *values, const uint64_t *tile_keys) {
         for (int i = 0; i < tilings; i++) {
             TileInfo *tile_info = get_tile_info(tile_keys[i]);
             for (int j = 0; j < _n_values; j++) {
@@ -217,10 +232,10 @@ public:
 
     /// Get the tile key for the tile on tiling_idx triggered at x.
     ///
-    /// \param x Input state.
+    /// \param x Coordinate
     /// \param tiling_idx
     /// \return The tile key for the given tile.
-    inline uint64_t get_tile_key(double *x, TilingIdxType tiling_idx) {
+    inline uint64_t get_tile_key(CoordinateType *x, TilingIdxType tiling_idx) {
         TileKeyUnion tile_key_union;
 
         // Set tiling index
@@ -247,6 +262,10 @@ public:
         return tile_key_union.tile_key;
     }
 
+    /// Get TileInfo struct instance for the given tile key.
+    ///
+    /// \param tile_key Given tile key
+    /// \return TileInfo struct instance for the given tile key
     inline TileInfo* get_tile_info(uint64_t tile_key) {
         auto item = tiles.find(tile_key);
         if (item != tiles.end()) {
@@ -258,14 +277,16 @@ public:
         }
     }
 
-    double **center_coordinates;
-    double  tile_size[_rank];
-    double min_x[_rank];
-    double max_x[_rank];
+    // TODO: Implement get_msgpack for this object.
+
+    CoordinateType **center_coordinates;
+    CoordinateType  tile_size[_rank];
+    CoordinateType min_x[_rank];
+    CoordinateType max_x[_rank];
     int rank = _rank;
     int n_values = _n_values;
     int tilings;
-    double default_weight;
+    WeightType default_weight;
 
 private:
     std::unordered_map<uint64_t, TileInfo*> tiles;
