@@ -126,18 +126,19 @@ One important property of the expected return used in reinforcement learning is 
 \end{equation}
 
 \section{Policy and value functions}
-The policy is a mapping from the state of the environment to the probabilities of the agent selecting each action. If the policy at time $t$ is $\pi$, then $\pi(a|s)$ is probability of selecting action $a$ if the current state is $s$.
+The policy is a mapping from the state of the environment to the probabilities of the agent selecting each action. If the policy at time $t$ is $\pi$, then $\pi(a|s)$ is the probability of selecting action $a$ if the current state is $s$.
 
-The value of a state can be different depending on the policy of the RL-agent, since different policies will result in different actions and thus different states and rewards. So $v_\pi(s)$ is the expected return when starting at state $s$ and following policy $\pi$. $v_\pi$ can be defined by
+The value of a state can be different depending on the policy of the RL-agent, since different policies will result in different actions and thus different states and rewards. So $v_\pi(s)$ is the expected return when starting at state $s$ and following policy $\pi$. $v_\pi$ can be defined by:
 
 \begin{equation}
-  \mathbb{E}_\pi \left [ \left. G_t \right| S_t=s \right ] = \mathbb{E}_\pi \left [ \left. \sum_{k=t+1}^{T}\gamma^{k-t-1}R_{k} \right| S_t=s \right ], \textup{ for all } s \textup{ in } \mathcal{S}
+  v_\pi(s) = \mathbb{E}_\pi \left [ \left. G_t \right| S_t=s \right ] = \mathbb{E}_\pi \left [ \left. \sum_{k=t+1}^{T}\gamma^{k-t-1}R_{k} \right| S_t=s \right ], \textup{ for all } s \textup{ in } \mathcal{S}
+  \label{eq:vpi}
 \end{equation}
 
-For some problems it might be more suitable to look at the value of state-action pairs. Thus similar as to the state value above, the state-action value under policy $\pi$, denoted by $q_\pi(s, a)$, is defined by
+For some problems it might be more suitable to look at the value of state-action pairs. Thus similar as to the state value above, the state-action value under policy $\pi$, denoted by $q_\pi(s, a)$, is defined by:
 
 \begin{equation}
-  \mathbb{E}_\pi \left [ \left. G_t \right| S_t=s, A_t=a \right ] = \mathbb{E}_\pi \left [ \left. \sum_{k=t+1}^{T}\gamma^{k-t-1}R_{k} \right| S_t=s, A_t=a  \right ], \textup{ for all } s \textup{ in } \mathcal{S}
+  q_\pi(s, a) = \mathbb{E}_\pi \left [ \left. G_t \right| S_t=s, A_t=a \right ] = \mathbb{E}_\pi \left [ \left. \sum_{k=t+1}^{T}\gamma^{k-t-1}R_{k} \right| S_t=s, A_t=a  \right ], \textup{ for all } s \textup{ in } \mathcal{S}
 \end{equation}
 
 \section{k-armed bandit problem}
@@ -169,5 +170,6 @@ Since the agent is trying out new actions while following \eps-greedy policies, 
 
 As it can be seen when using \eps-greedy policies the agents learn faster and are thus able to receive higher rewards sooner. On the other hand, while following the greedy policy, the agents will quickly choose the first action they find with a reward higher than the initial action value and then perform that action on all episodes. As a results many of the agents are not able to find the optimal policy.
 
+% \section{Summary}
 
 

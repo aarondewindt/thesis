@@ -38,4 +38,42 @@
 
 The action-value function estimate $Q_t(s, a)$ holds the current estimate of the real action-value function $q_*(a)$. If the \gls{rl}-agent is to achieve it's goal, $Q_t(s, a)$ needs to be as close to $q_*(a)$ as possible. The actual function used to represent $Q_t(s, a)$ can be different depending on the application, and the methods used to estimate $Q_t(s, a)$ can be different depending on the underling function and application. 
 
-This chapter will focus on methods where $q_*(a)$ is estimated using tables of discreet values. These methods are useful with small discreet state- and action-spaces and can be used to explain different concepts.
+This chapter will focus on methods used to solve \acrfull{mdp} problems where the value and policy consist of tables of discreet values. These methods are useful with small discreet state- and action-spaces and can be used to explain different concepts. The chapter will first start with Dynamic Programming and Monte Carlo methods. These methods have limited use in \acrfull{rl}, but provide an essential base for understanding the inner workings of \gls{rl} methods.
+
+
+\section{Dynamic Programming}
+\gls{dp} refers to a collection of methods used to solve \gls{mdp} problems. The main idea of \gls{dp} and \gls{rl} is the use of value functions to organize and structure the search for good policies. The optimal policies can be easily found once the optimal value functions $v_*$ or $q_*$, which satisfy the Bellman optimality equations shown below, are known.
+
+\begin{equation}  
+  \begin{aligned}
+    v_*(s) \ &=\ \max_{a} \mathbb{E} \left [ R_{t+1} + \gamma v_*(S_{t+1}) | S_t=s, A_t=a \right ] \\    
+             &=\ \sum_{s', r} p(s',r|s,a) \left [ r+\gamma v_*(s') \right ]
+\end{aligned}
+\end{equation}
+
+\begin{equation}
+  \begin{aligned}
+    q_*(s) \ &=\ \mathbb{E} \left [ R_{t+1} + \gamma \max_{a'} q_*(S_{t+1}, a') | S_t=s, A_t=a \right ] \\    
+        &=\ \sum_{s', r} p(s',r|s,a) \left [ r + \gamma \max_{a'} q_*(S_{t+1}, a') \right ]
+  \end{aligned}
+\end{equation}
+
+\gls{dp} algorithms are found by turning the Bellman equations into assignment and, or update rules for improving approximations of the value functions.
+
+
+\subsection{Policy evaluation}
+The first step in \gls{dp} is to compute the \emph{state-value} function $v_\pi$ for an arbitrary policy $\pi$. This is called \emph{policy evaluation} or \emph{prediction problem}.
+
+This can be done by writing the state-value function $v_\pi$ from eq.~\ref{eq:vpi} in terms of the policy probability function $\pi(a|s)$ and the transition probability function $p(s', t | s, a)$. The policy probability function is the probability of action $a$ being selected by the policy while being in state $s$. And the transition probability function gives the probability of the environment transitioning to state $s'$ and giving reward $r$ if action $a$ is taken while in state $s$.
+
+\begin{equation}
+  \begin{aligned}
+    v_\pi(s) \ &=\ \mathbb{E}_\pi \left [ G_t | S_t = s\right ] \\
+              &=\ \mathbb{E}_\pi \left [ R_{t+1}+\gamma G_{t+1} | S_t = s\right ] \\
+              &=\ \mathbb{E}_\pi \left [ R_{t+1}+\gamma v_\pi(S_{t+1}) | S_t = s\right ] \\
+              &=\ \sum_a \pi(a|s) \sum_{s',r} p(s', t | s, a) \left [ r + \gamma v_\pi(s') \right ]
+    \label{eq:vpipe}
+  \end{aligned}
+\end{equation}
+
+If the environment's dynamics are known, then Eq.~\ref{eq:vpipe} is a system of $|\mathcal{S}|$ equations with $|\mathcal{S}|$ unknowns. Solving it would be tedious, but trivial. However an iterative approach is preferred. Consider a sequence of value function $v_1, v_2, v_3, \dots$, each mapping 
