@@ -42,11 +42,12 @@ This chapter will focus on methods used to solve \acrfull{mdp} problems where th
 
 
 \section{Dynamic Programming}
-\gls{dp} refers to a collection of methods used to solve \gls{mdp} problems. The main idea of \gls{dp} and \gls{rl} is the use of value functions to organize and structure the search for good policies. The optimal policies can be easily found once the optimal value functions $v_*$ or $q_*$, which satisfy the Bellman optimality equations shown below, are known.
+\gls{dp} refers to a collection of methods used to solve \gls{mdp} problems. The main idea of \gls{dp} and \gls{rl} is the use of value functions to organize and structure the search for good policies. The optimal policies can be easily be found once the optimal value functions $v_*$ or $q_*$, which satisfy the Bellman optimality equations shown below, are known.
+\todo{Add reference to the transition probability function explenation in previous chapter.}
 
 \begin{equation}  
   \begin{aligned}
-    v_*(s) \ &=\ \max_{a} \mathbb{E} \left [ R_{t+1} + \gamma v_*(S_{t+1}) | S_t=s, A_t=a \right ] \\    
+    v_*(s) \ &=\ \max_{a}\ \mathbb{E} \left [ R_{t+1} + \gamma v_*(S_{t+1}) | S_t=s, A_t=a \right ] \\    
              &=\ \sum_{s', r} p(s',r|s,a) \left [ r+\gamma v_*(s') \right ]
 \end{aligned}
 \end{equation}
@@ -69,11 +70,31 @@ This can be done by writing the state-value function $v_\pi$ from eq.~\ref{eq:vp
 \begin{equation}
   \begin{aligned}
     v_\pi(s) \ &=\ \mathbb{E}_\pi \left [ G_t | S_t = s\right ] \\
-              &=\ \mathbb{E}_\pi \left [ R_{t+1}+\gamma G_{t+1} | S_t = s\right ] \\
-              &=\ \mathbb{E}_\pi \left [ R_{t+1}+\gamma v_\pi(S_{t+1}) | S_t = s\right ] \\
-              &=\ \sum_a \pi(a|s) \sum_{s',r} p(s', t | s, a) \left [ r + \gamma v_\pi(s') \right ]
+               &=\ \mathbb{E}_\pi \left [ R_{t+1}+\gamma G_{t+1} | S_t = s\right ] \\
+               &=\ \mathbb{E}_\pi \left [ R_{t+1}+\gamma v_\pi(S_{t+1}) | S_t = s\right ] \\
+               &=\ \sum_a \pi(a|s) \sum_{s',r} p(s', t | s, a) \left [ r + \gamma v_\pi(s') \right ]
     \label{eq:vpipe}
   \end{aligned}
 \end{equation}
 
-If the environment's dynamics are known, then Eq.~\ref{eq:vpipe} is a system of $|\mathcal{S}|$ equations with $|\mathcal{S}|$ unknowns. Solving it would be tedious, but trivial. However an iterative approach is preferred. Consider a sequence of value function $v_1, v_2, v_3, \dots$, each mapping $\mathcal{S}^+$ to $\mathbb{R}$.
+If the environment's dynamics are known, then Eq.~\ref{eq:vpipe} is a system of $|\mathcal{S}|$ equations with $|\mathcal{S}|$ unknowns. Solving it would be tedious, but trivial. However, this is almost never the case, thus iterative solution methods provide a better approach.
+Consider a sequence of value functions $v_1, v_2, v_3, \dots$, each mapping $\mathcal{S}^+$ to $\mathbb{R}$. The initial value function approximation may be chosen arbitrarily and new approximations are calculated using the Bellman equation for $v_\pi$ as an update rule.
+
+\begin{equation}
+  \begin{aligned}
+    v_{k+1}(s) \ &=\ \max_{a}\ \mathbb{E} \left [ R_{t+1} + \gamma v_k(S_{t+1}) | S_t=s, A_t=a \right ] \\    
+                 &=\ \sum_{s', r} p(s',r|s,a) \left [ r+\gamma v_k(s') \right ]
+    \label{eq:vpipe_update}
+  \end{aligned}
+\end{equation}
+
+The state-value function $v_pi$ is a fixed point for this update rule because the Bellman equation for $v_pi$ assures us of equality in this case. It os also possible to show that the sequence ${v_k}$ approaches $v_\pi$ as $k \rightarrow \infty$. This algorithm is called the \emph{iterative policy evaluation.}
+
+To produce each approximation the iterative policy evaluation applies the operation to each state $s$ and replacing the old value of $s$ with a new one based on the immediate received reward and the old values of the successor states of state $s$. This operation is called an \emph{expected update}.
+
+One way to implement this algorithm is to keep two arrays, one to hold the old values and another for the new ones. This way the new values can be computed from the old ones, without changing the old ones. It is also possible to implement it with one array and update the values "in place", by immediately replacing the old value by the one. The in-place algorithm not only consumes less memory, but also usually converges faster than the two-array version. This is because the new values are used as soon as they are available.
+
+
+\subsection{Policy improvement}
+
+After the value function $v_\pi$ for a deterministic policy $\pi$ has been found, it is possible to check whether there is an action $a$ which yields a larger value at 
