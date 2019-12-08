@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="report index" type="MAKEINDEX_RUN_CONFIGURATION" factoryName="LaTeX configuration factory">
+    <texify-makeindex>
+      <program>MAKEINDEX</program>
+      <main-file>$PROJECT_DIR$/report.tex</main-file>
+      <work-dir>$PROJECT_DIR$</work-dir>
+    </texify-makeindex>
+    <method v="2" />
+  </configuration>
+</component>

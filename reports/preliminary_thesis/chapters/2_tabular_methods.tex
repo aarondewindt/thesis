@@ -36,40 +36,51 @@
 
 \end{comment}
 
-The action-value function estimate $Q_t(s, a)$ holds the current estimate of the real action-value function $q_*(a)$. If the \gls{rl}-agent is to achieve it's goal, $Q_t(s, a)$ needs to be as close to $q_*(a)$ as possible. The actual function used to represent $Q_t(s, a)$ can be different depending on the application, and the methods used to estimate $Q_t(s, a)$ can be different depending on the underling function and application. 
+The action-value function estimate $Q_t(s, a)$ holds the current estimate of the real action-value function $q_*(a)$. If the \gls{rl}-agent is to achieve it's goal, $Q_t(s, a)$ needs to be as close to $q_*(a)$ as possible.
+The actual function used to represent $Q_t(s, a)$ can be different depending on the application, and the methods used to estimate $Q_t(s, a)$ can be different depending on the underlying function and application.
 
-This chapter will focus on methods used to solve \acrfull{mdp} problems where the value and policy consist of tables of discreet values. These methods are useful with small discreet state- and action-spaces and can be used to explain different concepts. The chapter will first start with Dynamic Programming and Monte Carlo methods. These methods have limited use in \acrfull{rl}, but provide an essential base for understanding the inner workings of \gls{rl} methods.
+This chapter will focus on methods used to solve \acrfull{mdp} problems where the value and policy consist of tables of discreet values.
+These methods are useful with small discreet state- and action-spaces and can be used to explain different concepts.
+The chapter will first start with Dynamic Programming and Monte Carlo methods.
+These methods have limited use in \acrfull{rl}, but provide an essential base for understanding the inner workings of \gls{rl} methods.
 
 
 \section{Dynamic Programming}
-\gls{dp} refers to a collection of methods used to solve \gls{mdp} problems. The main idea of \gls{dp} and \gls{rl} is the use of value functions to organize and structure the search for good policies. The optimal policies can be easily be found once the optimal value functions $v_*$ or $q_*$, which satisfy the Bellman optimality equations shown below, are known.
-\todo{Add reference to the transition probability function explenation in previous chapter.}
+\gls{dp} refers to a collection of methods used to solve \gls{mdp} problems.
+The main idea of \gls{dp} and \gls{rl} is the use of value functions to organize and structure the search for good policies.
+The optimal policies can be easily be found once the optimal value functions $v_*$ or $q_*$ which satisfy the Bellman optimality equations shown below are known.
+\todo{Add reference to the transition probability function explanation in previous chapter.}
 
-\begin{equation}  
+\begin{equation}
   \begin{aligned}
     v_*(s) \ &=\ \max_{a}\ \mathbb{E} \left [ R_{t+1} + \gamma v_*(S_{t+1}) | S_t=s, A_t=a \right ] \\    
              &=\ \sum_{s', r} p(s',r|s,a) \left [ r+\gamma v_*(s') \right ]
-\end{aligned}
+  \end{aligned}
+    \label{eq:bellman_1}
 \end{equation}
 
 \begin{equation}
   \begin{aligned}
-    q_*(s) \ &=\ \mathbb{E} \left [ R_{t+1} + \gamma \max_{a'} q_*(S_{t+1}, a') | S_t=s, A_t=a \right ] \\    
+    q_*(s, a) \ &=\ \mathbb{E} \left [ R_{t+1} + \gamma \max_{a'} q_*(S_{t+1}, a') | S_t=s, A_t=a \right ] \\
         &=\ \sum_{s', r} p(s',r|s,a) \left [ r + \gamma \max_{a'} q_*(S_{t+1}, a') \right ]
   \end{aligned}
+    \label{eq:bellman_2}
 \end{equation}
 
 \gls{dp} algorithms are found by turning the Bellman equations into assignment and, or update rules for improving approximations of the value functions.
 
 
 \subsection{Policy evaluation}
-The first step in \gls{dp} is to compute the \emph{state-value} function $v_\pi$ for an arbitrary policy $\pi$. This is called \emph{policy evaluation} or \emph{prediction problem}.
+The first step in \gls{dp} is to compute the \emph{state-value} function $v_\pi$ for an arbitrary policy $\pi$.
+This is called \emph{policy evaluation} or \emph{prediction problem}.
 
-This can be done by writing the state-value function $v_\pi$ from eq.~\ref{eq:vpi} in terms of the policy probability function $\pi(a|s)$ and the transition probability function $p(s', t | s, a)$. The policy probability function is the probability of action $a$ being selected by the policy while being in state $s$. And the transition probability function gives the probability of the environment transitioning to state $s'$ and giving reward $r$ if action $a$ is taken while in state $s$.
+This can be done by writing the state-value function $v_\pi$ from eq.~\ref{eq:vpi} in terms of the policy probability function $\pi(a|s)$ and the transition probability function $p(s', t | s, a)$.
+The policy probability function is the probability of action $a$ being selected by the policy while being in state $s$.
+And the transition probability function gives the probability of the environment transitioning to state $s'$ and giving reward $r$ if action $a$ is taken while in state $s$.
 
 \begin{equation}
   \begin{aligned}
-    v_\pi(s) \ &=\ \mathbb{E}_\pi \left [ G_t | S_t = s\right ] \\
+    v_\pi(s) \ &\doteq\ \mathbb{E}_\pi \left [ G_t | S_t = s\right ] \\
                &=\ \mathbb{E}_\pi \left [ R_{t+1}+\gamma G_{t+1} | S_t = s\right ] \\
                &=\ \mathbb{E}_\pi \left [ R_{t+1}+\gamma v_\pi(S_{t+1}) | S_t = s\right ] \\
                &=\ \sum_a \pi(a|s) \sum_{s',r} p(s', t | s, a) \left [ r + \gamma v_\pi(s') \right ]
@@ -77,24 +88,75 @@ This can be done by writing the state-value function $v_\pi$ from eq.~\ref{eq:vp
   \end{aligned}
 \end{equation}
 
-If the environment's dynamics are known, then Eq.~\ref{eq:vpipe} is a system of $|\mathcal{S}|$ equations with $|\mathcal{S}|$ unknowns. Solving it would be tedious, but trivial. However, this is almost never the case, thus iterative solution methods provide a better approach.
-Consider a sequence of value functions $v_1, v_2, v_3, \dots$, each mapping $\mathcal{S}^+$ to $\mathbb{R}$. The initial value function approximation may be chosen arbitrarily and new approximations are calculated using the Bellman equation for $v_\pi$ as an update rule.
+If the environment's dynamics are known, then Eq.~\ref{eq:vpipe} is a system of $|\mathcal{S}|$ equations with $|\mathcal{S}|$ unknowns.
+Solving it would be tedious, but trivial.
+However, this is almost never the case, thus iterative solution methods provide a better approach.
+Consider a sequence of value functions $v_1, v_2, v_3, \dots$, each mapping $\mathcal{S}^+$ to $\mathbb{R}$.
+The initial value function approximation may be chosen arbitrarily and new approximations are calculated using the Bellman equation for $v_\pi$ as an update rule.
 
 \begin{equation}
   \begin{aligned}
-    v_{k+1}(s) \ &=\ \max_{a}\ \mathbb{E} \left [ R_{t+1} + \gamma v_k(S_{t+1}) | S_t=s, A_t=a \right ] \\    
-                 &=\ \sum_{s', r} p(s',r|s,a) \left [ r+\gamma v_k(s') \right ]
+    v_{k+1}(s) \ &=\ \mathbb{E} \left [ R_{t+1} + \gamma v_k(S_{t+1}) | S_t=s, A_t=a \right ] \\
+                 &=\ \sum_{a} \pi (a|s) \sum_{s', r} p(s',r|s,a) \left [ r+\gamma v_k(s') \right ]
     \label{eq:vpipe_update}
   \end{aligned}
 \end{equation}
 
-The state-value function $v_pi$ is a fixed point for this update rule because the Bellman equation for $v_pi$ assures us of equality in this case. It os also possible to show that the sequence ${v_k}$ approaches $v_\pi$ as $k \rightarrow \infty$. This algorithm is called the \emph{iterative policy evaluation.}
+The state-value function $v_\pi$ is a fixed point for this update rule because the Bellman equation for $v_\pi$ assures us of equality in this case.
+It is also possible to show that the sequence ${v_k}$ approaches $v_\pi$ as $k \rightarrow \infty$.
+This algorithm is called the \emph{iterative policy evaluation.}
 
-To produce each approximation the iterative policy evaluation applies the operation to each state $s$ and replacing the old value of $s$ with a new one based on the immediate received reward and the old values of the successor states of state $s$. This operation is called an \emph{expected update}.
+To produce each approximation the iterative policy evaluation applies the operation to each state $s$ and replacing the old value of $s$ with a new one based on the immediate received reward and the old values of the successor states of state $s$.
+This operation is called an \emph{expected update}.
 
-One way to implement this algorithm is to keep two arrays, one to hold the old values and another for the new ones. This way the new values can be computed from the old ones, without changing the old ones. It is also possible to implement it with one array and update the values "in place", by immediately replacing the old value by the one. The in-place algorithm not only consumes less memory, but also usually converges faster than the two-array version. This is because the new values are used as soon as they are available.
+One way to implement this algorithm is to keep two arrays, one to hold the old values and another for the new ones.
+This way the new values can be computed from the old ones, without changing the old ones.
+It is also possible to implement it with one array and update the values "in place", by immediately replacing the old value by the one.
+The in-place algorithm not only consumes less memory, but also usually converges faster than the two-array version.
+This is because the new values are used as soon as they are available.
 
 
 \subsection{Policy improvement}
+With the value function $v_\pi(s)$ for a deterministic policy $\pi$ known, it is possible to check for each state, whether there is an action $a$ which yields a larger value than the action taken by the current policy $\pi$.
+One way to do this, is for each state $s$, select an action $a$ different from the action taken by the current policy ($a \neq \pi(s)$) and calculate the value if that action is taken first, followed by the current policy after that.
+The value for this behaviour is:
 
-After the value function $v_\pi$ for a deterministic policy $\pi$ has been found, it is possible to check whether there is an action $a$ which yields a larger value at 
+\begin{equation}
+  \begin{aligned}
+    q_\pi(s, a) \ &=\ \mathbb{E} \left [ R_{t+1} + \gamma v_\pi \left ( S_{t+1}  \right ) | S_t=s, A_t=a \right ] \\
+        &=\ \sum_{s', r} p(s',r|s,a) \left [ r + \gamma v_\pi \left ( s'  \right ) \right ]
+  \end{aligned}
+\end{equation}
+
+If this value is greater than that of the current policy, then a better action has been found.
+It can therefore be expected that a policy where the new action $a$ is taken whenever state $s$ is encountered is a better policy than the current policy.
+Thus updating the policy $\pi$ with the new action will result in a new policy that is as good as or better than the current policy.
+
+Repeating this process for all state-action combinations, it is possible to find a new greedy policy $\pi'$, given below.
+Where $\argmax{a}$ denotes the value of $a$ which maximizes the expression that follows.
+
+\begin{equation}
+  \begin{aligned}
+    q_\pi(s, a) \ &\doteq \argmax{a}\ q_\pi(s, a) \\
+                  &=\ \argmax{a}\ \mathbb{E} \left [ R_{t+1} + \gamma v_\pi \left ( S_{t+1}  \right ) | S_t=s, A_t=a \right ] \\
+        &=\ \argmax{a}\ \sum_{s', r} p(s',r|s,a) \left [ r + \gamma v_\pi \left ( s'  \right ) \right ]
+  \end{aligned}
+\end{equation}
+
+
+The process of making a new policy that improves over the original one using the values of the original policy is called \emph{policy improvement}.
+In the case where the new policy $\pi'$ is as good than the old policy $\pi$, Then $v_{\pi'}=v_{\pi}$ and from there is follows that for all $s \in \mathcal{S}$:
+
+\begin{equation}
+  \begin{aligned}
+    v_{\pi'}(s) \ &=\ \max_{a}\ \mathbb{E} \left [ R_{t+1} + \gamma v_{\pi'}(S_{t+1}) | S_t=s, A_t=a \right ] \\
+             &=\ \sum_{s', r} p(s',r|s,a) \left [ r+\gamma v_{\pi'}(s') \right ]
+\end{aligned}
+\end{equation}
+
+This is the same as the Bellman optimality equation (\ref{eq:bellman_1}) and thus $v_{\pi'}(s)$ is the optimal value function $v_*(s)$.
+So policy improvement will always give a better policy, except when the policy is already optimal.
+
+Policy improvement can also be applied to stochastic policies.
+These are policies where each action is given a probability $\pi(a|s)$ to occur.
+If there are ties between actions, that is, multiple actions that result in the same maximum value, then each of these action can be given a part of the probability to occur, as long as any non-optimal action is given zero probability.

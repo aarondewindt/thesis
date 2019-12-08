@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated>
+      <config projectName="pole" targetName="spike_eigen_exp" />
+      <config projectName="pole" targetName="pole_main" />
+      <config projectName="pole" targetName="ReplicatePythonSourceTree" />
+      <config projectName="pole" targetName="random_local_test" />
+      <config projectName="pole" targetName="random_static_test" />
+      <config projectName="pole" targetName="libpole" />
+      <config projectName="pole" targetName="cpp_init" />
+      <config projectName="pole" targetName="spike_conditional_template" />
+      <config projectName="pole" targetName="random_thread_local_test" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b0eee238-e15b-48f0-9842-94abaf9ae376" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../../reports/preliminary_thesis/chapters/2_tabular_methods.tex" beforeDir="false" afterPath="$PROJECT_DIR$/../../reports/preliminary_thesis/chapters/2_tabular_methods.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../reports/preliminary_thesis/report.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../reports/preliminary_thesis/report.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../reports/preliminary_thesis/report.slg" beforeDir="false" afterPath="$PROJECT_DIR$/../../reports/preliminary_thesis/report.slg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../reports/preliminary_thesis/report.tex" beforeDir="false" afterPath="$PROJECT_DIR$/../../reports/preliminary_thesis/report.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../reports/preliminary_thesis/report.tlg" beforeDir="false" afterPath="$PROJECT_DIR$/../../reports/preliminary_thesis/report.tlg" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>python</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="EnlrTnIY" />
+  </component>
+  <component name="ProjectId" id="1NssYDvnOZYVe9ARXDkhxz6wlTl" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../learning_rust/building_blocks_1/meow" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="CMake Application.cpp_init">
+    <configuration name="ReplicatePythonSourceTree" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="pole" TARGET_NAME="ReplicatePythonSourceTree" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="cpp_init" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="pole" TARGET_NAME="cpp_init" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="libpole" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="pole" TARGET_NAME="libpole" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="pole_main" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="pole" TARGET_NAME="pole_main" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="pole" RUN_TARGET_NAME="pole_main">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="random_local_test" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="pole" TARGET_NAME="random_local_test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="pole" RUN_TARGET_NAME="random_local_test">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="random_static_test" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="pole" TARGET_NAME="random_static_test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="pole" RUN_TARGET_NAME="random_static_test">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="random_thread_local_test" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="pole" TARGET_NAME="random_thread_local_test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="pole" RUN_TARGET_NAME="random_thread_local_test">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="spike_conditional_template" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="pole" TARGET_NAME="spike_conditional_template" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="pole" RUN_TARGET_NAME="spike_conditional_template">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="spike_eigen_exp" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="pole" TARGET_NAME="spike_eigen_exp" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="pole" RUN_TARGET_NAME="spike_eigen_exp">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="CMake Application.pole_main" />
+      <item itemvalue="CMake Application.ReplicatePythonSourceTree" />
+      <item itemvalue="CMake Application.random_local_test" />
+      <item itemvalue="CMake Application.random_static_test" />
+      <item itemvalue="CMake Application.random_thread_local_test" />
+      <item itemvalue="CMake Application.cpp_init" />
+      <item itemvalue="CMake Application.libpole" />
+      <item itemvalue="CMake Application.spike_conditional_template" />
+      <item itemvalue="CMake Application.spike_eigen_exp" />
+    </list>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b0eee238-e15b-48f0-9842-94abaf9ae376" name="Default Changelist" comment="" />
+      <created>1559783810745</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1559783810745</updated>
+      <workItem from="1559783813996" duration="986000" />
+      <workItem from="1562881189699" duration="164000" />
+      <workItem from="1562881369503" duration="1630000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

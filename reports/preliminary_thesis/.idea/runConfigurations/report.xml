@@ -1,0 +1,20 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="report" type="LATEX_RUN_CONFIGURATION" factoryName="LaTeX configuration factory">
+    <texify>
+      <compiler>PDFLATEX</compiler>
+      <compiler-path />
+      <sumatra-path />
+      <viewer-command />
+      <compiler-arguments />
+      <main-file>$PROJECT_DIR$/report.tex</main-file>
+      <aux-dir>false</aux-dir>
+      <out-dir>true</out-dir>
+      <compile-twice>true</compile-twice>
+      <output-format>PDF</output-format>
+      <has-been-run>true</has-been-run>
+      <bib-run-config>BibTeX.report bibliography</bib-run-config>
+      <makeindex-run-config>Makeindex.report index</makeindex-run-config>
+    </texify>
+    <method v="2" />
+  </configuration>
+</component>
