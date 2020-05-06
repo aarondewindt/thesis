@@ -119,7 +119,7 @@ This is because the new values are used as soon as they are available.
 \subsection{Policy improvement}
 With the value function $v_\pi(s)$ for a deterministic policy $\pi$ known, it is possible to check for each state, whether there is an action $a$ which yields a larger value than the action taken by the current policy $\pi$.
 One way to do this, is for each state $s$, select an action $a$ different from the action taken by the current policy ($a \neq \pi(s)$) and calculate the value if that action is taken first, followed by the current policy after that.
-The value for this behaviour is:
+The value for this behavior is:
 
 \begin{equation}
   \begin{aligned}
@@ -160,3 +160,76 @@ So policy improvement will always give a better policy, except when the policy i
 Policy improvement can also be applied to stochastic policies.
 These are policies where each action is given a probability $\pi(a|s)$ to occur.
 If there are ties between actions, that is, multiple actions that result in the same maximum value, then each of these action can be given a part of the probability to occur, as long as any non-optimal action is given zero probability.
+
+\subsection{Policy iteration}
+Using policy improvement a policy, $\pi$, can be improved using $v_{\pi}$ to yield a better policy, $\pi'$. With this new policy a new \emph{state-value} function $v_\pi'$ can be evaluated from $\pi'$, which results a new improved policy $\pi''$. This process can be repeated indefinitely. 
+
+Each new policy in guaranteed to be in improvement over the previous one unless it's already the optimal policy. Since a finite MDP only had a finite number of policies, this process must converge to the optimal policy and the optimal value function in a finite number of iterations.
+
+This way of finding the optimal policy it called policy iteration.
+
+
+% \subsection{Value iteration}
+% One disadvantage Policy iteration is that the policy evaluation needs be repeated on each iteration. This can be time and computationally consuming if the policy evaluation is done iteratively, since this would require multiple sweeps through the entire state set during each policy evaluation.
+
+\subsection{Generalized Policy Iteration}
+In Policy Iteration the Policy Improvement and Policy Evaluation processes alternate, each completing before the other one. However this is not necessary, as long both processes continue to update all states, the ultimate result is almost always the same, convergence to the optimal value function and optimal policy. The term \acrfull{gpi} is used to refer the general idea of letting the Policy Improvement and Policy Evaluation processes interact independent of the granularity and other details of the other processes.
+
+
+\section{Monte Carlo Methods}
+It is not always possible to have a model fully describing the system for which the optimal policy is being discovered. This is where Monte Carlo methods come into play. Unlike Dynamic Programming, Monte Carlo methods require only \emph{experience}, sample sequences of states, actions and rewards or simulated interaction with the environment. Thus no prior knowledge of the dynamics are needed to determine the optimal policy. These methods allow learning from simulated experience, which would require a model, but this model only needs to generate sample transitions and not the complete probability distribution of all possible transitions.
+
+Just like the k-armed bandit problem demonstrated in Section~\ref{sec:epsgreedyexample}, Monte Carlo methods work by averaging the returns for state---action pairs. The main difference is that there are multiple states, each acting like a different, interrelated bandit problems, that is, the return from taking an action in one state depends on the actions taken in future states in the same episode.
+
+Since the agent is learning and changing its policy throughout the process, the action selection is constantly changing and thus the problem is nonstationary from the point of view of the earlier state. To handle the nonstationarity, the idea of \acrfull{gpi} is adapted. In \gls{dp} the value functions are computed directly from the knowledge of the \gls{mdp}. With Monte Carlo methods however the value functions are \emph{learned} from sample returns with the \gls{mdp}. The value functions and their policies still interact in the same way.
+
+As previously mentioned, the value of a state ($v_\pi(s)$) is the expected return, the expected cumulative future discounted reward, starting from that state. The obvious way to estimate it from experience is to average all returns after visiting that state. As more returns are observed, the average will converge to the expected value. This is the underlying idea of all Monte Carlo methods. 
+
+If no model is available, then it might be better to estimate \emph{action} values (the values of state---action pairs, $q_\pi(s, a)$). With a model, state values alone are sufficient to determine a policy, since the agent would simply have to look ahead one step and see which action results in the highest value. This is not possible without a model. The values of each action must be estimated, since the agent doesn't know to witch state each action will lead to.
+
+
+\section{Temporal Difference}
+\acrfull{td} learning is one of the main elements of reinforcement learning. It is a combination of ideas from Monte Carlo methods and \gls{dp}. Just as with Monte Carlo methods, \gls{td} methods are able to learn from experience without the need of a model of the environment's dynamics, and just as with \gls{dp}, \gls{td} methods update estimates based in part on other learned estimates, without waiting for a final outcome.
+
+\subsection{TD Prediction}
+Both \gls{td} and Monte Carlo methods use experience to solve the prediction problem. Given some experience following policy $\pi$, both methods update their estimate $V$ of $v_\pi$ for non-terminal states that occurred during that experience. Monte Carlo methods wait until the return $G_t$ after visiting state $S_t$ is known. A simple every-visit Monte-Carlo method is shown in Equation~\ref{eq:mcupdaterule}.
+
+
+\begin{equation}
+  \label{eq:mcupdaterule}
+  V(S_t) \leftarrow V(S_t) + \alpha \left [  G_t - V(S_t) \right ]
+\end{equation}
+
+Monte-Carlo methods need to wait until the end of an episode since $G_t$ is only known then. \gls{td} methods only need to wait until the next iteration by estimating $G_t$ using the observed reward $R_{t+1}$ and the estimated value $V(S_{t+1})$. Thus just like with \gls{dp}, \gls{td} methods updates are based in part on existing estimates. These types of methods are known as bootstrapping methods.
+
+Equation~\ref{eq:tdupdaterule} shows the simplest \gls{td} method. This method is called TD(0) or one-step TD, because it's a special case of the TD(\lambda) and n-step TD methods. 
+
+\begin{equation}
+  \label{eq:tdupdaterule}
+  V(S_t) \leftarrow V(S_t) + \alpha \left [  R_{t+1} + \gamma V(S_{t+1})- V(S_t) \right ]
+\end{equation}
+
+The quantity within the bracket is sort of an error, it's the difference between the estimated value of $S_t$ and the better estimate $R_{t+1} + \gamma V(S_{t+1})$. This quantity is known as the TD error and can be found in various forms throughout reinforcement learning.
+
+\subsection{Sarsa: On-policy TD Control}
+In order to use TD prediction for the control problem the pattern of \acrfull{gpi} can be used, only this time using TD methods for the evaluation or prediction part. Approaches fall under two classes, on-policy and off-policy. This section focuses on an on-policy \gld{td} control method.
+
+The first step is to learn an action-value function rather than a state-value function. For an on-policy method the estimated $q_\pi(s,a)$ is made for the behavior of the current policy. This can be done essentially the same as the \gls{td} method described above.
+
+\begin{equation}
+  Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left [  R_{t+1} + \gamma Q(S_{t+1}, A_{t+1})- Q(S_t, A_t) \right ]
+\end{equation}}
+
+This update is done after every iteration from a non-terminal state $S_t$. If $S_{t+1}$ is a terminal state, then $Q(S_{t+1}, A_{t+1})$ is defined as zero. This rule uses every element of the quintuple of events, $(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1})$, that make up a transition from one state-action to another. This quintuple gives rise to the name Sarsa for the algorithm.
+
+
+\subsection{Q-learning: Off-policy TD control}
+Another option is Q-learning, an off-policy TD control method. In this case the learned action-value. $Q$, directly approximates $q_*$, the optimal action-value function, independent of the policy being followed. The Q-learning update rule is defined by
+
+\begin{equation}
+  Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left [  R_{t+1} + \gamma\ \underset{a}{max}\ Q(S_{t+1}, a) - Q(S_t, A_t) \right ]
+\end{equation}}
+
+The advantage of this method is that it drastically simplifies the analysis of the algorithm and enables early convergence proofs. The policy still has an effect since it determines which states-action pairs are visited and updated, however the only thing that is required is that all pairs continue to be updated.
+
+The disadvantage is that since the action-value function learned is independent of the policy, the agent doesn't take into account the possibility of it taking a non-optimal action, which in turn may lead to a solution worse than that obtained by a on-policy method.
