@@ -212,24 +212,47 @@ Equation~\ref{eq:tdupdaterule} shows the simplest \gls{td} method. This method i
 The quantity within the bracket is sort of an error, it's the difference between the estimated value of $S_t$ and the better estimate $R_{t+1} + \gamma V(S_{t+1})$. This quantity is known as the TD error and can be found in various forms throughout reinforcement learning.
 
 \subsection{Sarsa: On-policy TD Control}
-In order to use TD prediction for the control problem the pattern of \acrfull{gpi} can be used, only this time using TD methods for the evaluation or prediction part. Approaches fall under two classes, on-policy and off-policy. This section focuses on an on-policy \gld{td} control method.
+In order to use TD prediction for the control problem the pattern of \acrfull{gpi} can be used, only this time using TD methods for the evaluation or prediction part. Approaches fall under two classes, on-policy and off-policy. This section focuses on an on-policy \gls{td} control method.
 
 The first step is to learn an action-value function rather than a state-value function. For an on-policy method the estimated $q_\pi(s,a)$ is made for the behavior of the current policy. This can be done essentially the same as the \gls{td} method described above.
 
 \begin{equation}
   Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left [  R_{t+1} + \gamma Q(S_{t+1}, A_{t+1})- Q(S_t, A_t) \right ]
-\end{equation}}
+\end{equation}
 
+\todo{Fix the tuple}
 This update is done after every iteration from a non-terminal state $S_t$. If $S_{t+1}$ is a terminal state, then $Q(S_{t+1}, A_{t+1})$ is defined as zero. This rule uses every element of the quintuple of events, $(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1})$, that make up a transition from one state-action to another. This quintuple gives rise to the name Sarsa for the algorithm.
 
 
 \subsection{Q-learning: Off-policy TD control}
-Another option is Q-learning, an off-policy TD control method. In this case the learned action-value. $Q$, directly approximates $q_*$, the optimal action-value function, independent of the policy being followed. The Q-learning update rule is defined by
+Another option is Q-learning, an off-policy TD control method. In this case the learned action-value function, directly approximates $q_*$, the optimal action-value function.
 
 \begin{equation}
   Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left [  R_{t+1} + \gamma\ \underset{a}{max}\ Q(S_{t+1}, a) - Q(S_t, A_t) \right ]
-\end{equation}}
+\end{equation}
 
-The advantage of this method is that it drastically simplifies the analysis of the algorithm and enables early convergence proofs. The policy still has an effect since it determines which states-action pairs are visited and updated, however the only thing that is required is that all pairs continue to be updated.
+The advantage of this method is that it drastically simplifies the analysis of the algorithm and enables early convergence proofs. The only thing that is required is that all pairs continue to be updated.
+The disadvantage is that since the action-value function learned is independent of the policy, the agent doesn't take into account the possibility of it taking a non-optimal action.
 
-The disadvantage is that since the action-value function learned is independent of the policy, the agent doesn't take into account the possibility of it taking a non-optimal action, which in turn may lead to a solution worse than that obtained by a on-policy method.
+The following example is used to demonstrate the difference between on and off policy methods. Figure~\ref{fig:on_off_policy} shows a grid world. The agent's task to go from the start (S) block to the goal (G). However if the agent steps on the cliff, the episode will end, it receives a $-100$ reward and is then send back to the start. A $-1$ reward is given to agent each step until it has reached the goal. 
+
+
+\begin{figure}[ht]			
+	\centering
+	\includegraphics[width=0.5\textwidth]{figures/on_off_policy}			
+	\caption{Example reward distribution for a 5-armed bandit problem.}
+	\label{fig:on_off_policy}
+\end{figure}
+
+200 agents are simulated for 500 episodes to demonstrate the difference between on and off policy learning methods. They all follow \eps-greedy policies with $\epsilon=0.1$, but half use Sarsa and the other half Q-learning. The Q-learning agents learn the optimal policy and thus travel right along the edge of the cliff. However since the agents may at any point take a step into any random direction, it is better to take the safer route further away from the edge. Since the Sarsa agents learn the roundabout policy, this is the path they learn to take. Figure~\ref{fig:on_off_policy_results} show the results of these simulations.
+
+However once the agents have been trained and \eps  is set to zero, the Q-learning agents outperform the Sarsa agents. With these new greedy policies the Q-learning agents will always receive a sum of rewards of $-12$ while the Sarsa agents receive $-16$ thanks to the longer path. If \eps  is gradually reduced to zero, then both methods to the optimal policy.
+
+\begin{figure}[ht]			
+	\centering
+	\includegraphics[width=0.6\textwidth]{figures/on_off_policy_results}			
+	\caption{Example reward distribution for a 5-armed bandit problem.}
+	\label{fig:on_off_policy_results}
+\end{figure}
+
+

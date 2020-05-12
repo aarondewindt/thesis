@@ -1,6 +1,15 @@
 from collections import defaultdict
-from random import randint, random
+from random import random, sample
 
+from cliff_walking.environment import Action
+
+
+action_print_map = {
+    Action.up: "↑",
+    Action.right: "→",
+    Action.down: "↓",
+    Action.left: "←",
+}
 
 class QLearningAgent:
     def __init__(self, alpha, gamma, eps, environment):
@@ -10,21 +19,30 @@ class QLearningAgent:
         self.q = defaultdict(lambda: 0.0)
         self.environment = environment
         self.reward_sum = 0
+        self.total_reward_sum = 0
 
-    def greedy_action(self):
-        state = self.environment.state()
-        best_action = randint(0, 3)
+    def greedy_action(self, state=None):
+        state = state or self.environment.state()
+        actions = self.environment.actions(state)
+        best_action = actions[0]
         best_value = self.q[(state, best_action)]
-        for i in range(1, 4):
-            value = self.q[(state, i)]
+        for action in actions[1:]:
+            value = self.q[(state, action)]
             if value > best_value:
-                best_action = i
+                best_action = action
                 best_value = value
         return best_action
 
+    def print_greedy_policy(self):
+        for y in reversed(range(self.environment.y_max + 1)):
+            for x in range(self.environment.x_max + 1):
+                action = self.greedy_action((x, y))
+                print(f"{action_print_map[action]} ", end="")
+            print("")
+
     def policy(self):
         if random() < self.eps:
-            return randint(0, 3)
+            return sample(self.environment.actions(), 1)[0]
         else:
             return self.greedy_action()
 
@@ -50,5 +68,6 @@ class QLearningAgent:
         for i in range(n):
             if self.step():
                 break
+        self.total_reward_sum += self.reward_sum
         return self.reward_sum
 

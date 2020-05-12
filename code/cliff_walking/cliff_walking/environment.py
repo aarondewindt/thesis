@@ -1,4 +1,12 @@
+from enum import IntEnum
 import numpy as np
+
+
+class Action(IntEnum):
+    up = 0
+    right = 1
+    down = 2
+    left = 3
 
 
 class Environment:
@@ -15,14 +23,33 @@ class Environment:
         self.x = 0
         self.y = 0
 
-    def perform_action(self, action):
-        if action == 0:
+    def actions(self, state=None):
+        state = state or (self.x, self.y)
+        actions = [Action.up,
+                   Action.right,
+                   Action.down,
+                   Action.left]
+
+        if state[1] <= 0:
+            actions.remove(Action.down)
+        elif state[1] >= self.y_max:
+            actions.remove(Action.up)
+
+        if state[0] <= 0:
+            actions.remove(Action.left)
+        elif state[0] >= self.x_max:
+            actions.remove(Action.right)
+
+        return actions
+
+    def perform_action(self, action: Action):
+        if action == Action.up:
             self.y += 1
-        elif action == 1:
+        elif action == Action.right:
             self.x += 1
-        elif action == 2:
+        elif action == Action.down:
             self.y += -1
-        elif action == 3:
+        elif action == Action.left:
             self.x += -1
         else:
             raise Exception(f"Invalid action '{action}'.")
