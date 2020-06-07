@@ -13,3 +13,9 @@
 [submodule "code/f16/extern_libs/eigen-git-mirror"]
 	path = code/f16/extern_libs/eigen-git-mirror
 	url = https://github.com/eigenteam/eigen-git-mirror.git
+[submodule "code/pole_new/libs/random"]
+	path = code/pole_new/libs/random
+	url = https://github.com/effolkronium/random.git
+[submodule "code/pole_new/libs/span"]
+	path = code/pole_new/libs/span
+	url = https://github.com/tcbrindle/span.git

@@ -15,6 +15,8 @@ target_compile_options(libpole PUBLIC -march=native)
 
 set_source_files_properties(cpp_init.pyx PROPERTIES CYTHON_IS_CXX TRUE)
 cython_add_module(cpp_init cpp_init.pyx)
+
+
 target_link_libraries(cpp_init libpole)
 target_include_directories(cpp_init PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 set_target_properties(cpp_init PROPERTIES

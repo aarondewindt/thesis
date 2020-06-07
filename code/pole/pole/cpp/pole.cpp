@@ -18,7 +18,6 @@ Pole::Pole(double mass, double length):
         length(length),
         mass(mass),
         inertia(mass * length * length / 3){
-
 }
 
 void Pole::act(double torque, double &reward, bool &is_terminal) {

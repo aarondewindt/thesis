@@ -1,4 +1,4 @@
-\chapter{Tabular Methods}
+% \chapter{Tabular Methods}
 
 \begin{comment}
     Short description of what tabular methods are.
@@ -36,13 +36,13 @@
 
 \end{comment}
 
-The action-value function estimate $Q_t(s, a)$ holds the current estimate of the real action-value function $q_*(a)$. If the \gls{rl}-agent is to achieve it's goal, $Q_t(s, a)$ needs to be as close to $q_*(a)$ as possible.
-The actual function used to represent $Q_t(s, a)$ can be different depending on the application, and the methods used to estimate $Q_t(s, a)$ can be different depending on the underlying function and application.
+% The action-value function estimate $Q_t(s, a)$ holds the current estimate of the real action-value function $q_*(a)$. If the \gls{rl}-agent is to achieve it's goal, $Q_t(s, a)$ needs to be as close to $q_*(a)$ as possible.
+% The actual function used to represent $Q_t(s, a)$ can be different depending on the application, and the methods used to estimate $Q_t(s, a)$ can be different depending on the underlying function and application.
 
-This chapter will focus on methods used to solve \acrfull{mdp} problems where the value and policy consist of tables of discreet values.
-These methods are useful with small discreet state- and action-spaces and can be used to explain different concepts.
-The chapter will first start with Dynamic Programming and Monte Carlo methods.
-These methods have limited use in \acrfull{rl}, but provide an essential base for understanding the inner workings of \gls{rl} methods.
+% This chapter will focus on methods used to solve \acrfull{mdp} problems where the value and policy consist of tables of discreet values.
+% These methods are useful with small discreet state- and action-spaces and can be used to explain different concepts.
+% The chapter will first start with Dynamic Programming and Monte Carlo methods.
+% These methods have limited use in \acrfull{rl}, but provide an essential base for understanding the inner workings of \gls{rl} methods.
 
 
 \section{Dynamic Programming}
@@ -236,6 +236,7 @@ The disadvantage is that since the action-value function learned is independent 
 
 The following example is used to demonstrate the difference between on and off policy methods. Figure~\ref{fig:on_off_policy} shows a grid world. The agent's task to go from the start (S) block to the goal (G). However if the agent steps on the cliff, the episode will end, it receives a $-100$ reward and is then send back to the start. A $-1$ reward is given to agent each step until it has reached the goal. 
 
+\todo{Update captions}
 
 \begin{figure}[ht]			
 	\centering
@@ -246,7 +247,7 @@ The following example is used to demonstrate the difference between on and off p
 
 200 agents are simulated for 500 episodes to demonstrate the difference between on and off policy learning methods. They all follow \eps-greedy policies with $\epsilon=0.1$, but half use Sarsa and the other half Q-learning. The Q-learning agents learn the optimal policy and thus travel right along the edge of the cliff. However since the agents may at any point take a step into any random direction, it is better to take the safer route further away from the edge. Since the Sarsa agents learn the roundabout policy, this is the path they learn to take. Figure~\ref{fig:on_off_policy_results} show the results of these simulations.
 
-However once the agents have been trained and \eps  is set to zero, the Q-learning agents outperform the Sarsa agents. With these new greedy policies the Q-learning agents will always receive a sum of rewards of $-12$ while the Sarsa agents receive $-16$ thanks to the longer path. If \eps  is gradually reduced to zero, then both methods to the optimal policy.
+However once the agents have been trained and \eps  is set to zero, the Q-learning agents outperform the Sarsa agents. With these new greedy policies the Q-learning agents will always receive a sum of rewards of $-12$ while the Sarsa agents receive $-16$ thanks to the longer path. If \eps  is gradually reduced to zero, then both methods converge to the optimal policy.
 
 \begin{figure}[ht]			
 	\centering
