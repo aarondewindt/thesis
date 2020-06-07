@@ -122,38 +122,48 @@ namespace pole {
             return q_table_span.subspan(c1 * theta_dot_idx + c2 * theta_idx, q_table_size_torque);
         }
 
-        inline f64 greedy_action(f64 theta, f64 theta_dot) {
+        inline std::pair<f64, f64*> greedy_action(f64 theta, f64 theta_dot) {
             auto values = q_search(theta, theta_dot);
             auto max_element = std::max_element(values.begin(), values.end());
             usize max_element_idx = std::distance(values.begin(), max_element);
-            return min_torque + delta_action * (max_element_idx + 0.5);
+            return std::make_pair(
+                    min_torque + delta_action * (max_element_idx + 0.5),
+                    values.data() + max_element_idx);
         }
 
-        inline f64 evaluate_policy(f64 theta, f64 theta_dot) {
+        inline std::pair<f64, f64*> evaluate_policy(f64 theta, f64 theta_dot) {
             if (frand(0., 1.) < epsilon) {
                 usize action_idx = usize_rand(0, q_table_size_torque);
-                return min_torque + delta_action * (action_idx + 0.5);
+                f64 action = min_torque + delta_action * (action_idx + 0.5);
+                return std::make_pair(
+                    action,
+                    &q(action, theta, theta_dot));
             } else {
                 return greedy_action(theta, theta_dot);
             }
         }
 
         bool step() final {
-            f64 action = 0;
-            f64 delta_v = 0;
+            auto [action_t0, q_t0_ptr] = evaluate_policy(env.theta, env.theta_dot);
+            f64& q_t0 = *q_t0_ptr;
 
-            auto [reward, is_terminal] = env.step(action);
+            auto [reward_t1, is_terminal] = env.step(action_t0);
 
-            q(3., 6., 4.);
+            auto [action_t1, q_t1_ptr] = evaluate_policy(env.theta, env.theta_dot);
+            f64& q_t1 = *q_t1_ptr;
+
+            f64 delta_v = alpha * (reward_t1 + gamma * q_t1 - q_t0);
+
+            q_t0 += delta_v;
 
             // Log
-            reward_sum += reward;
+            reward_sum += reward_t1;
             log.emplace_back(
                     env.time,
                     env.theta,
                     env.theta_dot,
-                    action,
-                    reward,
+                    action_t0,
+                    reward_t1,
                     delta_v);
 
             return is_terminal;
