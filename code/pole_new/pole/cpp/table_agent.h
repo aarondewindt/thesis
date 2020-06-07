@@ -8,6 +8,7 @@
 #include "agent_base.h"
 #include <array>
 #include <cmath>
+#include <stdexcept>
 
 
 namespace pole {
@@ -41,6 +42,17 @@ namespace pole {
             f64 delta_v;
         };
         std::vector<LogEntry> log;
+
+        inline f64& q(usize theta_idx, usize theta_dot_idx, usize torque_idx) {
+            static usize c1 = q_table_size_theta;
+            static usize c2 = q_table_size_theta + q_table_size_theta_dot;
+
+            if (theta_idx > q_table_size_theta) throw std::domain_error("Theta_idx out of bounds");
+            if (theta_dot_idx > q_table_size_theta_dot) throw std::domain_error("Theta_idx out of bounds");
+            if (torque_idx > q_table_size_torque) throw std::domain_error("Theta_idx out of bounds");
+
+            return q_table[theta_idx + c1 * theta_dot_idx + c2 * torque_idx];
+        }
 
     public:
         inline TableAgent(Environment& env,
