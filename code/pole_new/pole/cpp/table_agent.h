@@ -6,25 +6,33 @@
 #define POLE_NEW_TABLE_AGENT_H
 
 #include "agent_base.h"
+#include "tcb/span.hpp"
+#include "rand.h"
+
 #include <array>
 #include <cmath>
 #include <stdexcept>
-
+#include <algorithm>
+#include <iterator>
 
 namespace pole {
     class TableAgent : public AgentBase {
         Environment& env;
         f64 reward_sum;
 
-        f64 min_theta;
-        f64 max_theta;
-        f64 min_theta_dot;
-        f64 max_theta_dot;
-        f64 min_torque;
-        f64 max_torque;
-        usize q_table_size_theta;
-        usize q_table_size_theta_dot;
-        usize q_table_size_torque;
+        const f64 min_theta;
+        const f64 max_theta;
+        const f64 min_theta_dot;
+        const f64 max_theta_dot;
+        const f64 min_torque;
+        const f64 max_torque;
+        const usize q_table_size_theta;
+        const usize q_table_size_theta_dot;
+        const usize q_table_size_torque;
+        const f64 delta_theta;
+        const f64 delta_theta_dot;
+        const f64 delta_action;
+
         f64 epsilon;
         f64 gamma;
         f64 alpha;
@@ -42,17 +50,6 @@ namespace pole {
             f64 delta_v;
         };
         std::vector<LogEntry> log;
-
-        inline f64& q(usize theta_idx, usize theta_dot_idx, usize torque_idx) {
-            static usize c1 = q_table_size_theta;
-            static usize c2 = q_table_size_theta + q_table_size_theta_dot;
-
-            if (theta_idx > q_table_size_theta) throw std::domain_error("Theta_idx out of bounds");
-            if (theta_dot_idx > q_table_size_theta_dot) throw std::domain_error("Theta_idx out of bounds");
-            if (torque_idx > q_table_size_torque) throw std::domain_error("Theta_idx out of bounds");
-
-            return q_table[theta_idx + c1 * theta_dot_idx + c2 * torque_idx];
-        }
 
     public:
         inline TableAgent(Environment& env,
@@ -82,15 +79,72 @@ namespace pole {
                 epsilon(epsilon),
                 gamma(gamma),
                 alpha(alpha),
-                q_table(q_table_size_theta * q_table_size_theta_dot * q_table_size_torque, 0)
+                q_table(q_table_size_theta * q_table_size_theta_dot * q_table_size_torque, 0),
+                delta_theta((max_theta - min_theta) / q_table_size_theta),
+                delta_theta_dot((max_theta_dot - min_theta_dot) / q_table_size_theta_dot),
+                delta_action((max_torque - min_torque) / q_table_size_torque) {}
 
-        {}
+
+        inline f64& q_search(f64 action, f64 theta, f64 theta_dot) {
+            return q(
+                    static_cast<usize>(action - min_torque / delta_action),
+                    static_cast<usize>(theta - min_theta / delta_theta),
+                    static_cast<usize>(theta_dot - min_theta_dot / delta_theta_dot)
+            );
+        }
+
+        inline f64& q(usize action_idx, usize theta_idx, usize theta_dot_idx) {
+            static usize c1 = q_table_size_torque;
+            static usize c2 = q_table_size_torque + q_table_size_theta_dot;
+
+            if (action_idx > q_table_size_torque) throw std::domain_error("Theta_idx out of bounds");
+            if (theta_idx > q_table_size_theta) throw std::domain_error("Theta_idx out of bounds");
+            if (theta_dot_idx > q_table_size_theta_dot) throw std::domain_error("Theta_idx out of bounds");
+
+            return q_table[action_idx + c1 * theta_dot_idx + c2 * theta_idx];
+        }
+
+        inline tcb::span<f64> q_search(f64 theta, f64 theta_dot) {
+            return q(
+                    static_cast<usize>(theta - min_theta / delta_theta),
+                    static_cast<usize>(theta_dot - min_theta_dot / delta_theta_dot)
+            );
+        }
+
+        inline tcb::span<f64> q(usize theta_idx, usize theta_dot_idx) {
+            static usize c1 = q_table_size_torque;
+            static usize c2 = q_table_size_torque + q_table_size_theta_dot;
+            static tcb::span<f64> q_table_span(q_table);
+
+            if (theta_idx > q_table_size_theta) throw std::domain_error("Theta_idx out of bounds");
+            if (theta_dot_idx > q_table_size_theta_dot) throw std::domain_error("Theta_idx out of bounds");
+
+            return q_table_span.subspan(c1 * theta_dot_idx + c2 * theta_idx, q_table_size_torque);
+        }
+
+        inline f64 greedy_action(f64 theta, f64 theta_dot) {
+            auto values = q_search(theta, theta_dot);
+            auto max_element = std::max_element(values.begin(), values.end());
+            usize max_element_idx = std::distance(values.begin(), max_element);
+            return min_torque + delta_action * (max_element_idx + 0.5);
+        }
+
+        inline f64 evaluate_policy(f64 theta, f64 theta_dot) {
+            if (frand(0., 1.) < epsilon) {
+                usize action_idx = usize_rand(0, q_table_size_torque);
+                return min_torque + delta_action * (action_idx + 0.5);
+            } else {
+                return greedy_action(theta, theta_dot);
+            }
+        }
 
         bool step() final {
             f64 action = 0;
             f64 delta_v = 0;
 
             auto [reward, is_terminal] = env.step(action);
+
+            q(3., 6., 4.);
 
             // Log
             reward_sum += reward;

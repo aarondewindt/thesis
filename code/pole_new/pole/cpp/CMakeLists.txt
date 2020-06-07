@@ -1,6 +1,7 @@
 
 add_executable(pole
         main.cpp
+        rand.h
         types.h
         agent_base.h
         pid_agent.h
