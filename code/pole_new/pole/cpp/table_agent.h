@@ -97,9 +97,9 @@ namespace pole {
             static usize c1 = q_table_size_torque;
             static usize c2 = q_table_size_torque + q_table_size_theta_dot;
 
-            if (action_idx > q_table_size_torque) throw std::domain_error("Theta_idx out of bounds");
-            if (theta_idx > q_table_size_theta) throw std::domain_error("Theta_idx out of bounds");
-            if (theta_dot_idx > q_table_size_theta_dot) throw std::domain_error("Theta_idx out of bounds");
+            if (action_idx >= q_table_size_torque) action_idx = q_table_size_torque - 1;
+            if (theta_idx >= q_table_size_theta) theta_idx = q_table_size_theta - 1;
+            if (theta_dot_idx >= q_table_size_theta_dot) theta_dot_idx = q_table_size_theta_dot - 1;
 
             return q_table[action_idx + c1 * theta_dot_idx + c2 * theta_idx];
         }
@@ -116,8 +116,8 @@ namespace pole {
             static usize c2 = q_table_size_torque + q_table_size_theta_dot;
             static tcb::span<f64> q_table_span(q_table);
 
-            if (theta_idx > q_table_size_theta) throw std::domain_error("Theta_idx out of bounds");
-            if (theta_dot_idx > q_table_size_theta_dot) throw std::domain_error("Theta_idx out of bounds");
+            if (theta_idx >= q_table_size_theta) theta_idx = q_table_size_theta - 1;
+            if (theta_dot_idx >= q_table_size_theta_dot) theta_dot_idx = q_table_size_theta_dot - 1;
 
             return q_table_span.subspan(c1 * theta_dot_idx + c2 * theta_idx, q_table_size_torque);
         }
@@ -231,6 +231,12 @@ namespace pole {
         f64 get_reward_sum() final {
             return reward_sum;
         }
+
+        std::vector<f64>& get_q_table_data() {
+            return q_table;
+        }
+
+
     };
 }
 

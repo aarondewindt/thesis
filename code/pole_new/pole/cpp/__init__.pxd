@@ -59,3 +59,4 @@ cdef extern from "table_agent.h" namespace "pole":
         map[string, vector[f64]] get_data()
         map[string, f64] get_scalar_data
         f64 get_reward_sum()
+        vector[f64]& get_q_table_data()

@@ -6,7 +6,7 @@
 #define POLE_NEW_TYPES_H
 
 #include <cstdint>
-
+#include "tcb/span.hpp"
 
 namespace pole {
     using u8 = std::uint8_t;
@@ -24,8 +24,6 @@ namespace pole {
 
     using f32 = float;
     using f64 = double;
-
-
 
     const double pi = 3.141592653589793;
     const double pi2 = 6.283185307179586;

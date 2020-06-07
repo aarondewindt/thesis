@@ -19,3 +19,9 @@
 [submodule "code/pole_new/libs/span"]
 	path = code/pole_new/libs/span
 	url = https://github.com/tcbrindle/span.git
+[submodule "code/pole_new/libs/Catch2"]
+	path = code/pole_new/libs/Catch2
+	url = https://github.com/catchorg/Catch2.git
+[submodule "code/pole_new/libs/fmt"]
+	path = code/pole_new/libs/fmt
+	url = https://github.com/fmtlib/fmt.git

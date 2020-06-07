@@ -1,5 +1,7 @@
 from cython.operator import dereference, postincrement
 import xarray as xr
+import numpy as np
+cimport numpy as np
 
 
 cdef data_map_to_dataset(map[string, vector[f64]] data_map):
@@ -106,6 +108,9 @@ cdef class PIDAgent:
 
 cdef class TableAgent:
     cdef c_TableAgent *thisptr
+    cdef usize q_table_size_theta
+    cdef usize q_table_size_theta_dot
+    cdef usize q_table_size_torque
 
     def __cinit__(self,
                   env: Environment,
@@ -134,11 +139,24 @@ cdef class TableAgent:
                                             epsilon,
                                             gamma,
                                             alpha)
+            self.q_table_size_theta = q_table_size_theta
+            self.q_table_size_theta_dot = q_table_size_theta_dot
+            self.q_table_size_torque = q_table_size_torque
 
     def run_episode(self, max_steps: int):
         self.thisptr.run_episode(max_steps)
 
     def get_data(self):
-            data = self.thisptr.get_data()
-            return data_map_to_dataset(data)
+        data = self.thisptr.get_data()
+        return data_map_to_dataset(data)
+
+    def get_reward_sum(self):
+        return self.thisptr.get_reward_sum()
+
+    def get_q_table_data(self):
+        q_table_data = list(self.thisptr.get_q_table_data())
+        q_table = np.array(q_table_data).reshape((self.q_table_size_torque,
+                                                  self.q_table_size_theta,
+                                                  self.q_table_size_theta_dot))
+        return q_table
 

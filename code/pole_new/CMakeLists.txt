@@ -25,11 +25,15 @@ add_custom_target( ReplicatePythonSourceTree ALL ${CMAKE_COMMAND} -P
 # Instruction for use can be found at the top of cmake/UseCython.cmake.
 include( UseCython )
 
-
+add_subdirectory(libs/fmt)
 add_subdirectory(libs/span)
 add_subdirectory(libs/random) # path to the 'random' library root
+add_subdirectory(libs/Catch2)
 link_libraries(effolkronium_random) # add include path to a compiler
 link_libraries(span)
+link_libraries(fmt)
 
+#find_package(Catch2 REQUIRED)
 
 add_subdirectory(pole/cpp)
+add_subdirectory(pole/test)
