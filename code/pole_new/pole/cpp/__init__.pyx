@@ -103,3 +103,42 @@ cdef class PIDAgent:
             data = self.thisptr.get_data()
             return data_map_to_dataset(data)
 
+
+cdef class TableAgent:
+    cdef c_TableAgent *thisptr
+
+    def __cinit__(self,
+                  env: Environment,
+                  min_theta: float,
+                  max_theta: float,
+                  min_theta_dot: float,
+                  max_theta_dot: float,
+                  min_torque: float,
+                  max_torque: float,
+                  q_table_size_theta: int,
+                  q_table_size_theta_dot: int,
+                  q_table_size_torque: int,
+                  epsilon: float,
+                  gamma: float,
+                  alpha: float):
+            self.thisptr = new c_TableAgent(dereference(env.thisptr),
+                                            min_theta,
+                                            max_theta,
+                                            min_theta_dot,
+                                            max_theta_dot,
+                                            min_torque,
+                                            max_torque,
+                                            q_table_size_theta,
+                                            q_table_size_theta_dot,
+                                            q_table_size_torque,
+                                            epsilon,
+                                            gamma,
+                                            alpha)
+
+    def run_episode(self, max_steps: int):
+        self.thisptr.run_episode(max_steps)
+
+    def get_data(self):
+            data = self.thisptr.get_data()
+            return data_map_to_dataset(data)
+

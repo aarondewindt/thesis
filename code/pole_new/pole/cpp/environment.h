@@ -25,7 +25,6 @@ namespace pole {
         f64 theta = 0;
         f64 theta_dot = 0;
 
-
         /// Create new environment with a pole with the given mass and length
         ///
         /// \param mass
@@ -35,6 +34,10 @@ namespace pole {
                 length(length),
                 inertia(mass * length * length / 3) {}
 
+        /// Reset the environment to its initial state.
+        ///
+        /// \param theta_ Initial theta
+        /// \param theta_dot_ Initial theta_dot
         inline void reset(f64 theta_=0., f64 theta_dot_=0.) {
             time = 0;
             theta = theta_;

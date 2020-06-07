@@ -7,6 +7,8 @@ from libcpp.string cimport string
 
 ctypedef double f64
 ctypedef int64_t i64
+ctypedef size_t usize
+
 
 cdef extern from "environment.h" namespace "pole":
     cdef cppclass c_Environment "pole::Environment":
@@ -29,6 +31,28 @@ cdef extern from "agent_base.h":
 cdef extern from "pid_agent.h" namespace "pole":
     cdef cppclass c_PIDAgent "pole::PIDAgent":
         c_PIDAgent(c_Environment& env, double k_p, double k_i, double k_d)
+        bool run_step()
+        void run_episode(i64 max_steps)
+        void begin_episode()
+        map[string, vector[f64]] get_data()
+        map[string, f64] get_scalar_data
+        f64 get_reward_sum()
+
+cdef extern from "table_agent.h" namespace "pole":
+    cdef cppclass c_TableAgent "pole::TableAgent":
+        c_TableAgent(c_Environment& env,
+                   f64 min_theta,
+                   f64 max_theta,
+                   f64 min_theta_dot,
+                   f64 max_theta_dot,
+                   f64 min_torque,
+                   f64 max_torque,
+                   usize q_table_size_theta,
+                   usize q_table_size_theta_dot,
+                   usize q_table_size_torque,
+                   f64 epsilon,
+                   f64 gamma,
+                   f64 alpha)
         bool run_step()
         void run_episode(i64 max_steps)
         void begin_episode()
