@@ -25,3 +25,6 @@
 [submodule "code/pole_new/libs/fmt"]
 	path = code/pole_new/libs/fmt
 	url = https://github.com/fmtlib/fmt.git
+[submodule "code/pole_new/libs/eigen"]
+	path = code/pole_new/libs/eigen
+	url = https://gitlab.com/libeigen/eigen.git

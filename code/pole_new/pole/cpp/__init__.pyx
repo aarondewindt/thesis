@@ -26,8 +26,8 @@ cdef data_map_to_dataset(map[string, vector[f64]] data_map):
 cdef class Environment:
     cdef c_Environment *thisptr
 
-    def __cinit__(self, mass: float, length: float):
-        self.thisptr = new c_Environment(mass, length)
+    def __cinit__(self, mass: float, length: float, f64 theta_terminate: float, f64 theta_min_reward: float):
+        self.thisptr = new c_Environment(mass, length, theta_terminate, theta_min_reward)
 
     def reset(self, theta: float=0, theta_dot: float=0):
         self.thisptr.reset(theta, theta_dot)
@@ -108,43 +108,88 @@ cdef class PIDAgent:
 
 cdef class TableAgent:
     cdef c_TableAgent *thisptr
-    cdef usize q_table_size_theta
-    cdef usize q_table_size_theta_dot
-    cdef usize q_table_size_torque
+    cdef usize n_action
+    cdef usize n_theta
+    cdef usize n_theta_dot
+    cdef object _actions
+    cdef object _thetas
+    cdef object _theta_dots
 
     def __cinit__(self,
                   env: Environment,
+                  min_action: float,
+                  max_action: float,
                   min_theta: float,
                   max_theta: float,
                   min_theta_dot: float,
                   max_theta_dot: float,
-                  min_torque: float,
-                  max_torque: float,
-                  q_table_size_theta: int,
-                  q_table_size_theta_dot: int,
-                  q_table_size_torque: int,
+                  n_action: int,
+                  n_theta: int,
+                  n_theta_dot: int,
                   epsilon: float,
                   gamma: float,
                   alpha: float):
-            self.thisptr = new c_TableAgent(dereference(env.thisptr),
-                                            min_theta,
-                                            max_theta,
-                                            min_theta_dot,
-                                            max_theta_dot,
-                                            min_torque,
-                                            max_torque,
-                                            q_table_size_theta,
-                                            q_table_size_theta_dot,
-                                            q_table_size_torque,
-                                            epsilon,
-                                            gamma,
-                                            alpha)
-            self.q_table_size_theta = q_table_size_theta
-            self.q_table_size_theta_dot = q_table_size_theta_dot
-            self.q_table_size_torque = q_table_size_torque
+        self.thisptr = new c_TableAgent(dereference(env.thisptr),
+                                        min_action,
+                                        max_action,
+                                        min_theta,
+                                        max_theta,
+                                        min_theta_dot,
+                                        max_theta_dot,
+                                        n_action,
+                                        n_theta,
+                                        n_theta_dot,
+                                        epsilon,
+                                        gamma,
+                                        alpha)
+        self.n_action = n_action
+        self.n_theta = n_theta
+        self.n_theta_dot = n_theta_dot
+
+        delta_action = (max_action - min_action) / n_action
+        delta_theta = (max_theta - min_theta) / n_theta
+        delta_theta_dot = (max_theta_dot - min_theta_dot) / n_theta_dot
+
+        self._actions = [min_action + delta_action * (i + 0.5) for i in range(n_action)]
+        self._thetas = [min_theta + delta_theta * (i + 0.5) for i in range(n_theta)]
+        self._theta_dots = [min_theta_dot + delta_theta_dot * (i + 0.5) for i in range(n_theta_dot)]
+
+    @property
+    def actions(self):
+        return self._actions
+
+    @property
+    def thetas(self):
+        return self._thetas
+
+    @property
+    def theta_dots(self):
+        return self._theta_dots
+
+    @property
+    def epsilon(self):
+        return self.thisptr.epsilon
+    @epsilon.setter
+    def epsilon(self, value):
+        self.thisptr.epsilon = value
+
+    @property
+    def gamma(self):
+        return self.thisptr.gamma
+    @gamma.setter
+    def gamma(self, value):
+        self.thisptr.gamma = value
+
+    @property
+    def alpha(self):
+        return self.thisptr.alpha
+    @alpha.setter
+    def alpha(self, value):
+        self.thisptr.alpha = value
+
 
     def run_episode(self, max_steps: int):
-        self.thisptr.run_episode(max_steps)
+        return self.thisptr.run_episode(max_steps)
 
     def get_data(self):
         data = self.thisptr.get_data()
@@ -153,10 +198,23 @@ cdef class TableAgent:
     def get_reward_sum(self):
         return self.thisptr.get_reward_sum()
 
-    def get_q_table_data(self):
-        q_table_data = list(self.thisptr.get_q_table_data())
-        q_table = np.array(q_table_data).reshape((self.q_table_size_torque,
-                                                  self.q_table_size_theta,
-                                                  self.q_table_size_theta_dot))
-        return q_table
+    def get_values(self):
+        data = list(self.thisptr.get_values())
+        print(self.n_action, self.n_theta, self.n_theta_dot)
+        data = np.array(data).reshape((self.n_action,
+                                       self.n_theta,
+                                       self.n_theta_dot), order="F")
+        return data
 
+    def get_counts(self):
+        data = list(self.thisptr.get_counts())
+        data = np.array(data).reshape((self.n_action,
+                                       self.n_theta,
+                                       self.n_theta_dot), order="F")
+        return data
+
+    def get_greedy_action_table(self):
+            data = list(self.thisptr.get_greedy_action_table())
+            data = np.array(data).reshape((self.n_theta,
+                                           self.n_theta_dot), order="F")
+            return data

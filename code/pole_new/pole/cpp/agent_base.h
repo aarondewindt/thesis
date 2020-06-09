@@ -15,7 +15,7 @@ namespace pole {
     class AgentBase {
     public:
         virtual bool step() = 0;
-        virtual void run_episode(i64 max_steps) = 0;
+        virtual i64 run_episode(i64 max_steps) = 0;
 
         virtual std::map<std::string, std::vector<f64>> get_data() = 0;
         virtual std::map<std::string, f64> get_scalar_data() = 0;

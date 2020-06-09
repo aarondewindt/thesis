@@ -3,6 +3,7 @@ add_library(pole INTERFACE)
 target_include_directories(pole INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(pole_main
+        grid_tile_coding.h
         main.cpp
         table_3d.h
         rand.h

@@ -20,8 +20,9 @@ namespace pole {
         f64 length;
         f64 inertia;
         f64 time = 0;
-        f64 dt = 0.01;
-        f64 theta_min_reward = 3.141592653589793; // 0.523598776  // 30 degrees
+        f64 dt = 0.001;
+        f64 theta_min_reward;
+        f64 theta_terminate;
         f64 theta = 0;
         f64 theta_dot = 0;
 
@@ -29,10 +30,12 @@ namespace pole {
         ///
         /// \param mass
         /// \param length
-        inline Environment(f64 mass, f64 length) :
+        inline Environment(f64 mass, f64 length, f64 theta_terminate, f64 theta_min_reward) :
                 mass(mass),
                 length(length),
-                inertia(mass * length * length / 3) {}
+                inertia(mass * length * length / 3),
+                theta_terminate(theta_terminate),
+                theta_min_reward(theta_min_reward) {}
 
         /// Reset the environment to its initial state.
         ///
@@ -60,10 +63,13 @@ namespace pole {
             time += dt;
 
             theta = fmod(fmod(theta + pi, pi2) + pi2, pi2) - pi;
+            f64 theta_abs = fabs(theta);
 
             return std::make_pair(
-                    pow((theta_min_reward - fabs(theta)) / theta_min_reward, 4) - 0.2,
-                    false);
+                pow((theta_min_reward - theta_abs) / theta_min_reward, 2),
+                theta_abs > theta_terminate);
+
+
         }
 
     };

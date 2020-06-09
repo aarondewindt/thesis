@@ -29,9 +29,11 @@ add_subdirectory(libs/fmt)
 add_subdirectory(libs/span)
 add_subdirectory(libs/random) # path to the 'random' library root
 add_subdirectory(libs/Catch2)
+add_subdirectory(libs/eigen)
 link_libraries(effolkronium_random) # add include path to a compiler
 link_libraries(span)
 link_libraries(fmt)
+link_libraries(Eigen3::Eigen)
 
 #find_package(Catch2 REQUIRED)
 

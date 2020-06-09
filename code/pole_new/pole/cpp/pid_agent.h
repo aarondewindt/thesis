@@ -85,7 +85,7 @@ namespace pole {
         }
 
 
-        void run_episode(i64 max_steps) final {
+        i64 run_episode(i64 max_steps) final {
             // Clear log from previous episode.
             log.clear();
             log.reserve(max_steps);
@@ -93,9 +93,11 @@ namespace pole {
 
             for (i64 i = 0; i < max_steps; i++) {
                 if (step()) {
-                    return;
+                    return i;
                 }
             }
+
+            return max_steps;
         }
 
         std::map<std::string, std::vector<f64>> get_data() final {

@@ -12,37 +12,42 @@
 namespace pole {
     template<class T, class Y>
     class Table3D {
-        T* data;
-        Y min0;
-        Y max0;
-        Y delta0;
-        usize n0;
-
-        Y min1;
-        Y max1;
-        Y delta1;
-        usize n1;
-
-        Y min2;
-        Y max2;
-        Y delta2;
-        usize n2;
-
-        usize c1;
-        usize c2;
+        T*const data;
 
     public:
+        const Y min0;
+        const Y max0;
+        const Y delta0;
+        const usize n0;
+
+        const Y min1;
+        const Y max1;
+        const Y delta1;
+        const usize n1;
+
+        const Y min2;
+        const Y max2;
+        const Y delta2;
+        const usize n2;
+
+        const usize c1;
+        const usize c2;
+
         Table3D(Y min0, Y max0, usize n0,
                 Y min1, Y max1, usize n1,
-                Y min2, Y max2, usize n2) :
-                min0(min0), max0(max0), n0(n0),
-                min1(min1), max1(max1), n1(n1),
-                min2(min2), max2(max2), n2(n2),
-                c1(n0), c2(n0 * n1),
-                delta0((max0 - min0) / n0),
-                delta1((max1 - min1) / n1),
-                delta2((max2 - min2) / n2) {
-            data = new T[n0 * n1 * n2];
+                Y min2, Y max2, usize n2,
+                T init_value) :
+                    min0(min0), max0(max0), n0(n0),
+                    min1(min1), max1(max1), n1(n1),
+                    min2(min2), max2(max2), n2(n2),
+                    c1(n0), c2(n0 * n1),
+                    delta0((max0 - min0) / n0),
+                    delta1((max1 - min1) / n1),
+                    delta2((max2 - min2) / n2),
+                    data(new T[n0 * n1 * n2]) {
+            for (auto& item : get_span()) {
+                item = init_value;
+            }
         }
 
         ~Table3D() {
