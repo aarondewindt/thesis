@@ -12,7 +12,8 @@ add_executable(pole_main
         pid_agent.h
         table_agent.h
         environment.h
-        spancpy.h)
+        spancpy.h
+        grid_tile_coding_agent.h)
 
 set_source_files_properties(__init__.pyx PROPERTIES CYTHON_IS_CXX TRUE)
 cython_add_module(__init__ __init__.pyx)

@@ -19,6 +19,10 @@
 
 
 namespace pole {
+    ///
+    ///
+    /// \tparam _rank
+    /// \tparam _n_values
     template <usize _rank, usize _n_values>
     class GridTileCoding {
     public:
@@ -88,7 +92,6 @@ namespace pole {
                 bool random_offsets) :
                 default_weight(default_weight), tilings(tilings)
         {
-
             center_coordinates = new f64*[tilings];
 
             // Copy the data to the local arrays.

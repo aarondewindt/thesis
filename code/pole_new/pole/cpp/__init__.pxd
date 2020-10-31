@@ -65,3 +65,37 @@ cdef extern from "table_agent.h" namespace "pole":
         f64 epsilon;
         f64 gamma;
         f64 alpha;
+
+
+cdef extern from "grid_tile_coding_agent.h" namespace "pole":
+    cdef cppclass c_TileCodingAgent "pole::TileCodingAgent":
+        c_TileCodingAgent(c_Environment& env,
+                        vector[f64] center,
+                        vector[f64] tile_size,
+                        int tilings,
+                        double default_weight,
+                        bool random_offsets,
+                        double min_action,
+                        double max_action,
+                        int n_actions,
+                        double epsilon,
+                        double gamma,
+                        double alpha,
+                        double vc_min_theta,
+                        double vc_max_theta,
+                        int vc_n_theta,
+                        double vc_min_theta_dot,
+                        double vc_max_theta_dot,
+                        int vc_n_theta_dot)
+        bool run_step()
+        i64 run_episode(i64 max_steps)
+        void begin_episode()
+        map[string, vector[f64]] get_data()
+        map[string, f64] get_scalar_data
+        f64 get_reward_sum()
+        vector[f64]& get_greedy_action_table()
+        vector[f64]& get_counts()
+        f64 epsilon;
+        f64 gamma;
+        f64 alpha;
+        double *actions;

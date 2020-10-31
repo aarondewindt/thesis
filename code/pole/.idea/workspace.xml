@@ -51,20 +51,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b0eee238-e15b-48f0-9842-94abaf9ae376" name="Default Changelist" comment="Created table rl agent. RL not implemented yet.">
-      <change afterPath="$PROJECT_DIR$/../pole_new/libs/eigen" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../pole_new/pole/cpp/grid_tile_coding.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.gitmodules" beforeDir="false" afterPath="$PROJECT_DIR$/../../.gitmodules" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../pole_new/pole/cpp/grid_tile_coding_agent.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../pole_new/pole/test/test_grid_tile_coding.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pole_new/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../pole_new/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../pole_new/pole/cpp/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../pole_new/pole/cpp/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../pole_new/pole/cpp/__init__.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/../pole_new/pole/cpp/__init__.pxd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../pole_new/pole/cpp/__init__.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/../pole_new/pole/cpp/__init__.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pole_new/pole/cpp/agent_base.h" beforeDir="false" afterPath="$PROJECT_DIR$/../pole_new/pole/cpp/agent_base.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pole_new/pole/cpp/environment.h" beforeDir="false" afterPath="$PROJECT_DIR$/../pole_new/pole/cpp/environment.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pole_new/pole/cpp/pid_agent.h" beforeDir="false" afterPath="$PROJECT_DIR$/../pole_new/pole/cpp/pid_agent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pole_new/pole/cpp/table_3d.h" beforeDir="false" afterPath="$PROJECT_DIR$/../pole_new/pole/cpp/table_3d.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pole_new/pole/cpp/table_agent.h" beforeDir="false" afterPath="$PROJECT_DIR$/../pole_new/pole/cpp/table_agent.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pole_new/pole/cpp/grid_tile_coding.h" beforeDir="false" afterPath="$PROJECT_DIR$/../pole_new/pole/cpp/grid_tile_coding.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pole_new/pole/test/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../pole_new/pole/test/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../pole_new/pole/test/test_table_3d.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../pole_new/pole/test/test_table_3d.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../reports/preliminary_thesis/chapters/3_approximate_solutions.tex" beforeDir="false" afterPath="$PROJECT_DIR$/../../reports/preliminary_thesis/chapters/3_approximate_solutions.tex" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -179,7 +175,13 @@
       <workItem from="1589250907247" duration="855000" />
       <workItem from="1589322809885" duration="605000" />
       <workItem from="1591476169922" duration="25226000" />
-      <workItem from="1591739454035" duration="1253000" />
+      <workItem from="1591739454035" duration="3920000" />
+      <workItem from="1591975393626" duration="599000" />
+      <workItem from="1591997270244" duration="15000" />
+      <workItem from="1592991698288" duration="36000" />
+      <workItem from="1592991846523" duration="5478000" />
+      <workItem from="1593644145646" duration="5623000" />
+      <workItem from="1596483246059" duration="2377000" />
     </task>
     <task id="LOCAL-00001" summary="Created table rl agent. RL not implemented yet.">
       <created>1591498592286</created>

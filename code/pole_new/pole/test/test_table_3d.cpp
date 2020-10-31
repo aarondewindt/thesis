@@ -12,12 +12,13 @@
 
 
 namespace pole::tests {
-    SCENARIO("Table3D", "[factorial]") {
+    SCENARIO("Table3D", "") {
         GIVEN("A filled 3x2x2 Table3D<i32>") {
             Table3D<i32, f64> table(
                     -1, 2, 3,
                     -1, 1, 2,
-                    -1, 1, 2);
+                    -1, 1, 2,
+                    0);
 
             auto table_span = table.get_span();
             spancpy(table_span, {1, 2, 3,

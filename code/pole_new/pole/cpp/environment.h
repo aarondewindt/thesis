@@ -56,7 +56,7 @@ namespace pole {
             torque += mass * 9.81 * (length / 2) * sin(theta);
 
             f64 theta_dot_dot = torque / inertia;
-
+            
             // Integrate
             theta_dot += theta_dot_dot * dt;
             theta += theta_dot * dt;
