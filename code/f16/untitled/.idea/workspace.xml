@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="dcd7191b-09c4-45d0-b697-1d610393ed0d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../../pole_new/pole/cpp/grid_tile_coding_agent.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../pole_new/pole/test/test_grid_tile_coding.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../pole/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../pole/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../pole_new/pole/cpp/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../pole_new/pole/cpp/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../pole_new/pole/cpp/__init__.pxd" beforeDir="false" afterPath="$PROJECT_DIR$/../../pole_new/pole/cpp/__init__.pxd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../pole_new/pole/cpp/__init__.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/../../pole_new/pole/cpp/__init__.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../pole_new/pole/cpp/grid_tile_coding.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../pole_new/pole/cpp/grid_tile_coding.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../pole_new/pole/test/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../pole_new/pole/test/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../pole_new/pole/test/test_table_3d.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../pole_new/pole/test/test_table_3d.cpp" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="ProjectId" id="1eW0fX8AtoswFXVFbYWWtlmQCic" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="dcd7191b-09c4-45d0-b697-1d610393ed0d" name="Default Changelist" comment="" />
+      <created>1594422144298</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1594422144298</updated>
+      <workItem from="1594422145505" duration="30000" />
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="2977" y="456" width="424" height="519" key="FileChooserDialogImpl" timestamp="1594422167797">
+      <screen x="1920" y="0" width="2560" height="1440" />
+    </state>
+    <state x="2977" y="456" width="424" height="519" key="FileChooserDialogImpl/0.0.1920.1056/4480.390.1680.1050/1920.0.2560.1440@1920.0.2560.1440" timestamp="1594422167797" />
+  </component>
+</project>
