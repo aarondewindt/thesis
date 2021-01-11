@@ -2,25 +2,27 @@
 
 \begin{comment}
 
+    Title
+     - Fast launcher performance evaluation using reinforcement learning
+     - Orbital ascent trajectory optimization using reinforcement learning
+     - Orbital ascent trajectory optimization using reinforcement learning for the purpose of launcher performance evaluation
+     - Fast launcher performance evaluation using reinforcement learning based guidance.
+     - Fast orbital ascent trajectory optimization using reinforcement learning
+
     Describe problem(s) that we are trying to solve.
-     - complex (changing) dynamics of aerospace vehicles.
-     - fault tolerant control.
-     - accurate model needed
-     - mav
-       • model not possible due to
-         · complex nature of mav dynamics
-         · inconsistent manufacturing
-         · parameter adaptation during time
-         · susceptible to unforseen disturbances.        
-     - new technological improvements spurred the development of innovative more advanced aerospace systems.
-       • From 
+     - Launcher performance evaluation
+     - Orbital ascent trajectory optimization
+     - Slow performance of current launcher performance evaluation
+     - Lifting body first stage
+     - Unknown situations and circumstances
 
     
     Why it's relevant to the aerospace industry.
-     - aerospace vehicle, duh, maybe this should go with the first item
+     - Space
 
     What the basic solution to this problem could be, current solutions
-     - (adaptive) non-linear control
+     - Global optimization methods
+
     
     Research question
 
@@ -44,51 +46,45 @@
 
 \end{comment}
 
+Thanks to advancements in technology and an increasingly widespread use of satellite services, demand for space access has been steadily rising the past decades. This growth in the satellite launch services market has lead to the development of new launchers by both government agencies and an emerging private sector. 
 
-\todo{Rewrite this paragraph so it's easier to read.}
+One often overlooked, but crucial step during the design process of any product is the performance evaluation of proposed designs. This is the process of determining a products ability to meet the design requirements. Too low of a performance, and the product will not be able to fullfil its purpose. To high of a performance and the product may be over engineered or inefficient.
 
-The technological advancements and the steadily increasing demand for air and space travel of the past decades have lead to the development of new, more complex aerospace systems, resulting in new challenges in the field of aerospace control. At the same time, advancements in automated control have been seen in many domains, ranging from industrial manufacturing and household appliances to the rapid widespread adoption of UAVs. However, most of these systems are only able to complete their tasks within the narrow, predictable conditions they where designed for. Autonomous control systems need to be able to adapt to unexpected situations and environments. This has motivated researchers to search for new innovative methods that can be used to solve these new problems. 
+In the case of a launcher the performance may be measured by how much payload mass it can bring to it's target range of orbits. In other words, in order to maximize the performance of a launcher, the propellant mass fraction of the upper stage needs to be reduced.
 
-% https://www.icao.int/safety/iStars/Pages/Accident-Statistics.aspx
-\todo{Expand a bit more here.}
-One of the leading causes of fatal air traffic accidents is loss of control. If fully autonomous UAV's are to be used in the future, these need to be at least as safe as a human piloted aircraft. However since it is impossible to take every known and unknown failure case into account when designing flight control systems, it is necessary to create fault tolerant control systems capable of identifying and adapting to changing conditions.
+% \todo{Maybe move this somewhere else. A bit too detailed for the introduction.}
+% The typical flight profile of a launcher starts with a short vertical ascent followed by a pitch-over maneuver into the azimuth that will take the launcher to the desired orbital inclination. As the launcher slowly pitches down it increases both it's vertical and horizontal velocities, the former needed to reach the desired orbital altitude and the latter is required to successfully enter into a stable orbit. After a few minutes, the engine is cut-off and launcher continues coasting until is reaches it's apogee. Here the engine is ignited again in order to circularize the orbit and give it the desired eccentricity.
 
-Furthermore, thanks to the miniaturization of technologies, Micro Air Vehicles are becoming smaller, more diverse and are seeing a rise is use. However, these types of vehicles come with their own new problems. In order to design a reliable, well performing control system, an accurate dynamics model is needed. This is not always possible for MAVs because of the complex nature of MAV flight dynamics, inconsistent manufacturing and parameter adaptation during time. Because of their smaller size, MAVs are more susceptible to unforseen disturbances and have sensor and actuator limitations due to their weight and size requirements.
+A successful orbital insertion requires the launcher to carefully follow an optimized trajectory. This trajectory has a massive effect on the performance of the launcher and is unfortunately not a trivial problem to solve. There has been quite some research in this trajectory optimization problem, but due to the complexity, the most reliable way to get the optimum is by using a global optimization method such as \acrfull{ga} or \acrfull{pso}.
 
-Adaptive control methods allow autonomous systems to reconfigure them self if necessary. This opens the possibility to create fault tolerant control systems and control systems capable of determining the governing dynamics and track changes that may occur over time due to degradation or varying flight conditions. These systems can also detect and compensate for the limited on-board resources and any inconsistencies that may have occurred during manufacturing.
+Using a global optimizer to solve this problem is computationally intensive. This is not an issue when computing the trajectory for one particular launch during normal operations, but it is during the design the launch vehicle. A fast trajectory optimizer is desired during the design process in order to for example get a large number of results when performing a sensitivity analysis on the design parameters or continuously evaluate and monitor the feasibility of a changing design.
 
-\todo{Add examples of actual use cases and research instead of a simple, ranging from ... to ...}
-Reinforcement learning is a framework of intelligent, self-learning methods that can be applied to a wide range of autonomous operations and applications. These methods have been used in robotics for decades and a lot of research has been taking place at the same time in a wide range of topics, from resource management in computer clusters to optimizing chemical reactions. However, most of these use cases involve taking high level decisions such as trajectories, schedules, etc, and not low level actuator control. 
+This thesis proposes the use of \acrfull{rl} as a possible solution to the trajectory optimization problem. With enough training an \acrshort{rl} agent is able to learn to solve complex and non-linear problems. The goal is to sufficiently train an \acrshort{rl} agent in order for it to be able to compute the optimal or close to optimal trajectory of a particular launcher design to a specific target orbit with just one simulation run. 
 
-RL methods are also relatively new in the field of aerospace and it's thus uncertain which systems can make effective use of the advantages of RL. This thesis proposes the development of online, self tuning low level quadcopters controllers. 
+Even if generating optimal trajectories using \acrshort{rl} ends up being unfeasible, it may still generate close to optimal trajectories, which may either be acceptable for a design parameter sensitivity analysis, or serve as an initial guess for a more refined optimization algorithm.
 
-% \emph{The objective of this thesis is to investigate the effectiveness of Reinforcement Learning based control methods for low level quadrotor control.}
+The use of \gls{rl} in spacecraft guidance, navigation and control opens up the possibilities to solve future problems as space exploration becomes more prevalent. For example thanks to it's ability to run and adapt in real time, it may be used in situations that are difficult to forsee or too cumbersome to manually take into account, such as hovering and manoeuvering around the non-uniform, rotating gravitational field of an asteroid.
 
-\emph{The objective of this thesis is to develop a low level quadrotor controller with Reinforcement Learning elements and investigate it's effectiveness compared to existing methods.}
+\emph{The objective of this thesis is to develop a orbital ascent trajectory optimization method using reinforcement learning and investigate its effectiveness compared to existing methods.}
 
-\textbf{What is Reinforcement Learning and what can it be used for?}\\
-  How does Reinforcement Learning learning work?\\
-  What is Reinforcement Learning capable of?\\
-  How has Reinforcement Learning been used so far?\\
-  What state of the art technological developments make use of Reinforcement Learning?
+\textbf{What is \acrlong{rl} and what can it be used for?}
+\begin{itemize}
+  \item How does \acrshort{rl} work?
+  \item What is \acrshort{rl} capable of?
+  \item How has \acrshort{rl} been used so far?
+  \item What state of the art technological developments make use of \acrshort{rl}?  
+\end{itemize}
+  
+\textbf{How are orbital ascent trajectories currently optimized?}
+\begin{itemize}
+  \item What are the challenges faced when optimizing an orbital ascent trajectory?
+  \item What methods are currently used or being researched to solve this problem?
+\end{itemize}
 
-\textbf{How can Reinforcement Learning methods be used to improve the performance of low level control of a quadcopter?}\\
-  What advantages do RL based controllers provide over classical control methods?\\
-  What RL methods can be effective when used as part of the low level control of a quadrotor?\\
-  What controller structures can make effective use of RL?\\
-  How do these new methods compare to classical control methods?\\
-  Are these RL based controllers fault tolerant and capable of adapting themselves in a practical environment?
-
-% \textbf{Can Reinforcement Learning methods be used as part of a self tuning low level controller for quadcopters?}
-
-% \textbf{What Aerospace systems can make use of Reinforcement Learning?}
-
-% \textbf{How can Reinforcement Learning be used to make the low level control of a quadcopter more flexible and robust.}
-
-% \textbf{What is reinforcement learning?}
-
-
-
-% Short summary of the proposed solution
-
-% Description of the report content.
+\textbf{How can \acrlong{rl} methods be used to solve the orbital ascent trajectory optimization problem?}
+\begin{itemize}
+  \item What advantages do \acrshort{rl} methods have over existing methods?
+  \item What \acrshort{rl} methods have the potential of being effective in solving this problem?
+  \item How do these newly developed methods compare to existing methods?
+  \item May these \acrshort{rl} methods be used to compliment or improve the performance of existing methods?
+\end{itemize}
