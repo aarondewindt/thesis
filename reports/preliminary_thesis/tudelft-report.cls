@@ -170,10 +170,10 @@
         ItalicFont = *-ItalicMT,
         BoldItalicFont = *-BoldItalicMT
     ]{CourierNewPS}
-    \setmathfont[
-        Path = fonts/,
-        Extension = .ttf
-    ]{CambriaMath}
+    % \setmathfont[
+    %     Path = fonts/,
+    %     Extension = .ttf
+    % ]{CambriaMath}
     %% The default style for text is Tahoma (sans-serif).
     \renewcommand*\familydefault{\sfdefault}
     %% The default style for titles is Bookman Old Style (serif). 

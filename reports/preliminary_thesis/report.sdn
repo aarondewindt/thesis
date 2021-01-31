@@ -23,3 +23,4 @@
 \glossaryentry{$q_* \left ( s, a \right )$?\glossentry{q_optimal_s}|setentrycounter[]{page}\glsnumberformat}{vi}
 \glossaryentry{$V, V_t$?\glossentry{v_array}|setentrycounter[]{page}\glsnumberformat}{vi}
 \glossaryentry{$Q, Q_t$?\glossentry{q_array}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{$v$?\glossentry{velocityS}|setentrycounter[]{page}\glsnumberformat}{vi}

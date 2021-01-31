@@ -1,0 +1,179 @@
+\chapter{Reinforcement learning}
+
+\begin{comment}
+    What is reinforcement learning in words, no equation or algorithms.
+    
+    How it is different from other types of machine learning.
+     - Supervised learning
+     - Unsupervised learning
+    
+    The different elements in reinforcement learning.
+     - markov decision process
+     - exploration
+     - exploitation
+     - agent   
+     - environment
+      • state
+      • action
+      • reward
+     - policy
+      • e-greedy
+     - value
+     - reward
+      • different approaches to define rewards
+        · continuos rewards
+        · reward only at goal
+        · negative reward while still alive
+     - optional model
+     - on/off policy
+     - etc
+
+    Very simple example of reinforcement learning.
+     - tic-tac-toe
+     - 1D travel (1D grid world, wins if it reaches one end, dies if it reaches the other.)
+     - quad grid nav (this is more complex that what I would like to have here)
+\end{comment}
+
+
+% Introduction
+\acrfull{rl} is a method of machine learning different from other machine learning methods such as supervised learning which uses a set of labeled examples from a knowledgeable supervisor, and unsupervised learning which is typically used to find hidden patterns in unlabeled data. In \gls{rl} the learner is not told what action to take to achieve its goal, but instead it maps situations and actions by trying them out and discovering the most valuable. It does this by not only looking at the reward it received by its latest action, but it also takes into account any future rewards it could receive in the future by taking that action.
+
+% Configure spell checker Markov.
+\section{Finite Markov Decision Process}
+
+\begin{comment}
+
+  process that gives a mathematical framework that can be used to describe problems where learners learn from their actions to reach a goal.
+
+  Two main parts
+  agent: decides, interacts with environment and learns
+  environment everything else
+
+  They constantly interact.
+  agent decides and does action -> environment changes state and gives reward to agent -> agent learns.
+
+  The probability of going from state to state only depends on the current state and the action, past states have no influence.
+
+
+\end{comment}
+
+
+A \acrfull{mdp} is a stochastic process that provides a mathematical framework used to describe problems where a learner learns from its actions to achieve an end goal. This framework is used in many areas, such as robotics, economics, manufacturing and in the case of this report, \acrlong{rl}. 
+
+% source: intro and wiki
+The two main components of a \gls{mdp} are the agent, which makes decisions, interacts with its environment and learns. And the environment which consists of everything else. The two are constantly interacting with each other, the agent will perform an action which changes the state of the environment and the environment responds by giving it a reward. The goal of the agent is to maximize the reward it receives from the environment.
+
+This happens in a sequence of discrete time steps. At the beginning of each time step the environment is at a certain state $s$. The agent then decides based on its policy $\pi$ which action $a$ to take, this in turn changes the environment to the new state $s'$ and the environment then gives the agent a certain reward $r$. In order for it to be a \gls{mdp} this transition and the reward must satisfy the Marcov property, which means it needs to be memoryless and thus the environment's behavior must be independent of its past states. In other words, the probability of the environment to go from state $s$ to $s'$ and the reward $r$ it gives back to the agent, must only be dependent on the initial state $s$ and action $a$.
+
+\section{Elements of Reinforcement Learning}
+
+% intro
+The main goal when solving an \gls{mdp} problem is to find a policy $\pi$ that defines the action $\pi\left(s\right)$ the agent will take in order to maximize the sum of rewards it receives. It characterizes the way in which the agent will behave at a given time by mapping the agents perceived state of the environment to the actions taken in those states. This policy may be as simple as a table or consist of several Neural Networks. The policy is the core of the agent in that it alone defines the behavior of the agent.
+
+On each time step the environment will send the agent a reward. The goal of the agent is to maximize this reward in the long run. Thus this reward is used to tell the agent which states are good or bad. If the agent receives a low reward for a certain action it can change the policy so it takes a different action in the future.
+
+The reward signal tells the agent what the immediate effects of its action are. However, its goal is to maximize the cumulative sum of rewards it receives over time, and thus in order for it to receive higher rewards in the future, it might be necessary for the agent to take actions that yield lower rewards with the promise that it will receive higher rewards later. So the value is an indication of the reward the agent can expect to receive in the future by taking a certain action, and thus it is the main parameter used in the decision making process. 
+
+By defining the state and action taken during step $t$ as $S_t$ and $A_t$ respectively, and its corresponding reward as $R_t$ we can define the true value of an arbitrary action $a$ as:
+
+\begin{equation}
+  q_*\left (s, a \right )\dot{=}\ \mathbb{E}\left[R_t\ |\ S_t=s, A_t=a \right ]
+\end{equation}
+
+If $q_*(s, a)$ was known, then the solution would be trivial. Just select the action with the highest value. So it's assumed that the action values are not known, but are instead estimated from the rewards the agent receives. The estimated value of the state-action pair $(s, a)$ at time $t$ is known as $Q_t(s, a)$, thus $Q_t(s, a)$ needs to be as close to $q_*(s, a)$ as possible.
+
+Finally some \gls{rl} agents make use of a model for planning. This allows these agents to choose actions based on possible future situations before actually being experienced.
+
+
+\section{Expected return}
+The goal of the agent is to maximize the reward it receives over time. In order to formalize this goal, the \emph{expected return} $G_t$ can be defined as a function of the sequence of rewards. In it's simplest form this can be the cumulative sum of all rewards after time step $t$ until the final time step $T$.
+
+\begin{equation}
+  G_t \dot{=} R_{t+1} + R_{t+2} + R_{t+3} + \ldots + R_{T}
+  \label{eq:exp_r_1}
+\end{equation}
+
+This function assumes that there are one or more terminal states where the agent-environment interaction ends and break naturally into subsequences called \emph{episodes}. A good example are plays of a game or any type of repeating task. Even if there are different terminal states, eg. winning or losing a game, the starting state of the next episode must be independent of the previous episode. These type of tasks are called \emph{episodic tasks}. 
+% In episodic tasks it is sometimes important to distinguish the set of non-terminal states, denoted by $\mathcal{S}$, and the set of all states including the terminal state, denoted by $\mathcal{S}^+$.
+
+However not all tasks are episodic, it is possible an RL-agent needs to solve some task that can continuo without a limit. These types of tasks are called \emph{continuing tasks}. The expected return given by Eq.~\ref{eq:exp_r_1} can be problematic for these types of tasks, since the final time step would be at $T=\infty$. Thus it is possible the value it's trying to maximize is infinite as well. Thus to solve this problem the rewards can be $discounted$. In this approach the sum of discounted rewards, also known as the \emph{discounted expected return}, shown in Eq.~\ref{eq:exp_r_2} is maximized.
+\todo{Rewite this paragraph.}
+
+\begin{equation}
+  G_t \dot{=} R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots = \sum_{k=0}^{\infty}\gamma^kR_{t+k+1}
+  \label{eq:exp_r_2}
+\end{equation}
+
+% The functions are quite similar, it it thus possible to unify the expect return for both episodic and continuing tasks into the single equation show in Eq.~\ref{exp_r_3}. Episodic tasks will have $\gamma=1$ and continuing tasks will have $T=\infty$.
+
+It is possible to unify the expected return equations for the episodic and continuing tasks into a single one. For example, in the transition diagram for a continuos task shown below the environment transitions from states $s_0$ to $s_1$ and after its next action it ends up at a special absorbing state where all actions will result in the same state without any reward. This results in reward sequence $+1, +1, +1, 0, 0, \ldots$. By summing the whole infinite sequence we get the same result as summing the first $T$ rewards, where $T=3$ in this case. This is also true with discounting. 
+
+Thus Eq.~\ref{eq:exp_r_3} shows the unified equation for the (discounted) expected return for both episodic and continuing tasks. If the task at hand is continuing, then $T=\infty$, while for episodic tasks $T$ will be some finite integer. It is possible to have $T=\infty$ for episodic tasks, but due to the reasons mentioned before the expected return must be discounted for continuing tasks, so $\gamma=1$ and $T=\infty$ cannot true at the same time.
+
+\begin{equation}
+  G_t \dot{=} \sum_{k=t+1}^{T}\gamma^{k-t-1}R_{k}
+  \label{eq:exp_r_3}
+\end{equation}
+
+One important property of the expected return used in reinforcement learning is that it is recursive as demonstrated below.
+
+\begin{equation}
+  \begin{aligned}
+    G_t &= R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \gamma^3 R_{t+4} + \ldots\\ 
+        &= R_{t+1} + \gamma\left(R_{t+2} + \gamma R_{t+3} + \gamma^2 R_{t+4} + \ldots  \right )\\ 
+        &= R_{t+1} + \gamma G_{t+1}
+   \end{aligned}
+\end{equation}
+
+\section{Policy and value functions}
+The policy is a mapping from the state of the environment to the probabilities of the agent selecting each action. If the policy at time $t$ is $\pi$, then $\pi(a|s)$ is the probability of selecting action $a$ if the current state is $s$.
+
+The value of a state can be different depending on the policy of the RL-agent, since different policies will result in different actions and thus different states and rewards. So $v_\pi(s)$ is the expected return when starting at state $s$ and following policy $\pi$. $v_\pi$ can be defined by:
+
+\begin{equation}
+  v_\pi(s) = \mathbb{E}_\pi \left [ \left. G_t \right| S_t=s \right ] = \mathbb{E}_\pi \left [ \left. \sum_{k=t+1}^{T}\gamma^{k-t-1}R_{k} \right| S_t=s \right ], \textup{ for all } s \textup{ in } \mathcal{S}
+  \label{eq:vpi}
+\end{equation}
+
+For some problems it might be more suitable to look at the value of state-action pairs. Thus similar as to the state value above, the state-action value under policy $\pi$, denoted by $q_\pi(s, a)$, is defined by:
+
+\begin{equation}
+  q_\pi(s, a) = \mathbb{E}_\pi \left [ \left. G_t \right| S_t=s, A_t=a \right ] = \mathbb{E}_\pi \left [ \left. \sum_{k=t+1}^{T}\gamma^{k-t-1}R_{k} \right| S_t=s, A_t=a  \right ], \textup{ for all } s \textup{ in } \mathcal{S}
+\end{equation}
+
+\section{K-armed bandit problem}
+\label{sec:karmedbandit}
+K-armed bandit problems will be used as examples in the following sections. These are simple learning problems where the agent is given the option to take $k$ different action's. There is only one state and the episodes terminate after the agent has taken it's action. Furthermore the examples in this report use zero mean, unit variance normal distributions to select the true value $q_*(a)$ of the actions. The rewards given by the environment are then selected with $q_*(a)$ mean and unit variance normal distribution. Figure~\ref{fig:k_armed_bandit_vionlin} shows an example reward distribution for a 5-armed bandit.
+
+\begin{figure}[ht]			
+	\centering
+	\includegraphics{figures/k_armed_bandit_violin}			
+	\caption{Example reward distribution for a 5-armed bandit problem.}
+	\label{fig:k_armed_bandit_vionlin}
+\end{figure}
+
+% \eps
+\section{\texorpdfstring{\eps}---greedy policies}
+
+
+The main difference between \acrlong{rl} and other types of machine learning is that \gls{rl} uses training information that evaluates the actions taken by the agent instead of a set of correct actions. This means that in order to determine $Q_t(a)$ the agent needs to explore and try out as many actions as possible in order to find good behavior. To do this the agent can take random actions and learn from the rewards it gets back. This is called \emph{exploration}.
+
+However, the main goal of the agent is to maximize the rewards it receives from the environment over time. To achieve this goal the agent can choose to take the greedy actions. These are the actions with the highest value in $Q_t(a)$. This process of choosing the greedy action is known as \emph{exploitation} since the agent is exploiting its knowledge to achieve its goal.
+
+Unfortunately exploration and exploitation conflict with each other since in the former the agent wants to try out all possible actions, but only wants to perform a specific action if it's following a greedy policy. Thus a possible compromise is to use what is known as an \eps-greedy policy. In these policies, the agent will choose a random action \eps\ percentage of the time and the greedy action the rest of the time. This allows the agent to explore and try out new actions or old actions whose value might have changed, while also trying to achieve it's goal.
+\todo{Rewrite this paragraph.}
+
+Since the agent is trying out new actions while following \eps-greedy policies, it is able to learn faster and more than if it was following a greedy policy. To demonstrate this 2000 10-armed bandit problems are run for 1000 episodes. The average reward of all bandits are stored after each episode. Figure ~\ref{fig:10_armed_bandit} shows the average reward and the percentage of agents that selected the optimal action for the greedy policy and two \eps-greedy policies ($\epsilon=0.1$ and $\epsilon=0.1$). A full explanation of the learning method used can be found in the section \ref{sec:epsgreedyexample}, but in short, the action value function $Q_t(a)$ is estimated by averaging the rewards received from the environment.
+
+\begin{figure}[ht]			
+	\centering
+	\includegraphics{figures/10_armed_bandit}			
+	\caption{Average reward of 2000 10-armed bandit problems for 1000 episodes when following the greedy and two \eps-greedy policies.}
+	\label{fig:10_armed_bandit}
+\end{figure}
+
+As it can be seen when using \eps-greedy policies the agents learn faster and are thus able to receive higher rewards sooner. On the other hand, while following the greedy policy, the agents will quickly choose the first action they find with a reward higher than the initial action value and then perform that action on all episodes. As a results many of the agents are not able to find the optimal policy.
+
+
+
+

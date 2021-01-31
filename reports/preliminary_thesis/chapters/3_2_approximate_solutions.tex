@@ -1,0 +1,50 @@
+
+\begin{comment}
+
+    Introduction
+     - What are approximate solutions
+     - Why and what does it try to solve
+       • Continuos or large state and action spaces.
+    
+    Stochastic gradient and semi gradient
+
+    Linear methods
+     - poly
+     - fourier
+     - tile-coding
+     - rbf
+     - maybe more stuff, but I'll probably not try anything else
+
+    Non-linear methods
+     - ANN
+     - LSTD
+     - Memory based
+     - Kernel based
+
+    Eligibility traces (maybe not)
+
+    Policy gradient
+
+    Value function based example
+     - continuos state space, but discreet action space
+     - pole
+     - something else I haven't written yet, but the same as the previous example so we can compare the two
+
+    Policy gradient based example
+     - continuos state and action space
+     - same model as above
+
+\end{comment}
+
+\section{Approximate solutions}
+
+Up until now all methods discussed used tables to store the learned value functions and policies. However these methods are not practical for many of the tasks where \acrfull{rl} is applied due these having large and continuos state spaces. 
+
+The problem with large state spaces is not just the memory needed to store the table, but also the time and amount of data needed to fill in these tables accurately. For many of these tasks the states encountered will never have been seen before, thus to make decisions it is necessary to generalize from previous encounters with different states that are similar to the current one. In other words the key issue is that of \emph{generalization}. How can experience with a limited subset of states be generalized to produce a good approximation of a much larger subset?
+
+Fortunately, generalization from examples has been extensively studied, and thus the problem to be solved is combining existing generalization methods with \gls{rl} methods. The type of generalization methods required are often called \emph{function approximation} because it take in samples of the target function and creates an approximation of the entire function.
+
+The following chapters will cover several of these methods and will explain new issues which are introduced into \gls{rl} when using function approximations.
+
+\subsection{Tile-Coding}
+

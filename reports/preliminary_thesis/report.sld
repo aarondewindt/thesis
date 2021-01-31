@@ -1,0 +1,54 @@
+\glossarysection[\glossarytoctitle]{\glossarytitle}\glossarypreamble
+\begin{theglossary}\glossaryheader
+\glsgroupheading{glssymbols}\relax \glsresetentrylist %
+\glossentry{return}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{returnlambdaa}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{returnlambdas}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{return_h}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{returnlambdaah}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{returnlambdash}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{q_array}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{v_array}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{element_in}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{n_element}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{mdp_a_set}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{mdp_r_set}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{mdp_s_set}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{mdp_s_set_term}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{subset}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{mdp_a}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{trans_prob_r}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{trans_prob}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{q_optimal_s}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{q_pi_s}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{mdp_r}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{exp_rew}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{mdp_s}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{val_optimal_s}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\glossentry{val_pi_s}{\glossaryentrynumbers{\relax 
+		\setentrycounter[]{page}\glsnumberformat{vi}}}%
+\end{theglossary}\glossarypostamble
