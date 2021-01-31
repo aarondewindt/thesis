@@ -2,6 +2,7 @@
 
 The problem of placing a satellite in orbit can be solved by achieving a required velocity at a certain position in space. Unfortunately reaching this goal is not a trivial problem. In order for a launcher to carry out it's mission as efficient as possible it must follow a carefully optimized trajectory. Failure to do so results in wasted potential performance.
 
+\todo{Rewrite this once chapter is done}
 This chapter starts with a analytical solution by simplifying the problem and continues with methods with which the full trajectory optimization problem may be solved.
 
 
@@ -393,7 +394,7 @@ Where,
 
 Before continuing some details are reiterated.
 \begin{itemize}
-    \item Since $U$ is being maximized, any variation $\delta U$ must be negative. Thus the integral in Equation~\eqref{eq:eq:delta_u_int_3}, must always be negative. 
+    \item Since $U$ is being maximized, any variation $\delta U$ must be negative. 
     \item The velocity $V$ may not exceed $V_k$.
     \item Since the slope of $V$ is bounded between zero and infinity, it is not possible for $V$ to be negative.
     \item The optimal function for $V(t)$ is discreet, meaning only instantaneous burns.
@@ -415,7 +416,103 @@ It is possible for $\Phi$ to be always positive, always negative or vary from po
 	\label{fig:pow_fly_trj_an}
 \end{figure}
 
+\newpage
+\subsection{Gravity turn}
+\begin{wrapfigure}{r}{0.5\textwidth} 		
+	\centering
+	\input{figures/gravity_turn.tex}			
+	\caption{Gravity turn\cite{thomson2012introduction}.}
+	\label{fig:pow_fly_trj_an}
+\end{wrapfigure}
 
-\section{Gravity turn}
+It was previously shown that the optimal thrust attitude angle policy is given by the following equation,
+\begin{equation}
+    \tan {\theta} = \left(1-\frac{t}{T}\right)\tan{\gamma_0}
+\end{equation}
+
+One drawback of this policy is that it results in large angles of attack $\alpha = \theta - \gamma$. This is not an issue when flying outside of the atmosphere, but when flying within the atmosphere it results in increased aerodynamic forces, thus increasing aerodynamic losses and risk of structural damage. Thus for flights within the atmosphere a trajectory known as the \emph{gravity turn} is followed. In a gravity turn the thrust vector is kept parallel to the velocity vector at all times starting from a non-vertical initial velocity $v_0$. This is a zero angle of attack or zero lift trajectory.
+
+For convenience the flight path angle $\psi$ is now measured from the vertical. By neglecting aerodynamic forces and assuming a uniform gravitational field, it is possible to write the equation for the forces along the tangential and normal directions as follows,
+\begin{align}
+    \frac{1}{g} \frac{dv}{dg} &= \frac{F}{mg} - \cos{\psi} \label{eq:gturnzf_1}\\
+    \frac{v}{g} \frac{d \psi}{dt} &= \sin{\psi} \label{eq:gturnzf_2}
+\end{align}
+
+These equations are non-linear and there is no analytical solutions when $\frac{F}{mg}$ varies, thus $\frac{F}{mg}$ needs to be constant in order to solve the gravity turn trajectory. Since $m = m_0 - \dot{m}t$, this means that the thrust $F$ must decrease with time as well.
+
+However in reality it is reasonable to assume that $F=constant$. Thus for a realistic solutions it's not possible to assume that $\frac{F}{mg}$ doesn't vary. One way solve it, is by assuming $\frac{F}{mg}$ is constant for a short amount of time and perform a step-by-step numerical integration using the analytical solution for constant $\frac{F}{mg}$ on each interval.
+
+A new parameter $z$ is introduced and defined as,
+\begin{equation}
+    \label{eq:gturnz_1}
+    z = \tan{\frac{1}{2}\psi} 
+      = \sqrt{\frac{1-\cos{\psi}}{1+\cos{\psi}}} 
+      = \frac{\sin{\psi}}{1+\cos{\psi}}
+\end{equation}
+
+Then
+\begin{equation}
+    z^2 = \frac{1-\cos{\psi}}{1+\cos{\psi}}
+\end{equation}
+
+and
+\begin{equation}
+    \frac{1-z^2}{1+z^2}=\cos{\psi}
+\end{equation}
+
+Differentiating Equation~\eqref{eq:gturnz_1},
+\begin{equation}
+    \frac{dz}{dt} = \frac{1}{2 \cos^2{\left(\frac{\psi}{2}\right)}}\frac{d\psi}{dt}
+\end{equation}
+
+Thus,
+\begin{equation}
+    \frac{d\psi}{dt} = \left(1 + \cos \psi\right) \frac{dz}{dt}
+\end{equation}
+
+
+By defining $n=\frac{F}{mg}$ and substituting the previous results into Equations~\eqref{eq:gturnzf_1}~and~\eqref{eq:gturnzf_2} results in,
+\begin{align}
+    \frac{1}{g} \frac{dv}{dt} &= n-\frac{1-z^2}{1+z^2} \label{eq:gturnzf_3}\\
+    \frac{v}{g} \frac{dz}{dt} &= z \label{eq:gturnzf_4}
+\end{align}
+
+Eliminating $dt$ between the two equations yields,
+\begin{equation}
+    \frac{dv}{v} = n\frac{dz}{z} - \frac{1-z^2}{1+z^2} \frac{dz}{z}
+\end{equation}
+
+Integrating,
+\begin{equation}
+    \ln v = \ln {z^n} = \ln {\frac{1+z^2}{z}} + \ln{C'}
+\end{equation}
+
+or
+\begin{equation}
+    \label{eq:gturnv}
+    v=Cz^{n-1}\left(1 + z^2\right)
+\end{equation}
+
+The constant $C$ can be calculated from the initial values with,
+\begin{equation}
+    \label{eq:gturnc}
+    C = \frac{v_0}{z_0^{n-1}\left(1 + z_0^2\right)}
+\end{equation}
+
+Substituting Equation~\eqref{eq:gturnv}~into~\eqref{eq:gturnzf_4} and integrating,
+\begin{align}
+    t&=\frac{C}{g}\int_{z_0}^z z^{n-2} \left(1+ z^2\right) dz \nonumber\\
+     &=\frac{C}{g}z^{n-2} \left. \left(\frac{1}{n-1}+\frac{z^2}{n+1}\right) \right |_{z_0}^z \label{eq:gturnt}
+\end{align}
+
+Equation~\eqref{eq:gturnt} gives $t$ as a function of $z$ and any initial condition $C$. Thus $\psi$ is also known for any $C$ and $t$. Equation~\eqref{eq:gturnv} gives $v$ in terms of $C$, $t$ and $z$. So Equations~\eqref{eq:gturnz_1},~\eqref{eq:gturnc}~and~\eqref{eq:gturnt} give the analytical solution for the gravity turn with a constant $\frac{F}{mg}$.
+
+In order to solve the gravity turn with varying $\frac{F}{mg}$ Equation~\eqref{eq:gturnz_1} can be used to calculate values for $z$, Equation~\eqref{eq:gturnc} to calculate $C$, define $n=\frac{F}{mg}$ at $t=0$ and $v$ can be calculated using Equation~\eqref{eq:gturnv}. Then a value of $\psi$ slightly higher than $\psi_0$ must chosen and $\Delta t$ can then be calculated from Equation~\eqref{eq:gturnt}. The increment in displacement is then,
+\begin{align}
+    \Delta x &= \frac{1}{2}\left(v_0 \sin{\psi_0} +v \sin \psi \right) \Delta t \\
+    \Delta y &= \frac{1}{2}\left(v_0 \cos{\psi_0} +v \cos \psi \right) \Delta t 
+\end{align}
+
+This procedure can then be repeated with the values at the new point to obtain the full trajectory.
 
 
