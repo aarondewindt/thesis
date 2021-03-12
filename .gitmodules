@@ -4,15 +4,6 @@
 [submodule "code/pole/extern_libs/random"]
 	path = code/pole/extern_libs/random
 	url = https://github.com/effolkronium/random.git
-[submodule "code/f16/extern_libs/random"]
-	path = code/f16/extern_libs/random
-	url = https://github.com/effolkronium/random.git
-[submodule "code/f16/extern_libs/msgpack11"]
-	path = code/f16/extern_libs/msgpack11
-	url = https://github.com/ar90n/msgpack11.git
-[submodule "code/f16/extern_libs/eigen-git-mirror"]
-	path = code/f16/extern_libs/eigen-git-mirror
-	url = https://github.com/eigenteam/eigen-git-mirror.git
 [submodule "code/pole_new/libs/random"]
 	path = code/pole_new/libs/random
 	url = https://github.com/effolkronium/random.git
@@ -28,3 +19,6 @@
 [submodule "code/pole_new/libs/eigen"]
 	path = code/pole_new/libs/eigen
 	url = https://gitlab.com/libeigen/eigen.git
+[submodule "code/trajectory_optimization_1/external/cw"]
+	path = code/trajectory_optimization_1/external/cw
+	url = https://github.com/aarondewindt/cw.git

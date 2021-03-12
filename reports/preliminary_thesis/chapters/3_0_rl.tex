@@ -106,6 +106,7 @@ However not all tasks are episodic, it is possible an RL-agent needs to solve so
 
 % The functions are quite similar, it it thus possible to unify the expect return for both episodic and continuing tasks into the single equation show in Eq.~\ref{exp_r_3}. Episodic tasks will have $\gamma=1$ and continuing tasks will have $T=\infty$.
 
+\todo{Add missing figure referenced by this paragraph}
 It is possible to unify the expected return equations for the episodic and continuing tasks into a single one. For example, in the transition diagram for a continuos task shown below the environment transitions from states $s_0$ to $s_1$ and after its next action it ends up at a special absorbing state where all actions will result in the same state without any reward. This results in reward sequence $+1, +1, +1, 0, 0, \ldots$. By summing the whole infinite sequence we get the same result as summing the first $T$ rewards, where $T=3$ in this case. This is also true with discounting. 
 
 Thus Eq.~\ref{eq:exp_r_3} shows the unified equation for the (discounted) expected return for both episodic and continuing tasks. If the task at hand is continuing, then $T=\infty$, while for episodic tasks $T$ will be some finite integer. It is possible to have $T=\infty$ for episodic tasks, but due to the reasons mentioned before the expected return must be discounted for continuing tasks, so $\gamma=1$ and $T=\infty$ cannot true at the same time.
