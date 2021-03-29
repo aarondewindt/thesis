@@ -10,19 +10,17 @@ Policy gradient methods are a class of learning methods that learn the policy pa
 
 where $\alpha$ is a positive step-size parameter and $\widehat{\nabla J\left(\nd{\theta_t}\right)}$ is a stochastic estimate who's expectation is the gradient of the performance measure with respect to $\nd{\theta_t}$.
 
-In policy gradient methods the policy may be parametrized in any way so long as the policy function, $\pi\left(a|s,\ \nd{\theta}\right )$, is differentiable with respect to the policy parameters, $\nd{\theta}$. 
-
 An advantage of using policy gradient over \eps-greedy action selection is that the approximate policy can approach a deterministic policy if the optimal policy is deterministic, whereas \eps-greedy action selection will always have an \eps \ probability of selecting a random action.
 
-Similarly if the optimal policy is stochastic or in cases where multiple actions have similar values, then policy gradient methods are able converge towards stochastic policies who's probability distribution approximate the distribution of the optimal policy. In contrast action-value methods are unable to find optimal stochastic policies.
+Similarly if the optimal policy is stochastic or in cases where multiple actions have similar values, then policy gradient methods are able to converge towards stochastic policies who's probability distribution approximate the distribution of the optimal policy. In contrast action-value methods are unable to find optimal stochastic policies.
 
 In problems with significant function approximation, the best policy may be stochastic even for deterministic problems. With imperfect information the optimal policy may be to perform two or more different actions with specific probabilities, for example when bluffing in Poker.
 
 This is specially helpful for continuos state and action spaces. Since, as discussed in Section~\ref{sec:approximate_solutions}, for these kind of systems it is usually not practical to store, process and learn policy and value functions based on tables. Instead these functions are usually approximated.
-
-This section starts with the basics of gradient decent methods and then continuos with Actor-Critic methods.
  
 \subsection{Policy parameterization}
+In policy gradient methods the policy may be parametrized in any way so long as the policy function, $\pi\left(a|s,\ \nd{\theta}\right )$, is differentiable with respect to the policy parameters, $\nd{\theta}$. 
+
 A method of parameterization in case of discreet and small action spaces is to form parametrized numerical preferences $h(s, a \nd{\theta}) \in \mathbb{R}$ for each state-action pair. The actions with the highest preference can then be given the highest probability of being selected by, for example, using an exponential softmax distribution,
 
 \begin{equation}
@@ -42,7 +40,7 @@ For problems with large or continuos action spaces it may be better to learn the
 The goal with \gls{mdp} problems is to find a policy which maximizes the sum of rewards the agent receives. The value function approximates an expectation of the sum of rewards, thus the perform measure, $J\left(\nd{\theta}\right)$, can be assumed as being approximately equal to the true value function under current policy $\pi_\theta$.
 
 \begin{equation}
-  J\left(\nd{\theta}\right) \doteq \v_{\pi_\theta}\left(s\right)
+  J\left(\nd{\theta}\right) \doteq v_{\pi_\theta}\left(s\right)
 \end{equation}
 
 The problem with finding a change in the policy parameters that ensures improvement is that the performance depends on both the action selection and the distribution of states. At a given state, estimating the effect on the actions, and thus the reward, is relatively straightforward. However the effect of the policy on the state distribution depends on effects from the environment which are typically unknown.
@@ -57,7 +55,7 @@ Fortunately, the \emph{policy gradient theorem} provides an analytical expressio
 \subsection{REINFORCE}
 Recall from Equation~\ref{eq:stochastic_gradient_ascent} the overall strategy for policy gradient methods requires an estimate of the gradient of the performance measure with respect to the policy parameters. This estimate only needs to be proportional to the real gradient, since any constant of proportionality can be absorbed by the step size $\alpha$, which is otherwise arbitrary. The policy gradient theorem (Equation~\ref{eq:pgt}) gives an expression for such an estimate.
 
-The right-hand side of the policy gradient theorem is sum over the states weighted by how often the states occur under the target policy $\pi$. If $\pi$ is followed, then the states will be encountered in these proportions. Thus,
+The right-hand side of the policy gradient theorem is a sum over the states weighted by how often the states occur under the target policy $\pi$. If $\pi$ is followed, then the states will be encountered in these proportions. Thus,
 
 \begin{align}
   \nabla J\left(\nd{\theta}\right) &\propto \sum_s \mu \left(s\right) \sum_a q_\pi\left(s, a\right) \nabla_\theta \pi\left(a|s, \nd{\theta}\right)\\
@@ -99,18 +97,18 @@ The policy gradient theorem can be generalized by including a comparison of the 
 This baseline can be any function, even a random variable, as long as it does not vary with $a$\cite{sutton2018reinforcement}. Following a similar procedure as in the previous sections yields the following update rule for REINFORCE with baseline,
 
 \begin{equation}
-  \nd{\theta_{t+1}} = \nd{\theta_t} + \alpha \left(G_t - b(s)\right) \frac{\nabla_\theta \pi\left(A_t|S_t, \nd{\theta}\right)}{\pi\left(A_t|S_t,\theta\right)}
+  \nd{\theta_{t+1}} = \nd{\theta_t} + \alpha \left(G_t - b(S_t)\right) \frac{\nabla_\theta \pi\left(A_t|S_t, \nd{\theta}\right)}{\pi\left(A_t|S_t,\theta\right)}
   \label{eq:reinforce_1}
 \end{equation}
 
-The baseline leaves the expected value of the update unchanged, however it can have a large effect on it is variance and thus the learning rate. An appropriate choice for the baseline in an estimate of the state-value function $\hat{v}\left(S_t, \nd{w}\right)$\cite{sutton2018reinforcement}. 
+The baseline leaves the expected value of the update unchanged, however it can have a large effect on it is variance and thus the learning rate. An appropriate choice for the baseline in an estimate of the state-value function $\hat{v}\left(S_t\right)$\cite{sutton2018reinforcement}. 
 
 Since REINFORCE is a Monte Carlo method for learning the policy parameters $\theta$, it seems appropriate to use the similar \acrfull{sgd} function approximation learning method shown in Section~\ref{sec:stochastic_gradient_decent_methods} to learn the value function with weights $\nd{w}$.
 
 \subsection{Actor-Critic}
-Methods that learn both the policy and value functions are called \emph{actor-critic} methods, where the actor refers to the learned policy, and the critic to the learned value function. However REINFORCE-with-baseline is not considered an actor-critic method because the state-value function is only used as a baseline and not a critic. That is, it is not used for \emph{bootstrapping}, the process of updating the value estimate of a state using the estimated values of future states, such as with the \acrfull{td} methods found in Section~\ref{sec:temporal_difference}.
+Methods that learn both the policy and value functions are called \emph{actor-critic} methods, where the actor refers to the learned policy, and the critic to the learned value function. However REINFORCE with baseline is not considered an actor-critic method because the state-value function is only used as a baseline and not a critic. That is, it is not used for \emph{bootstrapping}, the process of updating the value estimate of a state using the estimated values of future states, such as with the \acrfull{td} methods found in Section~\ref{sec:temporal_difference}.
 
-Consider the one-step actor-critic methods. These methods replace the full return used in REINFORCE-with-baseline with the one-step return. Expanding these methods to include $n$-step bootstrapping is straightforward.
+Consider the one-step actor-critic methods. These methods replace the complete return used in REINFORCE with baseline with the one-step return. Expanding these methods to include $n$-step bootstrapping is then straightforward.
 
 \begin{align}
   \nd{\theta_{t+1}} &= \nd{\theta_t} + \alpha \left(G_{t:t+1} - \hat{v}\left(S_t, \nd{w}\right)\right) \frac{\nabla_\theta \pi\left(A_t|S_t, \nd{\theta}\right)}{\pi\left(A_t|S_t,\theta\right)}\\
