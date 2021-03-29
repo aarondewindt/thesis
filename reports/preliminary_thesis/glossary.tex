@@ -75,6 +75,14 @@
     description = {is an element of, e.g., $s \in \mathcal{S}$},
 }
 
+
+
+\newglossaryentry{distributes according}{
+    type=symbols,
+    name = $\sim$,
+    description = {distributes according, e.g. $A_t \sim \pi$},
+}
+
 \newglossaryentry{n_element}{
     type=symbols,
     name = $\left | \mathcal{S} \right |$,
@@ -99,10 +107,22 @@
     description = { probablity of taking action $a$ in state $s$ under \emph{stochastic} policy $\pi$},
 }
 
+\newglossaryentry{policy_theta}{
+    type=greek,
+    name = $\nd{theta}$,
+    description = {Policy parameter vector},
+}
+
 \newglossaryentry{policy_astheta}{
     type=greek,
     name = {$\pi\left(a|s,\ \nd{\theta}\right )$},
     description = { probability of taking action $a$ in state $s$ given parameter $\nd{\theta}$},
+}
+
+\newglossaryentry{policy_perfomance_measure}{
+    type=symbols,
+    name = {$J\left(\nd{\theta}\right)$},
+    description = {performance measure},
 }
 
 \newglossaryentry{return}{
@@ -202,6 +222,8 @@
 }
 
 
+
+
 % Orbital trajectory 
 \newglossaryentry{velocityS}{
     type=symbols,
@@ -225,4 +247,5 @@
 \newacronym{ga}{GA}{Genetic Algorithm}
 \newacronym{pso}{PSO}{Participle Swarm Optimization}
 \newacronym{sgd}{SGD}{Stochastic Gradient Decent}
+\newacronym{pgm}{PGM}{Policy Gradient Methods}
 % \makeglossaries

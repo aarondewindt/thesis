@@ -140,6 +140,7 @@ For some problems it might be more suitable to look at the value of state-action
 
 \begin{equation}
   q_\pi(s, a) = \mathbb{E}_\pi \left [ \left. G_t \right| S_t=s, A_t=a \right ] = \mathbb{E}_\pi \left [ \left. \sum_{k=t+1}^{T}\gamma^{k-t-1}R_{k} \right| S_t=s, A_t=a  \right ], \textup{ for all } s \textup{ in } \mathcal{S}
+  \label{eq:value_state_action_pair}
 \end{equation}
 
 \section{K-armed bandit problem}

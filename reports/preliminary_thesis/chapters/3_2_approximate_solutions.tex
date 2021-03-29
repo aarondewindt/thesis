@@ -37,6 +37,7 @@
 \end{comment}
 
 \section{Approximate solutions}
+\label{sec:approximate_solutions}
 
 Up until now all methods discussed used tables to store the learned value functions and policies. However these methods are not practical for many of the tasks where \acrfull{rl} is applied due these having large and continuos state spaces. 
 
@@ -45,7 +46,34 @@ The problem with large state spaces is not just the memory needed to store the t
 Fortunately, generalization from examples has been extensively studied, and thus the problem to be solved is combining existing generalization methods with \gls{rl} methods. The type of generalization methods required are often called \emph{function approximation} because it take in samples of the target function and creates an approximation of the entire function.
 
 
+\subsection{Stochastic Gradient Decent methods}
+\label{sec:stochastic_gradient_decent_methods}
+\acrfull{sgd} methods are a class of function approximation learning methods well suited for the field of \acrfull{rl}. In these methods the weight vector is a real valued column vector with a fixed number of elements, $\nd{w}=\left (w_1, w_2, ..., w_n \right )^T$, and the approximate function $\hat{v}\left(s, \nd{w}\right)$ is differentiable w.r.t. all weights in $\nd{w}$ at all states $s \in \mathcal{S}$.
 
+The goal is to update the weights in $\nd{w}$ after each observation such that the approximate function $\hat{v}\left(s, \nd{w}\right)$ better approximates the real function $v_{\pi}\left(s\right)$. This can be done by updating the weights in the direction that would reduce the error the most. A definition of this error is thus needed, one possibility is to use the \emph{Mean Squared Value Error} $\overline{\text{VE}}$ shown below \cite{sutton2018reinforcement}.
+
+\begin{equation}
+    \overline{\text{VE}}\left(\nd{w}\right) \doteq  \sum_{s\in S} \mu(s) \left[v_{\pi}\left(s\right) - \hat{v}\left(s, \nd{w}\right) \right]^2
+\end{equation}
+
+Here is $\mu(s)$ the \emph{state weight distribution}, it is used to indicate which states are more important. This may be necessary since the number of weights in $\nd{w}$ can be significantly smaller than the total number of states, thus prioritizing certain states may be needed.
+
+The following update rule for the weights in $\nd{w}$ may be defined, using $\overline{\text{VE}}$ and assuming the probability for each state to appear is uniformly distributed.
+
+\begin{align}
+  \nd{w}_{t+1} &\doteq \nd{w}_t - \frac{1}{2} \alpha \nabla \left[v_{\pi}\left(S_t\right) - \hat{v}\left(S_t, \nd{w}\right) \right]^2 \\
+  &= \nd{w}_t + \alpha \left[v_{\pi}\left(S_t\right) - \hat{v}\left(S_t, \nd{w}\right) \right] \nabla \hat{v}\left(S_t, \nd{w}\right)
+  \label{eq:w_update}
+\end{align}
+
+\acrshort{sgd} methods are \emph{Gradient Decent} because the updates to the weight vector $\nd{w}$ are proportional to the negative gradient of each sample's error. This is the direction where error falls the fastest. Gradient decent methods are called \emph{stochastic} when the updates are done using single samples which may have been selected stochastically. In these cases the updates apply small corrections to the weights and over the course of may iterations it has the effect of reducing the error.
+
+As shown in Equation~\ref{eq:w_update}, approximating the value function using \gls{sgd} methods require the real value function $v_{\pi}\left(s\right)$ to be known, but this is in practice often not the case. However using Equation~\ref{eq:vpi} it is possible to substitute the real value function with the expected return $G_t$ or with the $n$-step return $G_{t:t+n}$ to include bootstrapping. Thus the weight vector update rule for the state-value function estimate may be rewritten as,
+
+\begin{equation}
+  \nd{w}_{t+1} = \nd{w}_t + \alpha \left[G_t - \hat{v}\left(S_t, \nd{w}\right) \right] \nabla \hat{v}\left(S_t, \nd{w}\right)
+  \label{eq:vpist_w_update}
+\end{equation}
 
 
 \subsection{Artificial Neural Networks}

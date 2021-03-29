@@ -1,39 +1,126 @@
 \section{Policy Gradient Methods}
+So far the methods discussed select actions based on estimated (state-)action­ values, however this is not the only option. Instead of learning the value estimates and deriving a policy out of the resulting value functions, it is also possible to directly learn a \emph{parametrized policy} which can choose actions without having to consult a value function.
 
-\subsection{Stochastic Gradient Decent methods}
-\acrfull{sgd} methods are a class of function approximation learning methods well suited for the field of \acrfull{rl}. In these methods the weight vector is a real valued column vector with a fixed number of elements, $\nd{w}=\left (w_1, w_2, ..., w_n \right )^T$, and the approximate function $\hat{v}\left(s, \nd{w}\right)$ is differentiable w.r.t. all weights in $\nd{w}$ at all states $s \in \mathcal{S}$.
-
-The goal is to update the weights in $\nd{w}$ after each observation such that the approximate function $\hat{v}\left(s, \nd{w}\right)$ better approximates the real function $v_{\pi}\left(s\right)$. This can be done by updating the weights in the direction that would reduce the error the most. A definition of this error is thus needed, one possibility is to use the \emph{Mean Squared Value Error} $\overline{\text{VE}}$ shown below \cite{sutton2018reinforcement}.
+Policy gradient methods are a class of learning methods that learn the policy parameters, $\nd{\theta}$, based on the gradient of some performance measure, $J\left(\nd{\theta}\right)$, with respect to the policy parameters. These methods try to maximize the performance, so the updates approximate gradient accent in $J$. 
 
 \begin{equation}
-    \overline{\text{VE}}\left(\nd{w}\right) \doteq  \sum_{s\in S} \mu(s) \left[v_{\pi}\left(s\right) - \hat{v}\left(s, \nd{w}\right) \right]^2
+  \nd{\theta_{t+1}} = \nd{\theta_t} + \alpha \cdot \widehat{\nabla J\left(\nd{\theta_t}\right)}
+  \label{eq:stochastic_gradient_ascent}
 \end{equation}
 
-Here is $\mu(s)$ the \emph{state weight distribution}, it is used to indicate which states are more important. This may be necessary since the number of weights in $\nd{w}$ can be significantly smaller than the total number of states, thus prioritizing certain states may be needed.
+where $\alpha$ is a positive step-size parameter and $\widehat{\nabla J\left(\nd{\theta_t}\right)}$ is a stochastic estimate who's expectation is the gradient of the performance measure with respect to $\nd{\theta_t}$.
 
-The following update rule for the weights in $\nd{w}$ may be defined, using $\overline{\text{VE}}$ and assuming the probability for each state to appear is uniformly distributed.
+In policy gradient methods the policy may be parametrized in any way so long as the policy function, $\pi\left(a|s,\ \nd{\theta}\right )$, is differentiable with respect to the policy parameters, $\nd{\theta}$. 
+
+An advantage of using policy gradient over \eps-greedy action selection is that the approximate policy can approach a deterministic policy if the optimal policy is deterministic, whereas \eps-greedy action selection will always have an \eps \ probability of selecting a random action.
+
+Similarly if the optimal policy is stochastic or in cases where multiple actions have similar values, then policy gradient methods are able converge towards stochastic policies who's probability distribution approximate the distribution of the optimal policy. In contrast action-value methods are unable to find optimal stochastic policies.
+
+In problems with significant function approximation, the best policy may be stochastic even for deterministic problems. With imperfect information the optimal policy may be to perform two or more different actions with specific probabilities, for example when bluffing in Poker.
+
+This is specially helpful for continuos state and action spaces. Since, as discussed in Section~\ref{sec:approximate_solutions}, for these kind of systems it is usually not practical to store, process and learn policy and value functions based on tables. Instead these functions are usually approximated.
+
+This section starts with the basics of gradient decent methods and then continuos with Actor-Critic methods.
+ 
+\subsection{Policy parameterization}
+A method of parameterization in case of discreet and small action spaces is to form parametrized numerical preferences $h(s, a \nd{\theta}) \in \mathbb{R}$ for each state-action pair. The actions with the highest preference can then be given the highest probability of being selected by, for example, using an exponential softmax distribution,
+
+\begin{equation}
+  \pi\left(a|s, \nd{\theta}\right)=\frac{\exp(h(s, a \nd{\theta}))}{\sum_b\exp(h(s, b \nd{\theta}))}
+\end{equation}
+
+The denominator is needed such that the probabilities in each state sum to one, thus allowing the preference to be parametrized using any function, whether it is a table, a linear function using feature vectors or a deep neural network.
+
+For problems with large or continuos action spaces it may be better to learn the statistics of the probability distribution instead of the preference of each individual action. For example, the actions may be chosen using a normal (Gaussian) distribution. In this case the mean, $\mu$, and standard deviation, $\sigma$ of the distribution may be parametrized using any function approximation method, with the only limitation being that the function for the standard deviation must always be positive.
+
+\begin{equation}
+  \pi\left(a|s, \nd{\theta}\right)=\frac{1}{\sigma(s, \nd{\theta})\sqrt{2\pi}}\exp\left(-\frac{(a-\mu(s, \theta))^2}{2\sigma(s, \theta)^2}\right)
+\end{equation}
+
+\subsection{Policy gradient theorem}
+
+The goal with \gls{mdp} problems is to find a policy which maximizes the sum of rewards the agent receives. The value function approximates an expectation of the sum of rewards, thus the perform measure, $J\left(\nd{\theta}\right)$, can be assumed as being approximately equal to the true value function under current policy $\pi_\theta$.
+
+\begin{equation}
+  J\left(\nd{\theta}\right) \doteq \v_{\pi_\theta}\left(s\right)
+\end{equation}
+
+The problem with finding a change in the policy parameters that ensures improvement is that the performance depends on both the action selection and the distribution of states. At a given state, estimating the effect on the actions, and thus the reward, is relatively straightforward. However the effect of the policy on the state distribution depends on effects from the environment which are typically unknown.
+
+Fortunately, the \emph{policy gradient theorem} provides an analytical expression that is proportional to the gradient of the performance with respect to the policy parameters, which doesn't involve the derivative of the state distribution\cite{sutton2018reinforcement}.
+
+\begin{equation}
+  \nabla J\left(\nd{\theta}\right) \propto \sum_s \mu \left(s\right) \sum_a q_\pi\left(s, a\right) \nabla_\theta \pi\left(a|s, \nd{\theta}\right)
+  \label{eq:pgt}
+\end{equation}
+
+\subsection{REINFORCE}
+Recall from Equation~\ref{eq:stochastic_gradient_ascent} the overall strategy for policy gradient methods requires an estimate of the gradient of the performance measure with respect to the policy parameters. This estimate only needs to be proportional to the real gradient, since any constant of proportionality can be absorbed by the step size $\alpha$, which is otherwise arbitrary. The policy gradient theorem (Equation~\ref{eq:pgt}) gives an expression for such an estimate.
+
+The right-hand side of the policy gradient theorem is sum over the states weighted by how often the states occur under the target policy $\pi$. If $\pi$ is followed, then the states will be encountered in these proportions. Thus,
 
 \begin{align}
-  \nd{w}_{t+1} &\doteq \nd{w}_t - \frac{1}{2} \alpha \nabla \left[v_{\pi}\left(S_t\right) - \hat{v}\left(S_t, \nd{w}\right) \right]^2 \\
-  &= \nd{w}_t + \alpha \left[v_{\pi}\left(S_t\right) - \hat{v}\left(S_t, \nd{w}\right) \right] \nabla \hat{v}\left(S_t, \nd{w}\right)
-  \label{eq:w_update}
+  \nabla J\left(\nd{\theta}\right) &\propto \sum_s \mu \left(s\right) \sum_a q_\pi\left(s, a\right) \nabla_\theta \pi\left(a|s, \nd{\theta}\right)\\
+  &= \mathbb{E}_\pi\left[\sum_a q_\pi\left(S_t, a\right) \nabla_\theta \pi\left(a|S_t, \nd{\theta}\right)\right]
 \end{align}
 
-$\alpha$ is a positive step-size parameter. $\nabla f\left(\nd{w}\right)$ is a vector with the partial derivatives w.r.t. each of the weights. 
+The remaining part of the expectation is a sum over the actions. If each term was weight by the probability of selecting the actions, that is by, $\pi\left(a|S_t,\theta\right)$, then it is possible to replace $a$ by the sample action $A_t$. This can be done multiplying and dividing by this probability.
+
+\begin{align}
+  \nabla J\left(\nd{\theta}\right)&= \mathbb{E}_\pi\left[\sum_a \pi\left(a|S_t,\theta\right)q_\pi\left(S_t, a\right) \frac{\nabla_\theta \pi\left(a|S_t, \nd{\theta}\right)}{\pi\left(a|S_t,\theta\right)}\right]\\
+  &=\mathbb{E}_\pi\left[q_\pi\left(S_t, A_t\right) \frac{\nabla_\theta \pi\left(A_t|S_t, \nd{\theta}\right)}{\pi\left(A_t|S_t,\theta\right)}\right]&\text{(replacing $a$ by sample $A_t \sim \pi$)}\\
+  &=\mathbb{E}_\pi\left[G_t \frac{\nabla_\theta \pi\left(A_t|S_t, \nd{\theta}\right)}{\pi\left(A_t|S_t,\theta\right)}\right]&\text{(Because $\mathbb{E}_\pi\left[G_t|S_t, A_t\right]=q_\pi\left(S_t, A_t\right)$, Equation~\ref{eq:value_state_action_pair})}
+\end{align}
+
+Substituting this expression into Equation~\ref{eq:stochastic_gradient_ascent} yields the update rule,
 
 \begin{equation}
-  \nabla f\left(\nd{w}\right) \doteq \left(\frac{\delta f(\nd{w})}{\delta w_1}, \frac{\delta f(\nd{w})}{\delta w_2}, ..., \frac{\delta f(\nd{w})}{\delta w_n}\right)
+  \nd{\theta_{t+1}} = \nd{\theta_t} + \alpha G_t \frac{\nabla_\theta \pi\left(A_t|S_t, \nd{\theta}\right)}{\pi\left(A_t|S_t,\theta\right)}
+  \label{eq:reinforce_1}
 \end{equation}
 
-\acrshort{sgd} methods are \emph{Gradient Decent} because the updates to the weight vector $\nd{w}$ are proportional to the negative gradient of each samples squared error. This is the direction where error falls the fastest. Gradient decent methods are called \emph{stochastic} when the updates are done using single samples which may have been selected stochastically. In these cases the updates apply small corrections to the weights and over the course of may iterations it has the effect of reducing the error.
+This is the REINFORCE algorithm. Note that REINFORCE uses the complete return from $t$ until the end of the episode. In this sense REINFORCE is a Monte Carlo algorithm and is only well defined for episodic problems.
 
-In practice the real value function $v_{\pi}\left(s\right)$ is unknown and thus it's not possible to use Equation~\ref{eq:w_update}. However using Equation~\ref{eq:vpi} it's possible to substitute the value function with the expected return $G_t$. Thus the weight vector update rule can be rewritten as,
+Each update is proportional to the product of the return, $G_t$, and a vector in the direction that most increases the probability of taking $A_t$ on future visits to $S_t$. This vector is the \emph{eligibility vector}. The eligibility vector is usually written in the more compact form $\nabla_\theta \ln \pi\left(A_t|S_t, \nd{\theta}\right)$, using $\nabla \ln x=\frac{\nabla x}{x}$. Thus the REINFORCE algorithm may also be written as,
 
 \begin{equation}
-    \nd{w}_{t+1} = \nd{w}_t + \alpha \left[G_t - \hat{v}\left(S_t, \nd{w}\right) \right] \nabla \hat{v}\left(S_t, \nd{w}\right)
-    \label{eq:w_update_2}
-  \end{equation}
- 
+  \nd{\theta_{t+1}} = \nd{\theta_t} + \alpha G_t \nabla_\theta \ln \pi\left(A_t|S_t, \nd{\theta}\right)
+  \label{eq:reinforce_2}
+\end{equation}
+
+\subsection{REINFORCE with baseline}
+The policy gradient theorem can be generalized by including a comparison of the action value to an arbitrary baseline $b(s)$. 
+
+\begin{equation}
+  \nabla J\left(\nd{\theta}\right) \propto \sum_s \mu \left(s\right) \sum_a \left(q_\pi\left(s, a\right) - b(s)\right) \nabla_\theta \pi\left(a|s, \nd{\theta}\right)
+  \label{eq:pgt_b}
+\end{equation}
+
+This baseline can be any function, even a random variable, as long as it does not vary with $a$\cite{sutton2018reinforcement}. Following a similar procedure as in the previous sections yields the following update rule for REINFORCE with baseline,
+
+\begin{equation}
+  \nd{\theta_{t+1}} = \nd{\theta_t} + \alpha \left(G_t - b(s)\right) \frac{\nabla_\theta \pi\left(A_t|S_t, \nd{\theta}\right)}{\pi\left(A_t|S_t,\theta\right)}
+  \label{eq:reinforce_1}
+\end{equation}
+
+The baseline leaves the expected value of the update unchanged, however it can have a large effect on it is variance and thus the learning rate. An appropriate choice for the baseline in an estimate of the state-value function $\hat{v}\left(S_t, \nd{w}\right)$\cite{sutton2018reinforcement}. 
+
+Since REINFORCE is a Monte Carlo method for learning the policy parameters $\theta$, it seems appropriate to use the similar \acrfull{sgd} function approximation learning method shown in Section~\ref{sec:stochastic_gradient_decent_methods} to learn the value function with weights $\nd{w}$.
+
 \subsection{Actor-Critic}
+Methods that learn both the policy and value functions are called \emph{actor-critic} methods, where the actor refers to the learned policy, and the critic to the learned value function. However REINFORCE-with-baseline is not considered an actor-critic method because the state-value function is only used as a baseline and not a critic. That is, it is not used for \emph{bootstrapping}, the process of updating the value estimate of a state using the estimated values of future states, such as with the \acrfull{td} methods found in Section~\ref{sec:temporal_difference}.
+
+Consider the one-step actor-critic methods. These methods replace the full return used in REINFORCE-with-baseline with the one-step return. Expanding these methods to include $n$-step bootstrapping is straightforward.
+
+\begin{align}
+  \nd{\theta_{t+1}} &= \nd{\theta_t} + \alpha \left(G_{t:t+1} - \hat{v}\left(S_t, \nd{w}\right)\right) \frac{\nabla_\theta \pi\left(A_t|S_t, \nd{\theta}\right)}{\pi\left(A_t|S_t,\theta\right)}\\
+  &= \nd{\theta_t} + \alpha \left(R_{t+1} + \gamma V_t(S_{t+1}) - \hat{v}\left(S_t, \nd{w}\right)\right) \frac{\nabla_\theta \pi\left(A_t|S_t, \nd{\theta}\right)}{\pi\left(A_t|S_t,\theta\right)}\\
+  &= \nd{\theta_t} + \alpha \delta_t \frac{\nabla_\theta \pi\left(A_t|S_t, \nd{\theta}\right)}{\pi\left(A_t|S_t,\theta\right)}
+  \label{eq:actor-critic_1}
+\end{align}
+
+
 
 \subsection{PPO}
+
+

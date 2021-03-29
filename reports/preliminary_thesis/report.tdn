@@ -1,4 +1,5 @@
 \glossaryentry{$\pi $?\glossentry{policy}|setentrycounter[]{page}\glsnumberformat}{vi}
 \glossaryentry{$\pi \left (s\right )$?\glossentry{policy_s}|setentrycounter[]{page}\glsnumberformat}{vi}
 \glossaryentry{$\pi \left (a"|s\right )$?\glossentry{policy_as}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{$\nd {theta}$?\glossentry{policy_theta}|setentrycounter[]{page}\glsnumberformat}{vi}
 \glossaryentry{$\pi \left (a"|s,\ \nd {\theta }\right )$?\glossentry{policy_astheta}|setentrycounter[]{page}\glsnumberformat}{vi}

@@ -187,6 +187,7 @@ If no model is available, then it might be better to estimate \emph{action} valu
 
 
 \section{Temporal Difference}
+\label{sec:temporal_difference}
 \acrfull{td} learning is one of the main elements of reinforcement learning. It is a combination of ideas from Monte Carlo methods and \gls{dp}. Just as with Monte Carlo methods, \gls{td} methods are able to learn from experience without the need of a model of the environment's dynamics, and just as with \gls{dp}, \gls{td} methods update estimates based in part on other learned estimates, without waiting for a final outcome.
 
 \subsection{TD Prediction}
@@ -200,7 +201,7 @@ Both \gls{td} and Monte Carlo methods use experience to solve the prediction pro
 
 Monte-Carlo methods need to wait until the end of an episode since $G_t$ is only known then. \gls{td} methods only need to wait until the next iteration by estimating $G_t$ using the observed reward $R_{t+1}$ and the estimated value $V(S_{t+1})$. Thus just like with \gls{dp}, \gls{td} methods updates are based in part on existing estimates. These types of methods are known as bootstrapping methods.
 
-Equation~\ref{eq:tdupdaterule} shows the simplest \gls{td} method. This method is called TD(0) or one-step TD, because it's a special case of the TD(\lambda) and n-step TD methods. 
+Equation~\ref{eq:tdupdaterule} shows the simplest \gls{td} method. This method is called TD(0) or one-step TD, because it's a special case of the TD($\lambda$) and n-step TD methods. 
 
 \begin{equation}
   \label{eq:tdupdaterule}
@@ -255,3 +256,26 @@ However once the agents have been trained and \eps  is set to zero, the Q-learni
 \end{figure}
 
 
+\subsection{$n$-step Bootstrapping}
+Consider the expected return used with Monte Carlo methods shown below. It's based on the rewards starting from time $t$ until the end of the episode. Thus while the update does include information throughout a long period of time, it's only possible to update the values after the episode has ended. 
+
+\begin{equation}
+  G_t \doteq R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots + \gamma^{T-t-1}R_T
+\end{equation}
+
+In contrast the expected return for one-step TD only uses single reward after one time-step. For many applications it's desirable to update as often as possible, but bootstrapping works best over a period of time after significant and recognizable change has occurred. With one-step TD methods these two lengths of time are the same, so a compromise must be made.
+
+\begin{equation}
+  G_{t:t+1} \doteq R_{t+1} + \gamma V_t(S_{t+1})
+\end{equation}
+
+While both of these methods are effective in solving \gls{mdp} problems, the best solutions are usually somewhere in between. $n$-step Bootstrapping methods provide a spectrum of methods with Monte Carlo in one end and one-step TD on the other by enabling bootstrapping to occur over multiple time steps.
+
+An example family of $n$-step Bootstrapping methods are $n$-step TD Prediction methods. For these methods the \emph{$n$-step return} is as follows,
+
+\begin{equation}
+  G_{t:t+n} \doteq R_{t+1} + \gamma R_{t+2} + \ldots + \gamma^{n-1} R_{t+n} + \gamma^n V_{t+n-1}(S_{t+n})
+  \label{eq:nstepbootreturn}
+\end{equation}
+
+As it is clear from the Equation~\ref{eq:nstepbootreturn}, the expected return uses the reward of multiple steps, thus allowing the value function to be updated on each time-step based on information collected over a longer period of time.

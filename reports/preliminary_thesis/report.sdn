@@ -7,7 +7,9 @@
 \glossaryentry{$\mathcal {R}$?\glossentry{mdp_r_set}|setentrycounter[]{page}\glsnumberformat}{vi}
 \glossaryentry{$\subset $?\glossentry{subset}|setentrycounter[]{page}\glsnumberformat}{vi}
 \glossaryentry{$\in $?\glossentry{element_in}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{$\sim $?\glossentry{distributes according}|setentrycounter[]{page}\glsnumberformat}{vi}
 \glossaryentry{$\left "| \mathcal {S} \right "|$?\glossentry{n_element}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{$J\left (\nd {\theta }\right )$?\glossentry{policy_perfomance_measure}|setentrycounter[]{page}\glsnumberformat}{vi}
 \glossaryentry{$G_t$?\glossentry{return}|setentrycounter[]{page}\glsnumberformat}{vi}
 \glossaryentry{$G_{t:h}$?\glossentry{return_h}|setentrycounter[]{page}\glsnumberformat}{vi}
 \glossaryentry{$G_t^{\lambda s}$?\glossentry{returnlambdas}|setentrycounter[]{page}\glsnumberformat}{vi}
