@@ -68,10 +68,10 @@ The following update rule for the weights in $\nd{w}$ may be defined, using $\ov
 
 \acrshort{sgd} methods are \emph{Gradient Decent} because the updates to the weight vector $\nd{w}$ are proportional to the negative gradient of each sample's error. This is the direction where error falls the fastest. Gradient decent methods are called \emph{stochastic} when the updates are done using single samples which may have been selected stochastically. In these cases the updates apply small corrections to the weights and over the course of may iterations it has the effect of reducing the error.
 
-As shown in Equation~\ref{eq:w_update}, approximating the value function using \gls{sgd} methods require the real value function $v_{\pi}\left(s\right)$ to be known, but this is in practice often not the case. However using Equation~\ref{eq:vpi} it is possible to substitute the real value function with the expected return $G_t$ or with the $n$-step return $G_{t:t+n}$ to include bootstrapping. Thus the weight vector update rule for the state-value function estimate may be rewritten as,
+The real value function $v_{\pi}\left(s\right)$ is in practice often not known. Thus the \gls{sgd} may be generalized by substituting it with $U_t$. This not the true value, $v_{\pi}\left(S_t\right)$, but an approximation of it. It may for example be a noise-corrupted version of $v_{\pi}\left(S_t\right)$, or one of the bootstrapping targets for $\hat{v}$ (eg. $G_t$, $G_{t:t+n}$, etc).
 
 \begin{equation}
-  \nd{w}_{t+1} = \nd{w}_t + \alpha \left[G_t - \hat{v}\left(S_t, \nd{w}\right) \right] \nabla \hat{v}\left(S_t, \nd{w}\right)
+  \nd{w}_{t+1} = \nd{w}_t + \alpha \left[U_t - \hat{v}\left(S_t, \nd{w}\right) \right] \nabla \hat{v}\left(S_t, \nd{w}\right)
   \label{eq:vpist_w_update}
 \end{equation}
 
