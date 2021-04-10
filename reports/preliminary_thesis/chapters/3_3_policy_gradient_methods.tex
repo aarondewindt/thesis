@@ -124,7 +124,7 @@ Consider the one-step actor-critic methods. These methods replace the complete r
 
 
 \subsection{PPO}
-A limitation of standard policy gradient methods is that it is hard to choose step sizes when updating the policy. This is in part because a bad update step is quite damaging since it reduces the visitation distribution around the state. Stepping to far results in a bad policy, which leads to new data being collected under the bad policy, which can cause performance collapse. Another issue with standard policy gradient methods is that these methods have low sample efficiency, only one gradient step is performed per environment sample\cite{schulman2017proximal, schulman2015trust}.
+A limitation of standard policy gradient methods is that it is hard to choose step sizes when updating the policy. This is in part because a bad update step is quite damaging since it may reduce the visitation distribution around the state. Stepping to far results in a bad policy, which leads to new data being collected under the bad policy, which can cause performance collapse. Another issue with standard policy gradient methods is that these methods have low sample efficiency, only one gradient step is performed per environment sample\cite{schulman2017proximal, schulman2015trust}.
 
 So, how can the biggest improvement step on the policy be taken without over stepping and causing performance collapse? This is the question that methods such as \acrfull{trpo}, and \acrfull{ppo} seek to answer.
 
@@ -132,7 +132,7 @@ So, how can the biggest improvement step on the policy be taken without over ste
 
 % Using the trust region method a maximum change in policy is chosen. Then the optimal point within the trust region is selected and the search continuos from there. But how is the size of this thrust region chosen? 
 
-In \acrshort{trpo} a surrogate objective function is maximized. This function is an approximation of the expected advantage function of the current or new policy. It is the expected advantage from the old policy used when the sample was taken and then calibrated using the probability ratio between the new and old policies. This approximation becomes less accurate, as the two policies deviate from each other.
+In \acrshort{trpo} a surrogate objective function is maximized. This function is an approximation of the expected advantage function of the current or new policy. It is the expected advantage from the old policy being used when the sample was taken and then calibrated using the probability ratio between the new and old policies. This approximation becomes less accurate, as the two policies deviate from each other.
 
 This objective function is then constrained by the KL-divergence of the new and old policies. The KL-divergence function measures the difference between two probability distributions. This problem is then solved using the conjugate gradient algorithm after making a linear approximation of the objective function and a quadratic approximation of the constraint \cite{schulman2015trust}.
 
@@ -147,7 +147,7 @@ This objective function is then constrained by the KL-divergence of the new and 
   \label{eq:trpo_constraint}
   \end{equation}
   
-The theory justifying \acrshort{trpo} actually suggests using a penalty instead of a constraint as shown in Equation~\ref{eq:trpo_penalty}. In this case the objective function computes the maximum KL-divergence over the states forming a lower or pessimistic bound on the performance of the new policy, $\pi$. This lower bound function can then be used to optimize the policy for maximum rewards using the \acrfull{mm} algorithm shown in Figure~\ref{fig:mma}. \acrshort{mm} works by iteratively maximizing the lower bound function.
+The theory justifying \acrshort{trpo} actually suggests using a penalty instead of a constraint as shown in Equation~\ref{eq:trpo_penalty}. In this case the objective function computes the maximum KL-divergence over the states and subtracts it from the expected advantage estimate,forming a lower or pessimistic bound on the performance of the new policy, $\pi$. This lower bound function can then be used to optimize the policy for maximum rewards using the \acrfull{mm} algorithm shown in Figure~\ref{fig:mma}. \acrshort{mm} works by iteratively maximizing a lower bound function which locally approximates the target function.
 
 \begin{equation}
   \begin{aligned}

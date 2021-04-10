@@ -75,6 +75,43 @@ The real value function $v_{\pi}\left(s\right)$ is in practice often not known. 
   \label{eq:vpist_w_update}
 \end{equation}
 
+\subsection{Adam}
+In \acrshort{sgd} the step size parameter, $\alpha$, has a significant effect on the learning performance. If it's too small, it will learn slowly, if it's too large the target function will not be properly approximated. The step size is also kept constant throughout the learning process and the same value is used to update all parameters in the weight vector, $\nd w$. This is not ideal, since it may in some cases be beneficial to have separate learning rates for each weight and to update these rates as the agent explores the environment and learns.
+
+Adam is an extension to \acrshort{sgd} that uses estimates of the gradient's average \nth{1} moment, better known as the mean, and the gradient's average \nth{2} moment, better known as the uncentered variance, to adapt the learning rate of each individual parameter in the weight vector.
+
+\begin{algorithm}[H]
+  \SetAlgoLined
+  \KwIn{$\alpha$: Stepsize}
+  \KwIn{$\beta_1, \beta_2 \in [0, 1)$: Exponential decay rates for the moment estimates}
+  \KwIn{$f(\nd w)$: Stochastic objective function with parameters $\nd w$}
+  \KwIn{$\nd w_0$: Initial parameter vector}
+  $m_0 \leftarrow 0$ (Initialize \nth{1} moment vector)\\
+  $v_0 \leftarrow 0$ (Initialize \nth{2} moment vector)\\
+  $t \leftarrow 0$ (Initialize time step)\\
+
+  \While{$\nd w_t$ not converged}{
+    $t \leftarrow t + 1$\\
+    $\nd{g_t} \leftarrow \nabla_w f_t(\nd w_{t-1})$ (Get gradients w.r.t. stochastic objective at timestep $t$)\\
+    $\nd{m}_t \leftarrow \beta_1 \cdot m_{t-1} + (1-\beta_1)\cdot \nd g_t$ (Update biased first moment estimate)\\
+    $\nd{v}_t \leftarrow \beta_2 \cdot v_{t-1} + (1-\beta_2)\cdot \nd g_t^2$ (Update biased second moment estimate)\\
+    $\widehat{\nd m_t} \leftarrow \nd m_t / (1-\beta_1^t)$ (Compute biased-corrected first moment estimate)\\
+    $\widehat{\nd v_t} \leftarrow \nd v_t / (1-\beta_2^t)$ (Compute biased-corrected second raw moment estimate)\\
+    $\nd w_t \leftarrow \nd w_{t-1} - \alpha \cdot \widehat{\nd m_t} / (\sqrt{\widehat{\nd v_t}}+\epsilon)$ (Update parameters)
+  }
+  \Return{$\nd w_t$} (Resulting parameters)
+
+  \caption{Adam algorithm. Good default values for the hyperparameters are $\alpha=0.001$, $\beta_1=0.9$, $\beta_2=0.999$ and $\epsilon=10^{-8}$. All operations on vectors are element wise. With $\beta_1^t$ and $\beta_2^t$ being $\beta_1$ and $\beta_2$ to the power of $t$\cite{kingma2014adam}.}
+  \label{alg:adam}
+\end{algorithm}
+
+The algorithm updates exponential moving averages of the gradient, $\nd m_t$, and the squared gradient, $\nd v_t$, where the hyperparameters $\beta_1$ and $\beta_2$ control the exponential decay. These moving averages are themselves estimates of the \nth{1} and \nth{2} average moments. These vectors are initialized at zero, thus the estimates are biased towards zero, specially during the initial timesteps and when the exponential decays are close to one. This initialization bias is then counteracted yielding the bias-corrected estimates $\widehat{\nd m_t}$ and $\widehat{\nd v_t}$.
+
+An important property of the update rule is its careful choice of stepsizes. Assuming $\epsilon=0$, the effective step taken by each parameter at timestep $t$ is $\Delta_t=\alpha\cdot \widehat{\nd m_t}/\sqrt{\widehat{\nd v_t}}$. This effective stepsize has two upper bounds: $|\Delta_t| \leq \alpha\cdot (1-\beta_1)/\sqrt{1-\beta_2}$ in case $(1-\beta_1) > \sqrt{{1-\beta_2}}$, and  $|\Delta_t| \leq \alpha$ otherwise. 
+
+The first case only happens in severe cases of sparsity. When a gradient has been zero for all timesteps except the current one. For less sparse cases, the effective stepsize is smaller. When $(1-\beta_1) = \sqrt{1-\beta_2}$ then $|\widehat{\nd m_t}/ \sqrt{\widehat{\nd v_t}}| < 1$ therefore $\Delta_t < \alpha$. In most cases $\widehat{\nd m_t}/ \sqrt{\widehat{\nd v_t}} \approx \pm 1$ since $|\mathbb{E}[\nd g]/\sqrt{\mathbb{E}[\nd g^2]}| \leq 1$. Therefore the effective stepsize is bounded by the stepsize hyperparameter, $\alpha$. This can be understood as establishing a \emph{trust region} around the current weight parameter values, beyond which the current gradient estimate does not provide enough information. This makes it easier to choose a value for $\alpha$ since it only indicates an upper bound for the stepsize.
+
+The $\widehat{\nd m_t}/ \sqrt{\widehat{\nd v_t}}$ may be seen as some sort of a \acrfull{snr}. With a smaller \acrshort{snr} the effective stepsize will be closer to zero. This property is desirable, since a smaller \acrshort{snr} indicates a greater uncertainty on whether the direction of $\widehat{\nd m_t}$ corresponds to the direction of the true gradient. For example, the \acrshort{snr} becomes close to $0$ towards the optimum, thus reducing the effective stepsize, resulting in a form of automatic step size annealing. The effective stepsize is also invariant of the scale of the gradients. Scaling the gradient $\nd g$ with a factor $c$ will scale $\widehat{\nd m_t}$ by $c$ and $\widehat{\nd v_t}$ by $c^2$, which cancels out in the \acrshort{snr}.
 
 \subsection{Artificial Neural Networks}
 \Acrfullpl{ann} are widely used for nonlinear function approximation in the field of machine learning and beyond. Deeply-layered \acrshortpl{ann} have successfully been used in the Reinforcement Learning to solve complex problems. 
@@ -97,7 +134,9 @@ lower-level abstractions, that is, abstractions produced by deep architectures s
 
 
 \subsection{LSTM Neural Networks}
-The network shown in Figure~\ref{fig:ann} is called a \acrfull{ffnn} since it contains no loops, that is, the output of a unit cannot influence the its input. Networks with loops are called \acrfullpl{rnn}. The main advantage of \acrshortpl{rnn} are the ability exhibit temporal dynamic behavior, this property allows agents to store memory and thus process sequences of variable length, learn how to behave when there are long intervals of time between events and potentially learn policies for non-Markovian environments. 
+The network shown in Figure~\ref{fig:ann} is called a \acrlong{ffnn} because it contains no loops, that is, the output of a unit cannot influence the its own input. Networks with loops are called \acrfullpl{rnn}. An \acrshort{rnn} can use the feedback loops to store representations of inputs from recent events in the form of activations. The main advantage of \acrshortpl{rnn} are the ability to exhibit temporal dynamic behavior, this property allows agents to process sequences of variable length, learn how to behave when there are long intervals of time between events and learn policies for non-Markovian environments. 
 
-The \acrfull{lstm} architecture is a type of \acrshortpl{rnn} that is quite popular and has been in use for many year. An \acrshort{lstm} unit consists of a cell, an input gate, an output gate and a forget gate. The cell remembers values for arbitrary time intervals and the three gate regulate the flow information in and out of the cell\cite{hochreiter1997long}.
+The \acrfull{lstm} architecture is a type of \acrshort{rnn} that is quite popular and has been in use for many year. An \acrshort{lstm} unit consists of a cell, an input gate, an output gate and a forget gate. The cell remembers values for arbitrary time intervals and the three gates regulate the flow of information in and out of the cell\cite{hochreiter1997long}. One or more \acrshort{lstm} hidden layers containing an array of these cells may then be used together with feed forward layers to build a deep neural network exhibiting the properties of an \acrshort{rnn}.
+
+
 
