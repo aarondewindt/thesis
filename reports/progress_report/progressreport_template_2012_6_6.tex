@@ -14,11 +14,11 @@
 	%%% You should edit this part appropriately
 	\newcommand{\Title}{Progress Report A. de Windt}
 	\newcommand{\Author}{A. de Windt}
-	\newcommand{\Date}{25-05-2020}
-	\newcommand{\Subject}{Policy Gradient Reinforcement Learning for quadrotor control}
+	\newcommand{\Date}{30-03-2021}
+	\newcommand{\Subject}{Orbit ascent trajectory optimization using reinforcement learning}
 	\newcommand{\Mentors}{Dr.ir. Erik-Jan van Kampen}
 	
-	\newcommand{\Term}{09/2018 - 12/2020}
+	\newcommand{\Term}{09/2018 - 12/2021}
 	\newcommand{\Mail}{A.deWindt@student.tudelft.nl}
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\setlength\parindent{0pt}
@@ -51,32 +51,25 @@
 	\section*{Outcome of the previous meeting}
 	
 	\begin{itemize}
-		\item Wrote launcher simulation environment.
-		\item Trained agents on timing engine ignitions.
+		\item Finished simulation rewrite.
 	\end{itemize}
 	
 	\section*{Description of the results since last meeting}
-
 	\subsection*{Short version}
 	\begin{itemize}
-		\item Rewrote launcher simulation in order to give it the same interface as OpenAI environments. The new simulation is written in a numba class, significantly increasing performance. 10-100x faster.
-		\item Implemented continues advantage actor-critic (A2C) with mixed success.
-		\item I ended up going back to the pendulum in order to develop the A2C agent.
-		\item Reorganized report and literature library.
-		\item Wrote new introduction
-		\item Investigated the use of an existing Reinforcement Learning framework so I don't have to start writing the agents from scratch.
-		\item Collected and read literature on:
-			\begin{itemize}
-				\item Orbital ascent trajectory optimization.
-				\item Reinforcement Learning in spacecraft navigation.
-				\item Inverse Reinforcement Learning and similar methods of supervised or imitation RL.
-			\end{itemize}
+		\item Added section 3.9.4. $n$­-step Bootstrapping
+		\item Moved section 3.10.1. Stochastic Gradient Decent methods to it's current location and changed the text a bit.
+		\item Added to section 3.11. Policy Gradient Methods. Up to actor-critic methods.
 	\end{itemize}
 	
 	\section*{Plans for next 2 weeks}
 	% Same as last week, since I haven't been able to progress.
 	\begin{enumerate}
-		\item Summarize collected literature and make a draft plan for the thesis project.
+		\item Add more advanced RL methods, TRPO, PPO, SAC, etc.
+		\item Add some background theory needed for those.
+		\item Finish approximate solutions section.
+		\item High-throughput architectures (IMPALA).
+		\item Code agent using RLlib.
 	\end{enumerate}
 	
 

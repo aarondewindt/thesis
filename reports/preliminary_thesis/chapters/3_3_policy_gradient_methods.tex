@@ -21,15 +21,15 @@ This is specially helpful for continuos state and action spaces. Since, as discu
 \subsection{Policy parameterization}
 In policy gradient methods the policy may be parametrized in any way so long as the policy function, $\pi\left(a|s,\ \nd{\theta}\right )$, is differentiable with respect to the policy parameters, $\nd{\theta}$. 
 
-A method of parameterization in case of discreet and small action spaces is to form parametrized numerical preferences $h(s, a \nd{\theta}) \in \mathbb{R}$ for each state-action pair. The actions with the highest preference can then be given the highest probability of being selected by, for example, using an exponential softmax distribution,
+A method of parameterization in case of discreet and small action spaces is to form parametrized numerical preferences $h(s, a, \nd{\theta}) \in \mathbb{R}$ for each state-action pair. The actions with the highest preference can then be given the highest probability of being selected by, for example, using an exponential softmax distribution,
 
 \begin{equation}
-  \pi\left(a|s, \nd{\theta}\right)=\frac{\exp(h(s, a \nd{\theta}))}{\sum_b\exp(h(s, b \nd{\theta}))}
+  \pi\left(a|s, \nd{\theta}\right)=\frac{\exp(h(s, a, \nd{\theta}))}{\sum_b\exp(h(s, b, \nd{\theta}))}
 \end{equation}
 
 The denominator is needed such that the probabilities in each state sum to one, thus allowing the preference to be parametrized using any function, whether it is a table, a linear function using feature vectors or a deep neural network.
 
-For problems with large or continuos action spaces it may be better to learn the statistics of the probability distribution instead of the preference of each individual action. For example, the actions may be chosen using a normal (Gaussian) distribution. In this case the mean, $\mu$, and standard deviation, $\sigma$ of the distribution may be parametrized using any function approximation method, with the only limitation being that the function for the standard deviation must always be positive.
+For problems with large or continuos action spaces it may be better to learn the statistics of the probability distribution instead of the preference of each individual action. For example, the actions may be chosen using a normal (Gaussian) distribution. In this case the mean, $\mu$, and standard deviation, $\sigma$, of the distribution may be parametrized using any function approximation method, with the only limitation being that the function for the standard deviation must always be positive.
 
 \begin{equation}
   \pi\left(a|s, \nd{\theta}\right)=\frac{1}{\sigma(s, \nd{\theta})\sqrt{2\pi}}\exp\left(-\frac{(a-\mu(s, \theta))^2}{2\sigma(s, \theta)^2}\right)
@@ -62,7 +62,7 @@ The right-hand side of the policy gradient theorem is a sum over the states weig
   &= \mathbb{E}_\pi\left[\sum_a q_\pi\left(S_t, a\right) \nabla_\theta \pi\left(a|S_t, \nd{\theta}\right)\right]
 \end{align}
 
-The remaining part of the expectation is a sum over the actions. If each term was weight by the probability of selecting the actions, that is by, $\pi\left(a|S_t,\theta\right)$, then it is possible to replace $a$ by the sample action $A_t$. This can be done multiplying and dividing by this probability.
+The remaining part of the expectation is a sum over the actions. If each term was weighted by the probability of selecting the actions, that is by, $\pi\left(a|S_t,\theta\right)$, then it is possible to replace $a$ by the sample action $A_t$. This can be done by multiplying and dividing by this probability.
 
 \begin{align}
   \nabla J\left(\nd{\theta}\right)&= \mathbb{E}_\pi\left[\sum_a \pi\left(a|S_t,\theta\right)q_\pi\left(S_t, a\right) \frac{\nabla_\theta \pi\left(a|S_t, \nd{\theta}\right)}{\pi\left(a|S_t,\theta\right)}\right]\\
@@ -77,7 +77,7 @@ Substituting this expression into Equation~\ref{eq:stochastic_gradient_ascent} y
   \label{eq:reinforce_1}
 \end{equation}
 
-This is the REINFORCE algorithm. Note that REINFORCE uses the complete return from $t$ until the end of the episode. In this sense REINFORCE is a Monte Carlo algorithm and is only well defined for episodic problems.
+This is the REINFORCE algorithm. Note that REINFORCE uses the complete return from $t$ until the end of the episode. In this sense REINFORCE is a Monte Carlo algorithm and is thus only well defined for episodic problems.
 
 Each update is proportional to the product of the return, $G_t$, and a vector in the direction that most increases the probability of taking $A_t$ on future visits to $S_t$. This vector is the \emph{eligibility vector}. The eligibility vector is usually written in the more compact form $\nabla_\theta \ln \pi\left(A_t|S_t, \nd{\theta}\right)$, using $\nabla \ln x=\frac{\nabla x}{x}$. Thus the REINFORCE algorithm may also be written as,
 
@@ -94,14 +94,18 @@ The policy gradient theorem can be generalized by including a comparison of the 
   \label{eq:pgt_b}
 \end{equation}
 
-This baseline can be any function, even a random variable, as long as it does not vary with $a$\cite{sutton2018reinforcement}. Following a similar procedure as in the previous sections yields the following update rule for REINFORCE with baseline,
+This baseline can be any function, even a random variable, as long as it does not vary with the action\cite{sutton2018reinforcement}. Following a similar procedure as in the previous section yields the following update rule for REINFORCE with baseline,
 
 \begin{equation}
   \nd{\theta_{t+1}} = \nd{\theta_t} + \alpha \left(G_t - b(S_t)\right) \frac{\nabla_\theta \pi\left(A_t|S_t, \nd{\theta}\right)}{\pi\left(A_t|S_t,\theta\right)}
-  \label{eq:reinforce_1}
+  \label{eq:reinforce_baseline}
 \end{equation}
 
-The baseline leaves the expected value of the update unchanged, however it can have a large effect on it is variance and thus the learning rate. An appropriate choice for the baseline in an estimate of the state-value function $\hat{v}\left(S_t\right)$\cite{sutton2018reinforcement}. 
+The baseline leaves the expected value of the update unchanged, however it can have a large effect on its variance and thus the learning rate. An appropriate choice for the baseline is an estimate of the state-value function $\hat{v}\left(S_t\right)$\cite{sutton2018reinforcement}. In this case, the term with the expected return and baseline value function is known as the expected advantage function.
+
+\begin{equation}
+  A_t=G_t-\hat{v}(S_t)
+\end{equation}
 
 Since REINFORCE is a Monte Carlo method for learning the policy parameters $\theta$, it seems appropriate to use the similar \acrfull{sgd} function approximation learning method shown in Section~\ref{sec:stochastic_gradient_decent_methods} to learn the value function with weights $\nd{w}$.
 
@@ -120,5 +124,76 @@ Consider the one-step actor-critic methods. These methods replace the complete r
 
 
 \subsection{PPO}
+A limitation of standard policy gradient methods is that it's hard to choose step sizes when updating the policy. This is in part because a bad update step is quite damaging since it reduces the visitation distribution around the state. Stepping to far results in a bad policy, which leads to new data being collected under the bad policy, which can cause performance collapse. Another issue with standard policy gradient methods is that these methods have low sample efficiency, only one gradient step is performed per environment sample.
+
+So, how can the biggest improvement step on the policy be taken without over stepping and causing performance collapse? This is the question that methods such as \acrfull{trpo}, and \acrfull{ppo} seek to answer.
+
+To better visualize the main issue, imagine an agent is climbing a mountain with the goal being to reach top. However somewhere along it's path it must cross a narrow pass with cliffs on both sides. If the robot takes short steps it will take too long to reach the top. If the steps are too long it may fall off the cliff and land in a bad state with low rewards, which will lead to a locally bad policy. 
+
+Using the trust region method a maximum change in policy is chosen. Then the optimal point within the trust region is selected and the search continuos from there. But how is the size of this thrust region chosen? 
+
+In \acrshort{trpo} a surrogate objective function is maximized. This function is an approximation of the expected advantage function of the new policy. It is the expected advantage from the old policy and then calibrated using the probability ratio between the new and old policies. This approximation becomes less accurate, as the two policies deviate from each other.
+
+This objective function is then constrained by the KL-divergence of the new and old policies. The KL-divergence function measures the difference between two probability distributions. This problem is then solved using the conjugate gradient algorithm after making a linear approximation of the objective function and a quadratic approximation of the constraint.
+
+\begin{equation}
+  \begin{aligned}
+  & \underset{\theta}{\text{maximize}}
+  & & \mathbb{E_t} \left[\frac{\pi_\theta(a_t | s_t)}{\pi_{\theta_{old}}(a_t | s_t)} A_t\right] \\
+  & \text{subject to}
+  & & \mathbb{E_t}\left[\overline{KL}\left[ \pi_{\theta_{old}}(\cdot | s_t), \pi_\theta(
+    \cdot | s_t) \right]\right] \leq \delta
+  \end{aligned}
+  \label{eq:trpo_constraint}
+  \end{equation}
+  
+The theory justifying \acrshort{trpo} actually suggests using a penalty instead of a constraint as shown in Equation~\ref{eq:trpo_penalty}. In this case the objective function computes the maximum KL-divergence over the states forming a lower or pessimistic bound on the performance of the new policy, $\pi$. This lower bound function can then be used to optimize the policy for maximum rewards using the \acrfull{mm} algorithm shown in Figure~\ref{fig:mma}. \acrshort{mm} works by iteratively maximizing the lower bound function.
+
+\begin{equation}
+  \begin{aligned}
+  & \underset{\theta}{\text{maximize}}
+  & & \mathbb{E_t} \left[
+    \frac{\pi_\theta(a_t | s_t)}{\pi_{\theta_{old}}(a_t | s_t)} A_t
+    - \beta\ \overline{KL}\left[ \pi_{\theta_{old}}(\cdot | s_t), \pi_\theta(\cdot | s_t) \right]
+  \right]   
+  \end{aligned}
+  \label{eq:trpo_penalty}
+  \end{equation}
+
+\begin{figure}[h!]			
+	\centering
+	\input{figures/min_max.tex}			
+	\caption{Minorize-Maximization algorithm}
+	\label{fig:mma}
+\end{figure}
+
+The reason \acrshort{trpo} uses a hard constraint instead of the penalty is because it is difficult to choose a value for $\beta$ that works well between problems or even within the same problem. However \acrshort{ppo} provides new alternate surrogate objective functions that work around this issue. Despite \acrshort{ppo} not being as good as \acrshort{trpo} in determining an appropriate size for the trust region, it is much simpler to implement and less computationally intensive. Benchmarks show that \acrshort{ppo} is able to perform as good as or even better than other state-of-the-art methods. 
+
+There are two variants of \acrshort{ppo}. \acrshort{ppo} with adaptive KL penalty and \acrshort{ppo} with clipped objective. This thesis only uses \acrshort{ppo} with clipped objective, thus the first variant is left out.
+
+Let $r_t(\nd\theta)$ be the probability ratio $r_t(\nd\theta)=\frac{\pi_\theta(a_t | s_t)}{\pi_{\theta_{old}}(a_t | s_t)}$. Then the policy surrogate objective function proposed by \acrshort{ppo} is as follows.
+
+\begin{equation}
+  L_t^{CLIP}(\nd{\theta}) = \mathbb{E_t} \left[\min(
+    r_t(\nd\theta)A_t,
+    \text{clip}(r_t(\nd\theta), 1-\epsilon, 1+\epsilon)A_t
+  )\right]
+\end{equation}
+
+Where \eps\ is a hyperparameter, in the original paper the value of $\epsilon=0.2$ was chosen based on benchmarks. The first term inside the $\min(\dots)$ is the same as the surrogate objective function used in \acrshort{trpo} (Equation~\ref{eq:trpo_constraint}). The second term $\text{clip}(r_t(\nd\theta), 1-\epsilon, 1+\epsilon)A_t$ modifies the surrogate objective by clipping the probability ratio, thus removing the incentive for moving $r_t$ outside of the interval $\left[1-\epsilon, 1+\epsilon\right]$
+
+If a neural network architecture that shares parameters between the policy and value functions is being used, then a loss function that combines the policy surrogate objective function and a value function error term must be used. An entropy bonus may also be added to encourage exploration. Combining these terms results in the following objective function.
+
+\begin{equation}
+  L_t^{CLIP+VF+S}(\nd{\theta}) = \mathbb{E_t} \left[ 
+    L_t^{CLIP}(\nd{\theta}) +
+    c_1L_t^{VF}(\nd{\theta}) +
+    c_2S[\pi_\theta](s_t) 
+    \right]
+\end{equation}
+
+Here are $c_1$ and $c_2$ coefficients, $S$ the entropy bonus and $L_t^{VF}$ is the squared-error loss of the value function estimate. This objective function can then be optimized on each iteration using \acrshort{sgd} or Adam. This allows each environment sample to be used for multiple policy updates, thus resulting in a better sample efficiency than standard gradient decent methods.
+
+
 
 

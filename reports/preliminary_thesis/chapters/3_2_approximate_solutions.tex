@@ -77,8 +77,27 @@ The real value function $v_{\pi}\left(s\right)$ is in practice often not known. 
 
 
 \subsection{Artificial Neural Networks}
+\Acrfullpl{ann} are widely used for nonlinear function approximation in the field of machine learning and beyond. Deeply-layered \acrshortpl{ann} have successfully been used in the Reinforcement Learning to solve complex problems. 
+
+An \acrshort{ann} consists of interconnected units which have a similar function to a neuron in a nervous system. Figure~\ref{fig:ann} shows a simple \acrfull{ffnn} with three inputs, three hidden layers and two outputs. The layers are connected to with links, with each link having a real-valued weight associated with it. The links are comparable to synaptic connections in a nervous system and the weight are roughly comparable to the efficacy of the synaptic connections.
+
+Each one of the units computes its output by first calculating a weighted sum of the inputs and then applies a non-linear function to the result. This non-linear function is called an \emph{activation function}. The activation function is often S-shaped, or sigmoid, for example a hyperbolic tangent, but sometimes a rectifier non-linearity, $f(x)=\max(0, x)$, or step function are also used. It's often useful for different layers to have different types of activation functions.
+
+A \acrshort{ffnn} with no hidden layers is only able to approximate linear functions, however if a single hidden layer with a large enough number sigmoid elements is added, then any continuos function may be approximated within a range of input values with any degree of accuracy\cite{cybenko1989approximation}. This is also true for other non-linear functions that satisfy certain conditions, however non-linearity is essential. Non-linear activation functions are equivalent to a network without hidden layers, since linear functions of linear functions are linear. 
+
+Even though a single hidden layer is enough to approximate any function, both practice and theory show that for the complex functions needed in many artificial intelligent tasks it's often easier or may even require abstractions which are hierarchical compositions of many layers of
+lower-level abstractions, that is, abstractions produced by deep architectures such as \acrshortpl{ann} with many hidden layers \cite{bengio2009learning,sutton2018reinforcement}.
+
+\begin{figure}[ht]			
+	\centering
+	\input{figures/ann.tex}			
+	\caption{Artificial Neural Network\cite{sutton2018reinforcement}.}
+	\label{fig:ann}
+\end{figure}
 
 
 \subsection{LSTM Neural Networks}
+The network shown in Figure~\ref{fig:ann} is called a \acrfull{ffnn} since it contains no loops, that is, the output of a unit cannot influence the its input. Networks with loops are called \acrfullpl{rnn}. The main advantage of \acrshortpl{rnn} are the ability exhibit temporal dynamic behavior, this property allows agents to store memory and thus process sequences of variable length, learn how to behave when there are long intervals of time between events and potentially learn policies for non-Markovian environments. 
 
+The \acrfull{lstm} architecture is a type of \acrshortpl{rnn} that is quite popular and has been in use for many year. An \acrshort{lstm} unit consists of a cell, an input gate, an output gate and a forget gate. The cell remembers values for arbitrary time intervals and the three gate regulate the flow information in and out of the cell\cite{hochreiter1997long}.
 
