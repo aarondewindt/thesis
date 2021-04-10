@@ -124,17 +124,17 @@ Consider the one-step actor-critic methods. These methods replace the complete r
 
 
 \subsection{PPO}
-A limitation of standard policy gradient methods is that it's hard to choose step sizes when updating the policy. This is in part because a bad update step is quite damaging since it reduces the visitation distribution around the state. Stepping to far results in a bad policy, which leads to new data being collected under the bad policy, which can cause performance collapse. Another issue with standard policy gradient methods is that these methods have low sample efficiency, only one gradient step is performed per environment sample.
+A limitation of standard policy gradient methods is that it is hard to choose step sizes when updating the policy. This is in part because a bad update step is quite damaging since it reduces the visitation distribution around the state. Stepping to far results in a bad policy, which leads to new data being collected under the bad policy, which can cause performance collapse. Another issue with standard policy gradient methods is that these methods have low sample efficiency, only one gradient step is performed per environment sample\cite{schulman2017proximal, schulman2015trust}.
 
 So, how can the biggest improvement step on the policy be taken without over stepping and causing performance collapse? This is the question that methods such as \acrfull{trpo}, and \acrfull{ppo} seek to answer.
 
-To better visualize the main issue, imagine an agent is climbing a mountain with the goal being to reach top. However somewhere along it's path it must cross a narrow pass with cliffs on both sides. If the robot takes short steps it will take too long to reach the top. If the steps are too long it may fall off the cliff and land in a bad state with low rewards, which will lead to a locally bad policy. 
+% To better visualize the main issue, imagine an agent is climbing a mountain with the goal being to reach top. However somewhere along its path it must cross a narrow pass with cliffs. If the agent takes short steps it will take too long to reach the top. If the steps are too long it may fall off the cliff and land in a bad state with low rewards, which will lead to a locally bad policy. 
 
-Using the trust region method a maximum change in policy is chosen. Then the optimal point within the trust region is selected and the search continuos from there. But how is the size of this thrust region chosen? 
+% Using the trust region method a maximum change in policy is chosen. Then the optimal point within the trust region is selected and the search continuos from there. But how is the size of this thrust region chosen? 
 
-In \acrshort{trpo} a surrogate objective function is maximized. This function is an approximation of the expected advantage function of the new policy. It is the expected advantage from the old policy and then calibrated using the probability ratio between the new and old policies. This approximation becomes less accurate, as the two policies deviate from each other.
+In \acrshort{trpo} a surrogate objective function is maximized. This function is an approximation of the expected advantage function of the current or new policy. It is the expected advantage from the old policy used when the sample was taken and then calibrated using the probability ratio between the new and old policies. This approximation becomes less accurate, as the two policies deviate from each other.
 
-This objective function is then constrained by the KL-divergence of the new and old policies. The KL-divergence function measures the difference between two probability distributions. This problem is then solved using the conjugate gradient algorithm after making a linear approximation of the objective function and a quadratic approximation of the constraint.
+This objective function is then constrained by the KL-divergence of the new and old policies. The KL-divergence function measures the difference between two probability distributions. This problem is then solved using the conjugate gradient algorithm after making a linear approximation of the objective function and a quadratic approximation of the constraint \cite{schulman2015trust}.
 
 \begin{equation}
   \begin{aligned}
@@ -167,7 +167,7 @@ The theory justifying \acrshort{trpo} actually suggests using a penalty instead 
 	\label{fig:mma}
 \end{figure}
 
-The reason \acrshort{trpo} uses a hard constraint instead of the penalty is because it is difficult to choose a value for $\beta$ that works well between problems or even within the same problem. However \acrshort{ppo} provides new alternate surrogate objective functions that work around this issue. Despite \acrshort{ppo} not being as good as \acrshort{trpo} in determining an appropriate size for the trust region, it is much simpler to implement and less computationally intensive. Benchmarks show that \acrshort{ppo} is able to perform as good as or even better than other state-of-the-art methods. 
+The reason \acrshort{trpo} uses a hard constraint instead of the penalty is because it is difficult to choose a value for $\beta$ that works well between problems or even within the same problem. However \acrshort{ppo} provides new alternate surrogate objective functions that work around this issue. Despite \acrshort{ppo} not being as good as \acrshort{trpo} in determining an appropriate size for the trust region, it is much simpler to implement and less computationally intensive. Benchmarks show that \acrshort{ppo} is able to perform as good as or even better than other state-of-the-art methods\cite{schulman2017proximal}. 
 
 There are two variants of \acrshort{ppo}. \acrshort{ppo} with adaptive KL penalty and \acrshort{ppo} with clipped objective. This thesis only uses \acrshort{ppo} with clipped objective, thus the first variant is left out.
 
@@ -180,9 +180,9 @@ Let $r_t(\nd\theta)$ be the probability ratio $r_t(\nd\theta)=\frac{\pi_\theta(a
   )\right]
 \end{equation}
 
-Where \eps\ is a hyperparameter, in the original paper the value of $\epsilon=0.2$ was chosen based on benchmarks. The first term inside the $\min(\dots)$ is the same as the surrogate objective function used in \acrshort{trpo} (Equation~\ref{eq:trpo_constraint}). The second term $\text{clip}(r_t(\nd\theta), 1-\epsilon, 1+\epsilon)A_t$ modifies the surrogate objective by clipping the probability ratio, thus removing the incentive for moving $r_t$ outside of the interval $\left[1-\epsilon, 1+\epsilon\right]$
+Where \eps\ is a hyperparameter, in the original paper the value of $\epsilon=0.2$ was chosen based on benchmarks\cite{schulman2017proximal}. The first term inside the $\min(\dots)$ is the same as the surrogate objective function used in \acrshort{trpo} (Equation~\ref{eq:trpo_constraint}). The second term $\text{clip}(r_t(\nd\theta), 1-\epsilon, 1+\epsilon)A_t$ modifies the surrogate objective by clipping the probability ratio, thus removing the incentive for moving $r_t$ outside of the interval $\left[1-\epsilon, 1+\epsilon\right]$
 
-If a neural network architecture that shares parameters between the policy and value functions is being used, then a loss function that combines the policy surrogate objective function and a value function error term must be used. An entropy bonus may also be added to encourage exploration. Combining these terms results in the following objective function.
+If a neural network architecture that shares parameters between the policy and value functions is being used, then a loss function that combines the policy surrogate objective function and a value function error term must be used. An entropy bonus may also be added to encourage exploration. Combining these terms results in the following objective function\cite{schulman2017proximal}.
 
 \begin{equation}
   L_t^{CLIP+VF+S}(\nd{\theta}) = \mathbb{E_t} \left[ 
