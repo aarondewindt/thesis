@@ -244,7 +244,7 @@ With the boundary conditions being,
 
 The initial velocity $v_0$ is considered fixed, but the initial flight path angle $\gamma_0$ is left undetermined.
 
-This optimization is solved using variational calculus. Thus the next step is to get an equation for $\delta U$, the variation of Equation~\eqref{eq:u_int_2}. However determining the variation of an integral is not trivial. According to derivation in appendix C of \cite{thomson2012introduction}, the variation of the following integral is shown in Equation~\eqref{eq:int_vars}.
+This optimization is solved using variational calculus. Thus the next step is to get an equation for $\delta U$, the variation of Equation~\eqref{eq:u_int_2}. However determining the variation of an integral is not trivial. According to derivation in appendix C of the book \cite{thomson2012introduction}, the variation of the following integral is shown in Equation~\eqref{eq:int_vars}.
 \begin{equation}
     I=\int_a^b{f\left( t, z, \frac{dz}{dt}\right)}
 \end{equation}
@@ -311,8 +311,8 @@ Combining Equations~(\ref{eq:duz_cond_3},~\ref{eq:atop_lambda_1},~\ref{eq:atop_c
     \tan {\theta} = \left(1-\frac{t}{T}\right)\tan{\gamma_0}
 \end{equation}
 
-Equation~\eqref{eq:optimal_theta_1} gives an expression for the thrust attitude angle $\theta$ if the initial flight path angle $\gamma_0$ is allowed to variate. If $\gamma_0$ is given a fixed quantity, a similar procedure starting from Equation~\eqref{eq:delta_u_int_1} can be followed with the added condition that $\delta \gamma_0=0$, The result is the following.
-\todo{derive this}
+Equation~\eqref{eq:optimal_theta_1} gives an expression for the thrust attitude angle $\theta$ if the initial flight path angle $\gamma_0$ is allowed to variate. If $\gamma_0$ is given a fixed quantity, a similar procedure starting from Equation~\eqref{eq:delta_u_int_1} can be followed with the added condition that $\delta \gamma_0=0$. This results in the following.
+% \todo{derive this}
 \begin{equation}
     \label{eq:optimal_theta_2}
     \tan\theta=\tan\theta_0-C_2t
@@ -320,6 +320,14 @@ Equation~\eqref{eq:optimal_theta_1} gives an expression for the thrust attitude 
 
 
 \subsection{Optimal propellant utilization policy}
+\begin{wrapfigure}{r}{0.3\textwidth}        
+    \begin{center}        
+        \input{figures/possible_variations_of_v.tex}		
+    \end{center}    
+    \caption{Possible variation of $V$}
+    \label{fig:possible_var_v}    
+\end{wrapfigure}
+
 The previous section resulted in the optimal thrust attitude angle $\theta$ policy that results in a maximum horizontal velocity $U$ for a specified thrust ratio $\frac{F}{m}$ policy. However the maximum attainable $U$ still depends on what policy is chosen for $\frac{F}{m}$ or in other words, the manner of propellant utilization.
 
 It is important to note that there is a maximum attainable velocity $V_k$. From Equation~\eqref{eq:vel_1} it is clear that the burn-time has a negative effect on $V_k$, thus the optimal function for $V(t)$ must be discontinues, in other words, the propellant must be burned instantly. By neglecting all forces except thrust, $V_k$ is only a function of the specific impulse and mass ratio.
@@ -335,13 +343,7 @@ Assuming the specific impulse is independent of the propellant utilization polic
     V &= \int_0^t{\frac{F}{m}} dt
 \end{align}
 
-\begin{wrapfigure}{r}{0.3\textwidth}        
-    \begin{center}        
-        \input{figures/possible_variations_of_v.tex}		
-    \end{center}    
-    \caption{Possible variation of $V$}
-    \label{fig:possible_var_v}    
-\end{wrapfigure}
+
 
 Here is $V$ the rocket thrust velocity with the maximum attainable value being $V_k$. $V$ is only a function of time and depends on the manner in which fuel is consumed. Both $F$ and $m$ are positive values thus the slope for $V$ is bounded between $0$  and infinity. Figure~\ref{fig:possible_var_v} shows a possible variation of $V$.
 
