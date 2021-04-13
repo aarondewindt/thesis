@@ -1,0 +1,512 @@
+\section{Analytical solution}
+The analytical solution to the orbital ascent trajectory optimization problem as described in \emph{Introduction to space dynamics by William T. Thomson} \cite{thomson2012introduction} is shown in this section.
+
+\subsection{Single stage performance}
+A rocket is a variable mass vehicle which produces thrust by ejecting high speed particles. Neglecting atmospheric forces and assuming a uniform gravitational field during vertical flight results in the following equation for the vehicle's acceleration $\frac{dv}{dt}$, where $T$ is the thrust, $m$ the mass and $g_{0}$ the gravitational acceleration at the earth's surface.
+
+\begin{equation}
+    \label{eq:acc_0}
+    \frac{dv}{dt} = \frac{T}{m} - g_{0}
+\end{equation}
+
+Since the rocket is constantly losing mass, the mass flow $\frac{dm}{dt}$ is negative and thus the thrust can be written as shown below if a term due to the difference in exhaust and ambient pressure is neglected.
+
+\begin{equation}
+    \label{eq:thrust_0}
+    T = -u \cdot \frac{dm}{dt}
+\end{equation}
+
+Here $u$ is the velocity of the expelled mass, also known as the exhaust velocity. The specific impulse $I_{sp}$ is a measure of the performance of a rocket engine and it's relationship to the exhaust velocity as taken from the book \cite{thomson2012introduction} is as follows,
+
+\begin{equation}
+    \label{eg:isp_0}
+    u=g_0I_{sp}
+\end{equation}
+
+Substituting Equation~\eqref{eq:thrust_0} into Equation~\eqref{eq:acc_0} and integrating yields the following equation for the velocity $v$.
+
+\begin{equation}
+    \label{eq:vel_0}
+    v - v_0 = u \ln{\frac{m_0}{m}} - g_{0}t
+\end{equation}
+
+Where $m$ is the mass at any time $t$. Substituting the burnout time $t_{b0}$ and burnout mass $m_{b0}$ into the equation results in an expression for the maximum attainable velocity for vertical flight.
+
+\begin{equation}
+    \label{eq:vel_1}
+    v_{b0} - v_0 = u \ln{\frac{m_0}{m_{b0}}} - g_{0}t_{b0}
+\end{equation}
+
+The thrust parameter $\mathscr{R}$ is now introduced. This is the initial thrust over mass ratio and its relationship to the initial acceleration $a_0$ is as follows,
+
+\begin{equation}
+    \mathscr{R} = \frac{T}{m_0} = \frac{a_0}{g_{0}} + 1
+\end{equation}
+
+The duration for powered flight is then,
+
+\begin{equation}
+    \label{eq:burnout_time_0}
+    t_{b0} = g_{0}I_{sp} \left ( \frac{m_0 - m_{b0}}{T} \right ) = \frac{I_{sp}}{\mathscr{R}} \left ( 1 - \frac{m_{b0}}{m_0} \right )
+\end{equation}
+
+Using Equations~\eqref{eg:isp_0}~and~\eqref{eq:burnout_time_0}, Equation~\eqref{eq:vel_1} can now be written as,
+
+\begin{equation}
+    \label{eq:vel_2}
+    v_{b0} - v_0 = g_{0}I_{sp} \left [ \ln{\frac{m_0}{m_{b0}}} - \frac{1}{\mathscr{R}} \left ( 1 - \frac{m_{b0}}{m_0} \right ) \right ]
+\end{equation}
+
+% Maybe something about compromise between R m/m and I.
+
+It is possible to determine the distance traveled during powered flight by integrating Equation~\eqref{eq:vel_0}. A realistic assumption is that the mass during flight is known and that a constant rate of fuel mass leads to constant thrust. Thus the following can be defined,
+
+\begin{equation}
+    dt=\frac{dm}{\dot{m}} \qquad \text{and} \qquad -\dot{m} = \frac{m_0 - m_{b0}}{t_{b0}} = \text{constant}
+\end{equation}
+
+so that
+
+
+\begin{align}
+    \int_0^{t_{b0}}{\left ( \ln{m} \right ) dt}     
+    &= \frac{1}{\dot{m}} \int_{m_0}^{m_{b0}}{\left ( \ln{m} \right)}\ dm 
+    = \left . \frac{m}{\dot{m}} \left ( \ln{m} - 1\right) \right |_{m_0}^{m_{b0}} \\
+    &= \frac{m_0 - m_{b0}}{\dot{m}}-\frac{m_0}{\dot{m}}\ln{m_0} + \frac{m_{b0}}{\dot{m}} \ln{m_{b0}}
+\end{align}   
+
+
+The distance traveled then becomes,
+
+\begin{align}
+    \label{eq:height_b0}
+    h_{b0}&=ut_{b0}\left [ 1 - \frac{1}{(m_0/m_{b0}-1)} \ln{\frac{m_0}{m_{b0}}}\right] + v_0t_{b0} - \frac{1}{2} g_0t_{b0}^2 \\
+    &= g_0\frac{I_{sp}^2}{\mathscr{R}} \left ( 1 - \frac{m_{b0}}{m_0} \right ) \left [ 1 - \frac{1}{(m_0/m_{b0}-1)} \ln{\frac{m_0}{m_{b0}}}\right] 
+    + v_0\frac{I_{sp}}{\mathscr{R}} \left ( 1 - \frac{m_{b0}}{m_0} \right ) 
+    - \frac{1}{2} g_0\frac{I_{sp}^2}{\mathscr{R}^2} \left ( 1 - \frac{m_{b0}}{m_0} \right )^2
+\end{align}
+
+After burnout the rocket continues coasting with the velocity only changing due to the gravitational acceleration. Unfortunately due to the altitude in this phase of flight it is not possible to assume a uniform gravitational field. 
+
+Since the system does not lose or gain energy while coasting it is possible to get the distance traveled by equating the kinetic energy at burnout with the work done by the \emph{gravitational force} $m_{b0}g_0\left ( \frac{R}{r} \right )^2$. Thus the equation for coasting distance becomes,
+
+\begin{equation}
+    \label{eq:height_c}
+    h_c = \frac{v_{b0^2}}{2g_0} \frac{\left ( R+h_{b0} \right )^2}
+    {R^2 - \left(v_{b0}^2/2g_0 \right) \left ( R+h_{b0} \right )}
+\end{equation}
+
+where $r_{b0}=R+h_{b0}$ has been substituted. The total height can then be calculated by summing Equations~\eqref{eq:height_b0}~and~\eqref{eq:height_c}.
+
+Equations~\eqref{eq:vel_2}~and~\eqref{eq:height_c} indicate that the performance of a single stage rocket depends on the specific impulse $I_{sp}$ and thrust ratio $\mathscr{R}$ and the mass ratio $\mu=\frac{m_0}{m_{b0}}$. The effect of varying these quantities on the burnout velocity or height can be found by considering Equations~\eqref{eq:vel_2}~and~\eqref{eq:height_b0} to be in the form,
+
+\begin{align}
+    v_{b0} = f_1\left(I_{sp}, \mathscr{R}, \mu\right) \\
+    h_{b0} = f_2\left(I_{sp}, \mathscr{R}, \mu\right)
+\end{align}
+
+
+The change in burnout velocity is then defined by the following equation,
+
+\begin{equation}
+    dv_{b0}=\frac{\delta f_1}{\delta I_{sp}} dI_{sp}
+           +\frac{\delta f_1}{\delta \mathscr{R}} d\mathscr{R}_{sp}
+           +\frac{\delta f_1}{\delta \mu} d\mu
+\end{equation}
+
+The optimum burnout velocity will be at $dv_{b0}=0$, this defines the constraint on the three quantities.
+
+
+\subsection{Optimization of multistage rockets}
+It can be shown using the equations from the previous section that with achievable mass ratios, thrust ratios and specific impulse, it is not possible to reach earth orbital velocities using single stage rockets. Thus multistage launchers are required for space travel.
+
+In a multistage rocket the burnout velocity of the previous stage is the initial velocity of the next. The maximum velocity by multistage rockets can then be computed as the sum of the single stage velocities given by Equation~\eqref{eq:vel_1}.
+Ignoring gravity loss due to burn-time results in the following equation for the maximum velocity of an N-stage rocket,
+
+\begin{equation}
+    \label{eq:vel_vm}
+    v_m = \sum_{i=1}^N u_i \ln{\mu_i}
+\end{equation}
+
+
+Assuming this velocity $v_m$ is specified, the mass ratios for each stage must be chosen such that the overall mass ratio $\frac{m_{01}}{P}$ is minimized, where $m_{01}$ is the take-off mass and $P$ the payload mass. To do this it is necessary to express the overall mass ratio in terms of the individual mass ratios $\mu_i$.
+
+Since the empty structure of the stages are to be discarded, the initial mass of each new stage is equal to the initial mass of the previous stage minus the propellant burned and the empty structure that is thrown off. Thus the overall mass ratio may be written as follows.
+
+\begin{equation}
+    \label{eq:overall_mu_1}
+    \frac{m_{01}}{P} = \frac{m_{01}}{m_{01} - m_{p1} - m_{s1}} 
+                       \frac{m_{02}}{m_{02} - m_{p2} - m_{s2}} \dots
+                       \frac{m_{0N}}{P}
+\end{equation}
+
+The structural factor $\beta_i$ is now introduced.
+
+\begin{equation}
+    \beta_i = \frac{m_{si}}{m_{pi}+m_{si}}
+\end{equation}
+
+Equation~\eqref{eq:overall_mu_1} can then be rewritten into,
+
+\begin{equation}
+    \label{eq:overall_mu_2}
+    \frac{m_{01}}{P} = \frac{\mu_1\left(1-\beta_1\right)}{1-\mu_1\beta_1}
+                       \frac{\mu_2\left(1-\beta_2\right)}{1-\mu_2\beta_2} \dots
+                       \frac{\mu_N\left(1-\beta_N\right)}{1-\mu_N\beta_N}
+\end{equation}
+
+If $\frac{m_{01}}{P}$ needs to be minimized, then the same result can be achieved my minimizing $\ln{\frac{m01}{P}}$ as well.
+
+\begin{equation}
+    \label{eq:overall_mu_3}
+    \ln{\frac{m_{01}}{P}} = \sum_{i=1}^N \ln{\frac{\mu_i\left(1-\beta_i\right)}{1-\mu_i\beta_i}} 
+                          = \sum_{i=1}^N \left[\ln{\mu_i} 
+                                         + \ln{\left(1-\beta_i\right)} 
+                                         - \ln{\left(1-\mu_i\beta_i\right)} \right]
+\end{equation}
+
+This equation does not contain the constraint imposed by the specified velocity in Equation~\ref{eq:vel_vm}. It can be added using the Lagrange multiplier method which results in the following,
+
+\begin{equation}
+    \label{eq:overall_mu_4}
+    \ln{\frac{m_{01}}{P}} = \sum_{i=1}^N \left[\ln{\mu_i} 
+                                      + \ln{\left(1-\beta_i\right)} 
+                                      - \ln{\left(1-\mu_i\beta_i\right)} 
+                                      + \lambda \left\{u_i\ln{\mu_i - v_m}\right\}  \right]
+\end{equation}
+
+In order to solve for the optimal mass ratios $\mu_i$, Equation~\eqref{eq:overall_mu_4} must be differentiated with respect to $\mu_i$. Performing this differentiation and rewriting results in $N$ equations in the form of,
+
+\begin{equation}    
+    \label{eq:mu_lambda}
+    \mu_i=\frac{1+\lambda u_i}{\lambda u_i \beta_i}
+\end{equation}
+
+Substituting this into Equation~\eqref{eq:vel_vm} yields the following expression which, assuming $u_i$, $\beta_i$ and $v_m$ are known, may be used to solve for $\lambda$.
+
+\begin{equation}
+    v_m = \sum_{i=1}^N u_i \ln{\frac{1+\lambda u_i}{\lambda u_i \beta_i}}
+\end{equation}
+
+With $\lambda$ known the mass ratios $\mu_i$ may be calculated using Equation~\eqref{eq:mu_lambda}.
+
+
+\subsection{Optimal thrust attitude angle policy}
+To simplify this problem the rocket is assumed to be rigid and the aerodynamics are neglected. In general the length of the powered flight path is short compared to the earth's radius, thus it's safe to replace the central gravitational field by a constant-plane parallel-force field.
+
+\begin{figure}[ht]			
+	\centering
+	\input{figures/flight_trajectory_analytical.tex}			
+	\caption{Powered flight trajectory\cite{thomson2012introduction}.}
+	\label{fig:pow_fly_trj_an}
+\end{figure}
+The geometry of the problem is shown in Figure~\ref{fig:pow_fly_trj_an}. Where $\theta$ is the thrust attitude angle and $\gamma$ the flight path angle. Gravity acts along to the negative $y$ axis. Letting $u$ and $w$ be the $x$ and $y$ component of the velocity $v$ results in the following equations of motion.
+\begin{align}
+    \dot{u} &= \frac{F}{m}\cos{\theta} \label{eq:eom_udot} \\
+    \dot{w} &= \frac{F}{m}\sin{\theta} - g \label{eq:eom_wdot}\\
+    \dot{y} &= w \label{eq:eom_ydot}
+\end{align}
+
+$\frac{F}{m}$ and $\theta$ vary with time and have a significant effect on the trajectory. Assuming that $\frac{F}{m}$ is known then the problem can be defined as finding the $\theta\left(t\right)$ that results the maximum horizontal velocity $U$ at a specified altitude $Y$. The time $T$ corresponds to the instant in time where $y=Y$. Since the timing of this event depends on $\theta\left(t\right)$, $T$ is unknown. However it is assumed that all propellant is burned before $t=T$.
+
+The problem can thus be defined as maximizing the time integral of Equation~\eqref{eq:eom_udot} shown below, with constraints. 
+\begin{equation}
+    \label{eq:u_int_1}
+    U= u_0+ \int_0^T{\frac{F}{m}\cos{\theta}}\ dt
+\end{equation}
+
+The goal is to reach this maximum at a specified value of $y$ under the condition that $w_{t=T}=0$. So Equations~\eqref{eq:eom_wdot}~and~\eqref{eq:eom_ydot} are the constraints that limit the allowable variations of Equation~\eqref{eq:u_int_1}. Using the Lagrange multiplier method to add these constraints results in the following equation.
+\begin{equation}
+    \label{eq:u_int_2}
+    U = u_0 + \int_0^T{\left[\frac{F}{m}\cos{\theta}
+                       + \lambda_1 \left(\dot{w}-\frac{F}{m}\sin{\theta} + g\right)
+                       + \lambda_2 \left(\dot{y}-w\right)
+    \right]}\ dt
+\end{equation}
+With the boundary conditions being,
+\begin{equation*}
+    \begin{aligned}
+    &\text{At}\ t=0\\
+      &&y &= y_0                &  x &= 0 \\ 
+      &&u_0 &= v_0\cos{\gamma_0}  &  w_0 &= w_0\sin{\gamma_0} \\
+    &\text{At}\ t=T \\
+      &&y &= Y & w &= 0
+    \end{aligned}
+\end{equation*}
+
+The initial velocity $v_0$ is considered fixed, but the initial flight path angle $\gamma_0$ is left undetermined.
+
+This optimization is solved using variational calculus. Thus the next step is to get an equation for $\delta U$, the variation of Equation~\eqref{eq:u_int_2}. However determining the variation of an integral is not trivial. According to derivation in appendix C of the book \cite{thomson2012introduction}, the variation of the following integral is shown in Equation~\eqref{eq:int_vars}.
+\begin{equation}
+    I=\int_a^b{f\left( t, z, \frac{dz}{dt}\right)}
+\end{equation}
+
+\begin{equation}
+    \label{eq:int_vars}
+    \delta I = \left. \frac{\delta f}{\delta z'} \delta z \right |_a^b 
+               + \int_a^b \left(\frac{\delta f}{\delta z} 
+                                - \frac{d}{dt} \frac{\delta f}{\delta z'}\right)
+               \delta z\ dt
+\end{equation}
+
+Applying Equation~\eqref{eq:int_vars} to Equation~\eqref{eq:u_int_2} results in the following equation for the variation of $U$.
+\begin{align}
+    \label{eq:delta_u_int_1}
+    \delta U = &-v_0\sin{\gamma_0}\ \delta \gamma_0 + \lambda_1 \delta w \bigg|_0^T + \lambda_2 \delta y \bigg|_0^T \\
+               &- \int_0^T\left[\frac{F}{m} \left(\sin{\theta} + \lambda_1\cos{\theta}\right) \delta \theta
+                               + \frac{d\lambda_2}{dt} \delta y 
+                               + \left(\frac{d\lambda_1}{dt} + \lambda_2\right) \delta w\right] dt = 0 \nonumber
+\end{align}
+
+Since the value of $y$ is known at $t=0$ and $t=T$, it's variation at the endpoints must be zero, thus the third term can be eliminated. The variation $\delta w$ at $t=0$ is,
+\begin{equation}
+    \delta w \bigg|_0=\delta (v_0 \sin \gamma_0) = v_0 \cos \gamma_0\ \delta \gamma_0
+\end{equation}
+
+At $t=T$, $w$ can be calculated by integrating Equation~\eqref{eq:eom_wdot} into the equation shown below.
+\begin{equation}
+    w = \int_0^T\frac{F}{m} \sin{\theta} dt - gT+ v_0 \sin \gamma_0
+\end{equation}
+Thus it's variation at $t=T$ is,
+\begin{equation}
+    \delta w \bigg|^T= \int_0^T\frac{F}{m} \cos{\theta}\ \delta \theta\ dt + v_0\ \delta \gamma_0 \sin \gamma_0
+\end{equation}
+For the optimal curve $w$ becomes zero at $t=T$, however for the varied curve it becomes zero at a different time $t=T+\delta T$. Since $\frac{F}{m}$ is not varied for $t>T$ the expression for $\delta w |^T$ must equal $g\delta T$. Substituting these equations into Equation~\eqref{eq:delta_u_int_1} yields,
+\begin{align}
+    \delta U= &-v_0 (\sin \gamma_0 + \lambda_{1,t=0}\cos\gamma_0)\ \delta \gamma_0 + g\lambda_{1,t=T}\ \delta T  \\
+    &- \int_0^T\left[\frac{F}{m} \left(\sin{\theta} + \lambda_1\cos{\theta}\right) \delta \theta
+    + \frac{d\lambda_2}{dt} \delta y 
+    + \left(\frac{d\lambda_1}{dt} + \lambda_2\right) \delta w\right] dt = 0  \nonumber
+\end{align}
+Since the rest of the variations are arbitrary, $\delta U$ can only be zero if
+\begin{align}
+    \tan \gamma_0 &=-\lambda_{1, t=0} \label{eq:duz_cond_1}  \\     
+    \lambda_{1, t=T} &= 0  \label{eq:duz_cond_2} \\
+    \tan{\theta} &= -\lambda_1 \label{eq:duz_cond_3} \\ 
+    \frac{d\lambda_2}{dt}&= 0 \label{eq:duz_cond_4} \\
+    \frac{d\lambda_1}{dt} + \lambda_2 &= 0 \label{eq:duz_cond_5}
+\end{align}
+The last two equations give,
+\begin{align}
+    \lambda_2&=-C_2\qquad\text{a constant} \\
+    \frac{d\lambda_1}{dt} - C_2 &= 0 \\
+    \lambda_1 &= C_1 + C_2 t \label{eq:atop_lambda_1}
+\end{align}
+Substituting $\lambda_1$ for $t=0$ and $t=T$ into Equations~\eqref{eq:duz_cond_1}~and~\eqref{eq:duz_cond_2}, results in expressions for constants $C_1$ and $C_2$.
+\begin{align}
+    C_1 &=-\tan{\gamma_0} \label{eq:atop_c1}\\
+    C_2 &=\frac{1}{T}\tan{\gamma_0} \label{eq:atop_c2}
+\end{align}
+Combining Equations~(\ref{eq:duz_cond_3},~\ref{eq:atop_lambda_1},~\ref{eq:atop_c1},~\ref{eq:atop_c2}) yields an expression for the thrust attitude angle $\theta$. 
+\begin{equation}
+    \label{eq:optimal_theta_1}
+    \tan {\theta} = \left(1-\frac{t}{T}\right)\tan{\gamma_0}
+\end{equation}
+
+Equation~\eqref{eq:optimal_theta_1} gives an expression for the thrust attitude angle $\theta$ if the initial flight path angle $\gamma_0$ is allowed to variate. If $\gamma_0$ is given a fixed quantity, a similar procedure starting from Equation~\eqref{eq:delta_u_int_1} can be followed with the added condition that $\delta \gamma_0=0$. This results in the following.
+% \todo{derive this}
+\begin{equation}
+    \label{eq:optimal_theta_2}
+    \tan\theta=\tan\theta_0-C_2t
+\end{equation}
+
+
+\subsection{Optimal propellant utilization policy}
+\begin{wrapfigure}{r}{0.3\textwidth}        
+    \begin{center}        
+        \input{figures/possible_variations_of_v.tex}		
+    \end{center}    
+    \caption{Possible variation of $V$}
+    \label{fig:possible_var_v}    
+\end{wrapfigure}
+
+The previous section resulted in the optimal thrust attitude angle $\theta$ policy that results in a maximum horizontal velocity $U$ for a specified thrust ratio $\frac{F}{m}$ policy. However the maximum attainable $U$ still depends on what policy is chosen for $\frac{F}{m}$ or in other words, the manner of propellant utilization.
+
+It is important to note that there is a maximum attainable velocity $V_k$. From Equation~\eqref{eq:vel_1} it is clear that the burn-time has a negative effect on $V_k$, thus the optimal function for $V(t)$ must be discontinues, in other words, the propellant must be burned instantly. By neglecting all forces except thrust, $V_k$ is only a function of the specific impulse and mass ratio.
+
+\begin{equation}
+    V_k=gI_{sp} \ln{\frac{m_0}{m_{b0}}}
+\end{equation}
+
+Assuming the specific impulse is independent of the propellant utilization policy, it is convenient to make the following substitutions.
+
+\begin{align}
+    \frac{dV}{dt} &= \frac{F}{m} \\
+    V &= \int_0^t{\frac{F}{m}} dt
+\end{align}
+
+
+
+Here is $V$ the rocket thrust velocity with the maximum attainable value being $V_k$. $V$ is only a function of time and depends on the manner in which fuel is consumed. Both $F$ and $m$ are positive values thus the slope for $V$ is bounded between $0$  and infinity. Figure~\ref{fig:possible_var_v} shows a possible variation of $V$.
+
+Assuming the initial values $v_0$ and $\gamma_0$ are fixed and that the policy for the thrust attitude angle in Equation~\eqref{eq:optimal_theta_2} is followed. Then Equation~\eqref{eq:u_int_2} may be rewritten into,
+
+\begin{equation}
+    \label{eq:u_int_3}
+    U = \int_0^T{\left[
+        \left(\cos{\theta-\lambda_1 \sin{\theta}}\right) \frac{dV}{dt}
+        +\lambda_1 \left(\dot{w} + g\right)
+        + \lambda_2 \left(\dot{y} - w\right)
+    \right]}\ dt
+\end{equation}
+
+Since the optimal thrust attitude policy is followed, then all variations have already been handled in the previous section, except for $\delta V$. Thus only the first term of the integral needs to be considered.
+
+In order to apply Equation~\eqref{eq:int_vars} to Equation~\eqref{eq:u_int_3} the following is needed,
+
+\begin{align}
+    \frac{\delta f}{\delta V} &= 0 & \frac{\delta f}{\delta \dot{V}} &= \left(\cos{\theta-\lambda_1 \sin{\theta}}\right)
+\end{align}
+
+
+Since the values for $V$ at the start and end time are fixed, it's variation $\delta V$ at $t=0$ and $t=T$ are zero. Thus the variation of Equation~\eqref{eq:u_int_3} is as follows,
+
+\begin{align} 
+    \delta U &= - \int_0^t \frac{d}{dt} \left(\cos{\theta-\lambda_1 \sin{\theta}}\right) \delta V dt \nonumber \\
+             &= \int_0^t \left[ \left(\sin{\theta} + \lambda_1 \cos{\theta}\right) \dot{\theta}
+                                + \sin{\theta} \frac{d\lambda_1}{dt}\right] \delta Vdt \label{eq:delta_u_int_2}
+\end{align}
+
+From Equations~\eqref{eq:delta_u_int_2}~and~\eqref{eq:optimal_theta_2} it's possible to get,
+
+\begin{align}
+    \lambda_1 &= -\tan{\theta} = -\tan{\theta_0} + C_2t \\
+    \frac{\lambda_1}{dt} &= -\frac{\dot{\theta}}{\cos^2{\theta}}=C_2
+\end{align}
+
+Using these expressions, $\delta U$ may be written as,
+\begin{align}
+    \delta U &= C_2 \int_0^T \left(\sin{\theta}\right) \delta V dt \\ 
+             &= C_2 \int_0^T \frac{\tan{\theta_0 - C_2t}}{\sqrt{1+\left(\tan{\theta_0 - C_2t}\right)^2}} \delta V dt \\
+             &= C_2 \int_0^T \Phi\ \delta V dt = 0 \label{eq:eq:delta_u_int_3}
+\end{align}
+
+Where,
+\begin{equation}
+    \Phi = \frac{\tan{\theta_0 - C_2t}}{\sqrt{1+\left(\tan{\theta_0 - C_2t}\right)^2}}
+\end{equation}
+
+Before continuing some details are reiterated.
+\begin{itemize}
+    \item Since $U$ is being maximized, any variation $\delta U$ must be negative. 
+    \item The velocity $V$ may not exceed $V_k$.
+    \item Since the slope of $V$ is bounded between zero and infinity, it is not possible for $V$ to be negative.
+    \item The optimal function for $V(t)$ is discreet, meaning only instantaneous burns.
+\end{itemize}
+
+
+It is possible for $\Phi$ to be always positive, always negative or vary from positive to negative with time.
+\begin{enumerate}
+    \item If $\Phi$ is always positive, then any variation $\delta V$ must be negative in order for $\delta U$ to be negative. Since $V(t)$ must always be larger than zero, then all the propellant must be burned instantaneously at $t=0$ so that any variation $\delta V$ from the optimal $V(t)$ is negative.
+    \item If $\Phi$ is always negative, then any variation $\delta V$ must be positive in order for $\delta U$ to be negative. Since $V(t)$ must always be lower than $V_k$, then all the propellant must be burned instantaneously at $t=T$.
+    \item If $\Phi$ varies from positive to negative. Then part of the propellant must be instantaneously burned at $t=0$, and the rest and $t=T$.
+\end{enumerate}
+
+
+\begin{figure}[ht]			
+	\centering
+	\input{figures/vt_phi_options.tex}			
+	\caption{Optimal $V(t)$ for different options for $\Phi$\cite{thomson2012introduction}.}
+	\label{fig:opt_vt}
+\end{figure}
+
+\newpage
+\subsection{Gravity turn}
+\begin{wrapfigure}{r}{0.5\textwidth} 		
+	\centering
+	\input{figures/gravity_turn.tex}			
+	\caption{Gravity turn\cite{thomson2012introduction}.}
+	\label{fig:grav_turn}
+\end{wrapfigure}
+
+It was previously shown that the optimal thrust attitude angle policy is given by the following equation,
+\begin{equation}
+    \tan {\theta} = \left(1-\frac{t}{T}\right)\tan{\gamma_0}
+\end{equation}
+
+One drawback of this policy is that it results in large angles of attack $\alpha = \theta - \gamma$. This is not an issue when flying outside of the atmosphere, but when flying within the atmosphere it results in increased aerodynamic forces, thus increasing aerodynamic losses and risk of structural damage. Thus for flights within the atmosphere a trajectory known as the \emph{gravity turn} is followed. In a gravity turn the thrust vector is kept parallel to the velocity vector at all times starting from a non-vertical initial velocity $v_0$. This is a zero angle of attack or zero lift trajectory.
+
+For convenience the flight path angle $\psi$ is now measured from the vertical. By neglecting aerodynamic forces and assuming a uniform gravitational field, it is possible to write the equation for the forces along the tangential and normal directions as follows,
+\begin{align}
+    \frac{1}{g} \frac{dv}{dg} &= \frac{F}{mg} - \cos{\psi} \label{eq:gturnzf_1}\\
+    \frac{v}{g} \frac{d \psi}{dt} &= \sin{\psi} \label{eq:gturnzf_2}
+\end{align}
+
+These equations are non-linear and there is no analytical solutions when $\frac{F}{mg}$ varies, thus $\frac{F}{mg}$ needs to be constant in order to solve the gravity turn trajectory. Since $m = m_0 - \dot{m}t$, this means that the thrust $F$ must decrease with time as well.
+
+However in reality it is reasonable to assume that $F=constant$. Thus for a realistic solutions it's not possible to assume that $\frac{F}{mg}$ doesn't vary. One way solve it, is by assuming $\frac{F}{mg}$ is constant for a short amount of time and perform a step-by-step numerical integration using the analytical solution for constant $\frac{F}{mg}$ on each interval.
+
+A new parameter $z$ is introduced and defined as,
+\begin{equation}
+    \label{eq:gturnz_1}
+    z = \tan{\frac{1}{2}\psi} 
+      = \sqrt{\frac{1-\cos{\psi}}{1+\cos{\psi}}} 
+      = \frac{\sin{\psi}}{1+\cos{\psi}}
+\end{equation}
+
+Then
+\begin{equation}
+    z^2 = \frac{1-\cos{\psi}}{1+\cos{\psi}}
+\end{equation}
+
+and
+\begin{equation}
+    \frac{1-z^2}{1+z^2}=\cos{\psi}
+\end{equation}
+
+Differentiating Equation~\eqref{eq:gturnz_1},
+\begin{equation}
+    \frac{dz}{dt} = \frac{1}{2 \cos^2{\left(\frac{\psi}{2}\right)}}\frac{d\psi}{dt}
+\end{equation}
+
+Thus,
+\begin{equation}
+    \frac{d\psi}{dt} = \left(1 + \cos \psi\right) \frac{dz}{dt}
+\end{equation}
+
+
+By defining $n=\frac{F}{mg}$ and substituting the previous results into Equations~\eqref{eq:gturnzf_1}~and~\eqref{eq:gturnzf_2} results in,
+\begin{align}
+    \frac{1}{g} \frac{dv}{dt} &= n-\frac{1-z^2}{1+z^2} \label{eq:gturnzf_3}\\
+    \frac{v}{g} \frac{dz}{dt} &= z \label{eq:gturnzf_4}
+\end{align}
+
+Eliminating $dt$ between the two equations yields,
+\begin{equation}
+    \frac{dv}{v} = n\frac{dz}{z} - \frac{1-z^2}{1+z^2} \frac{dz}{z}
+\end{equation}
+
+Integrating,
+\begin{equation}
+    \ln v = \ln {z^n} = \ln {\frac{1+z^2}{z}} + \ln{C'}
+\end{equation}
+
+or
+\begin{equation}
+    \label{eq:gturnv}
+    v=Cz^{n-1}\left(1 + z^2\right)
+\end{equation}
+
+The constant $C$ can be calculated from the initial values with,
+\begin{equation}
+    \label{eq:gturnc}
+    C = \frac{v_0}{z_0^{n-1}\left(1 + z_0^2\right)}
+\end{equation}
+
+Substituting Equation~\eqref{eq:gturnv}~into~\eqref{eq:gturnzf_4} and integrating,
+\begin{align}
+    t&=\frac{C}{g}\int_{z_0}^z z^{n-2} \left(1+ z^2\right) dz \nonumber\\
+     &=\frac{C}{g}z^{n-2} \left. \left(\frac{1}{n-1}+\frac{z^2}{n+1}\right) \right |_{z_0}^z \label{eq:gturnt}
+\end{align}
+
+Equation~\eqref{eq:gturnt} gives $t$ as a function of $z$ and any initial condition $C$. Thus $\psi$ is also known for any $C$ and $t$. Equation~\eqref{eq:gturnv} gives $v$ in terms of $C$, $t$ and $z$. So Equations~\eqref{eq:gturnz_1},~\eqref{eq:gturnc}~and~\eqref{eq:gturnt} give the analytical solution for the gravity turn with a constant $\frac{F}{mg}$.
+
+In order to solve the gravity turn with varying $\frac{F}{mg}$ Equation~\eqref{eq:gturnz_1} can be used to calculate values for $z$, Equation~\eqref{eq:gturnc} to calculate $C$, define $n=\frac{F}{mg}$ at $t=0$ and $v$ can be calculated using Equation~\eqref{eq:gturnv}. Then a value of $\psi$ slightly higher than $\psi_0$ must chosen and $\Delta t$ can then be calculated from Equation~\eqref{eq:gturnt}. The increment in displacement is then,
+\begin{align}
+    \Delta x &= \frac{1}{2}\left(v_0 \sin{\psi_0} +v \sin \psi \right) \Delta t \\
+    \Delta y &= \frac{1}{2}\left(v_0 \cos{\psi_0} +v \cos \psi \right) \Delta t 
+\end{align}
+
+This procedure can then be repeated with the values at the new point to obtain the full trajectory.
+
+

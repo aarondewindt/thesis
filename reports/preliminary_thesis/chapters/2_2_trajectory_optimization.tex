@@ -1,0 +1,21 @@
+\section{Trajectory Optimization}
+Unfortunately due to the complex dynamics, large number of constraints and high dimensionality of the problem it is not possible to calculate the optimal orbital ascent trajectory analytically and thus numerical solutions are necessary. This has been a problem since the beginning of space exploration and thus countless years of research have resulted in the development of \emph{trajectory optimization}, a set of mathematical techniques used to find the ideal or desired behavior of a dynamical system by finding the inputs, referred to as \emph{controls}, to the system as functions of time.
+
+The goal of trajectory optimization is to minimize an objective objective function in the form of $J(f(t))$, where $f(t)$ is an arbitrary vector function. In contrast, \emph{parameter optimization} minimizes objective functions in the form of $J(x)$, where $x$ is a vector of real numbers. This makes trajectory optimization a more difficult problem since the space of functions is much larger than a space of real numbers.
+
+In itself trajectory optimization is class of methods used to compute solutions for optimal control problems. Within optimal control there are two types of solutions, closed-loop and open-loop. 
+
+
+\begin{figure}[ht]			
+	\centering
+	\input{figures/optimal_control.tex}			
+	\caption{Optimal control closed and open loop solutions.}
+	\label{fig:pow_fly_trj_an}
+\end{figure}
+
+Closed-loop solutions provide the optimal controls for the entire state space, $u(x)$, thus advantages of these solutions include the possibility to compute the global optimal solution and the ability to apply the solution directly into real systems. The drawback is that these methods are difficult to compute specially when applied to higher dimensional problems. \acrlong{dp} and the main topic of thesis, \acrlong{rl} work by finding an optimal policy. This is a deterministic function or probability distribution mapping states to actions and thus provide closed-loop solutions to optimal control problems. Chapter~\ref{ch:rl} continues further with these methods.
+
+On the other hand open loop solutions consist of an initial state and a sequence of controls defined as a function of time, $u(t)$. Together these define a single trajectory the system takes through the state space. The advantage of these solutions is that they are easier to compute, and thus more practical for higher dimensional problems. The disadvantage is that these solutions do not necessarily converge to the global optimal
+
+
+
