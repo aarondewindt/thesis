@@ -1,21 +1,74 @@
 \section{Trajectory Optimization}
 Unfortunately due to the complex dynamics, large number of constraints and high dimensionality of the problem it is not possible to calculate the optimal orbital ascent trajectory analytically and thus numerical solutions are necessary. This has been a problem since the beginning of space exploration and thus countless years of research have resulted in the development of \emph{trajectory optimization}, a set of mathematical techniques used to find the ideal or desired behavior of a dynamical system by finding the inputs, referred to as \emph{controls}, to the system as functions of time.
 
-The goal of trajectory optimization is to minimize an objective objective function in the form of $J(f(t))$, where $f(t)$ is an arbitrary vector function. In contrast, \emph{parameter optimization} minimizes objective functions in the form of $J(x)$, where $x$ is a vector of real numbers. This makes trajectory optimization a more difficult problem since the space of functions is much larger than a space of real numbers.
-
+\subsection{Closed and open loop optimal control solutions}
 In itself trajectory optimization is class of methods used to compute solutions for optimal control problems. Within optimal control there are two types of solutions, closed-loop and open-loop. 
-
 
 \begin{figure}[ht]			
 	\centering
 	\input{figures/optimal_control.tex}			
 	\caption{Optimal control closed and open loop solutions.}
-	\label{fig:pow_fly_trj_an}
+	\label{fig:opt_control_solutions}
 \end{figure}
 
-Closed-loop solutions provide the optimal controls for the entire state space, $u(x)$, thus advantages of these solutions include the possibility to compute the global optimal solution and the ability to apply the solution directly into real systems. The drawback is that these methods are difficult to compute specially when applied to higher dimensional problems. \acrlong{dp} and the main topic of thesis, \acrlong{rl} work by finding an optimal policy. This is a deterministic function or probability distribution mapping states to actions and thus provide closed-loop solutions to optimal control problems. Chapter~\ref{ch:rl} continues further with these methods.
+Closed-loop solutions provide the optimal controls for the entire state space, $u(x)$, thus advantages of these solutions include the possibility to compute the global optimal solution and the ability to apply the solution directly into real systems. The drawback is that these solutions are difficult to compute, specially when applied to higher dimensional problems. \acrlong{dp} and the main topic of thesis, \acrlong{rl} work by finding an optimal policy. This is a deterministic function or probability distribution mapping states to actions and thus provide closed-loop solutions to optimal control problems \cite{kelly2017introduction}. Chapter~\ref{ch:rl} continues further with these methods.
 
-On the other hand open loop solutions consist of an initial state and a sequence of controls defined as a function of time, $u(t)$. Together these define a single trajectory the system takes through the state space. The advantage of these solutions is that they are easier to compute, and thus more practical for higher dimensional problems. The disadvantage is that these solutions do not necessarily converge to the global optimal
+On the other hand, trajectory optimization computes open-loop solutions consistent of an initial state and a sequence of controls defined as a function of time, $u(t)$. Together these define one single trajectory the system takes through the state space. The advantage of these solutions is that they are easier to compute, and thus more practical for higher dimensional problems. The disadvantage is that these solutions do not necessarily converge to the global optimal and require a stabilizing controller in order to keep the system on the predefined trajectory when applied to real systems \cite{kelly2017introduction}.
+
+\subsection{Trajectory optimization problem}
+There are many ways to define trajectory optimization problems \cite{rao2009survey}, but for simplicity only single-phase continues-time problem are considered here. In this case the problem can be described with an objective function and a set of constraints as shown is Equation~\ref{eq:to_objective} \cite{kelly2017introduction}. 
+
+\begin{equation}
+    \begin{aligned}
+    & \underset{t_0, t_F, x(t), u(t)}{\text{minimize}}
+    & & J\left( t_0, t_F, x(t_0), x(t_F)\right)
+        + \int_{t_0}^{t_F} w(\tau, x(\tau), u(\tau)) d\tau \\
+    & \text{subject to}
+    & & \dot x(t) = f(t, x(t), u(t)) \qquad \text{(system dynamics)} \\
+    & & & h(t, x(t), u(t)) \leq 0 \qquad \text{(non-linear path constraints)} \\
+    & & & g(t_0, t_F, x(t_0), x(t_F)) \leq 0 \qquad \text{(non-linear boundary constraints)} \\
+    & & & x_{low} \leq x(t) \leq x_{upp} \qquad \text{(path bounds on state)} \\
+    & & & u_{low} \leq u(t) \leq u_{upp} \qquad \text{(path bounds on control)} \\
+    & & & t_{low} \leq t_0 < t_F \leq t_{upp} \qquad \text{(bounds on initial and final time)} \\
+    & & & x_{0,low} \leq x(t_0) \leq x_{0,upp} \qquad \text{(bounds on initial state)} \\
+    & & & x_{F,low} \leq x(t_F) \leq x_{F,upp} \qquad \text{(bounds on final state)} \\
+\end{aligned}
+\label{eq:to_objective}
+\end{equation}
+
+The objective function consists of two terms, a boundary objective, $J(\cdot)$, also known as the \emph{Mayer term}, and a path integral along the entire trajectory with integrant, $w(\cdot)$, also known as the \emph{Lagrange term}. Such an objective function is said to be in \emph{Bolza form}.
+
+The system dynamics constraint is typically non-linear and describes how the system changes with time. The non-linear path constraints enforce restrictions along the path, for example airspace restrictions. Non-linear boundary constraints restrict the initial and final state of the system. The path bounds put restrictions on the states and controls, for example maximum actuator settings or aerodynamic loads. The bounds on initial and final state and time can be used to for example, set the initial launch location and final position and velocity needed for the target orbit.
+
+\subsection{Transcription}
+The goal of trajectory optimization is to minimize an objective function in the form of $J(f(t))$, where the decision variable $f(t)$ is an arbitrary vector function. In contrast, \emph{parameter optimization} minimizes objective functions in the form of $J(x)$, where the decision variables in vector $x$ are a finite set of real numbers. This makes trajectory optimization a more difficult problem since having a function as decision variable is the equivalent of having an infinite set of real numbered decision variables \cite{kelly2017introduction}.
+
+Transcription is the process of converting a trajectory optimization problem into a constraint parameter optimization problem. Thus the goal of transcription is to convert a infinite-dimensional problem into a finite-dimensional approximation, which can then be solved using existing numerical methods \cite{betts2010practical}. The three fundamental steps of the transcription method are:
+
+\begin{enumerate}
+    \item Convert the dynamic system into a problem with a finite set of variables.
+    \item Solve the finite-dimensional problem using a parameter optimization method.
+    \item Asses the accuracy of the finite-dimensional problem approximation and if necessary repeat the transcription and optimization steps.
+\end{enumerate}
+
+\subsubsection{Direct and indirect methods}
+Transcription methods can be split into two categories, direct and indirect methods. 
+
+Indirect methods work by analytically deriving the necessary conditions for optimal control as found in \emph{J. Betts} \cite{betts2010practical}, discretizing them and solving them numerically. In essence, indirect methods find the minimum of the objective functions by computing the derivative, search for stationary points using root finding methods and then selecting minimums using the second derivative \cite{kelly2017introduction, betts2010practical}.
+
+In contrast direct methods work by constructing a sequence of points, $x_0, x_1,...,x^*$, such that the objective function is minimized with each subsequent point. Unlike indirect methods, direct methods only need to compare values for the objective function.
+
+The advantage of indirect methods is the higher accuracy and a better measure for the accuracy of the solution. However these methods require prior knowledge of the system and even if this knowledge is available the required analytical derivations may not be possible or too difficult. Furthermore indirect methods are not robust. The region of convergence tends to be smaller, thus better initialization is required. Initializing indirect methods require the initialization of the adjoint variables, which since they have no physical representation, are more difficult to initialize \cite{kelly2017introduction, betts2010practical}.
+
+\subsubsection{Direct shooting}
+In direct single shooting methods the trajectory is approximated using a simulation. The decision variables in the parameter optimization problem are the initial state and an open-loop parametrization of the controls along the trajectory.
+
+An extension to direct single shooting methods are direct multiple shooting methods. Instead of representing the entire trajectory as a single simulation, the trajectory is segmented and each segment is represented by a simulation. Multiple shooting tends to be more robust than single shooting \cite{kelly2017introduction}.
+
+\subsubsection{Direct collocation}
+Direct collocation methods work by approximating all of the continues functions as polynomial splines. The first step is to discretize the trajectory by representing the continues functions by the values at specific points in time, known as collocation points.
+
+
 
 
 
