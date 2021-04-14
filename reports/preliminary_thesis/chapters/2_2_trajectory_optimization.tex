@@ -1,5 +1,5 @@
 \section{Trajectory Optimization}
-Unfortunately due to the complex dynamics, large number of constraints and high dimensionality of the problem it is not possible to calculate the optimal orbital ascent trajectory analytically and thus numerical solutions are necessary. This has been a problem since the beginning of space exploration and thus countless years of research have resulted in the development of \emph{trajectory optimization}, a set of mathematical techniques used to find the ideal or desired behavior of a dynamical system by finding the inputs, referred to as \emph{controls}, to the system as functions of time.
+Unfortunately due to the complex non-linear dynamics and constraints, and high dimensionality of the problem it is not possible to calculate the optimal orbital ascent trajectory analytically and thus numerical solutions are necessary. This has been a problem since the beginning of space exploration and thus countless years of research have resulted in the use and further development of \emph{trajectory optimization}, a set of mathematical techniques used to find the ideal or desired behavior of a dynamical system by finding the inputs, referred to as \emph{controls}, to the system as functions of time.
 
 \subsection{Closed and open loop optimal control solutions}
 In itself trajectory optimization is class of methods used to compute solutions for optimal control problems. Within optimal control there are two types of solutions, closed-loop and open-loop. 
@@ -16,7 +16,7 @@ Closed-loop solutions provide the optimal controls for the entire state space, $
 On the other hand, trajectory optimization computes open-loop solutions consistent of an initial state and a sequence of controls defined as a function of time, $u(t)$. Together these define one single trajectory the system takes through the state space. The advantage of these solutions is that they are easier to compute, and thus more practical for higher dimensional problems. The disadvantage is that these solutions do not necessarily converge to the global optimal and require a stabilizing controller in order to keep the system on the predefined trajectory when applied to real systems \cite{kelly2017introduction}.
 
 \subsection{Trajectory optimization problem}
-There are many ways to define trajectory optimization problems \cite{rao2009survey}, but for simplicity only single-phase continues-time problem are considered here. In this case the problem can be described with an objective function and a set of constraints as shown is Equation~\ref{eq:to_objective} \cite{kelly2017introduction}. 
+There are many ways to define trajectory optimization problems \cite{rao2009survey}, but assuming the problem consists of a single-phase and is continues in time, the problem can be described with an objective function and a set of constraints as shown is Equation~\ref{eq:to_objective} \cite{kelly2017introduction}. 
 
 \begin{equation}
     \begin{aligned}
@@ -43,7 +43,7 @@ The system dynamics constraint is typically non-linear and describes how the sys
 \subsection{Transcription}
 The goal of trajectory optimization is to minimize an objective function in the form of $J(f(t))$, where the decision variable $f(t)$ is an arbitrary vector function. In contrast, \emph{parameter optimization} minimizes objective functions in the form of $J(x)$, where the decision variables in vector $x$ are a finite set of real numbers. This makes trajectory optimization a more difficult problem since having a function as decision variable is the equivalent of having an infinite set of real numbered decision variables \cite{kelly2017introduction}.
 
-Transcription is the process of converting a trajectory optimization problem into a constraint parameter optimization problem. Thus the goal of transcription is to convert a infinite-dimensional problem into a finite-dimensional approximation, which can then be solved using existing numerical methods \cite{betts2010practical}. The three fundamental steps of the transcription method are:
+Transcription is the process of converting a trajectory optimization problem into a constrained parameter optimization problem. Thus the goal of transcription is to convert a infinite-dimensional problem into a finite-dimensional approximation, which can then be solved using existing numerical methods \cite{betts2010practical}. The three fundamental steps of the transcription method are:
 
 \begin{enumerate}
     \item Convert the dynamic system into a problem with a finite set of variables.
@@ -54,11 +54,13 @@ Transcription is the process of converting a trajectory optimization problem int
 \subsubsection{Direct and indirect methods}
 Transcription methods can be split into two categories, direct and indirect methods. 
 
-Indirect methods work by analytically deriving the necessary conditions for optimal control as found in \emph{J. Betts} \cite{betts2010practical}, discretizing them and solving them numerically. In essence, indirect methods find the minimum of the objective functions by computing the derivative, search for stationary points using root finding methods and then selecting minimums using the second derivative \cite{kelly2017introduction, betts2010practical}.
+Indirect methods work by analytically deriving the necessary conditions for optimal control as found in \emph{J. Betts} \cite{betts2010practical}, discretizing them and solving them numerically. In essence, indirect methods find the minimum of the objective functions by computing the derivative, search for stationary points using root finding methods and then selecting the minimum using the second derivative \cite{kelly2017introduction, betts2010practical}.
 
 In contrast direct methods work by constructing a sequence of points, $x_0, x_1,...,x^*$, such that the objective function is minimized with each subsequent point. Unlike indirect methods, direct methods only need to compare values for the objective function.
 
-The advantage of indirect methods is the higher accuracy and a better measure for the accuracy of the solution. However these methods require prior knowledge of the system and even if this knowledge is available the required analytical derivations may not be possible or too difficult. Furthermore indirect methods are not robust. The region of convergence tends to be smaller, thus better initialization is required. Initializing indirect methods require the initialization of the adjoint variables, which since they have no physical representation, are more difficult to initialize \cite{kelly2017introduction, betts2010practical}.
+The advantage of indirect methods is the higher accuracy and a better measure for the accuracy of the solution. However these methods require prior knowledge of the system and even if this knowledge is available the required analytical derivations may be too difficult or not possible. 
+
+Furthermore indirect methods are not robust. The region of convergence tends to be smaller, thus better initialization is required. Initializing indirect methods require the initialization of the adjoint variables, which since they have no physical representation, are more difficult to initialize \cite{kelly2017introduction, betts2010practical}.
 
 \subsubsection{Direct shooting}
 In direct single shooting methods the trajectory is approximated using a simulation. The decision variables in the parameter optimization problem are the initial state and an open-loop parametrization of the controls along the trajectory.
@@ -66,7 +68,47 @@ In direct single shooting methods the trajectory is approximated using a simulat
 An extension to direct single shooting methods are direct multiple shooting methods. Instead of representing the entire trajectory as a single simulation, the trajectory is segmented and each segment is represented by a simulation. Multiple shooting tends to be more robust than single shooting \cite{kelly2017introduction}.
 
 \subsubsection{Direct collocation}
-Direct collocation methods work by approximating all of the continues functions as polynomial splines. The first step is to discretize the trajectory by representing the continues functions by the values at specific points in time, known as collocation points.
+Direct collocation methods work by approximating all of the continues functions as polynomial splines. As an example take the following problem, compute the trajectory to move a block between two points. Where $x$ is the position, $v$ the velocity and $u$ the control. The objective function minimizes the control effort by integrating the square the control.
+
+\begin{equation}
+    \begin{aligned}
+    & \underset{x(t), v(t), u(t)}{\text{minimize}}
+    & & \int_{0}^{1}  u^2(\tau)\ d\tau \\
+    & \text{subject to}
+    & & \dot x(t) = v(t) \\
+    & & & \dot v(t) = u(t) \\
+    & & & x(0) = 0 \\
+    & & & x(1) = 1 \\
+    & & & v(0) = 0 \\
+    & & & v(1) = 0 \\
+\end{aligned}
+\label{eq:tocl_objective}
+\end{equation}
+
+The first step is to discretize the trajectory by representing the continues functions by their values at specific points in time, these are known as \emph{collocation points}.
+
+\begin{align*}
+    t &\rightarrow t_0 \dots t_k \dots t_N \\
+    x &\rightarrow x_0 \dots x_k \dots x_N \\
+    v &\rightarrow v_0 \dots v_k \dots v_N \\
+\end{align*}
+
+The next step is to convert the continuos system dynamics to a set of constraints. This is done by equating the change in states between two collocation points to an estimate of the system dynamics integral during the same time period. Here trapezoidal collocation is used, where the system dynamics is approximated by piece-wise linear functions. Another alternative is the Hermite–Simpson collocation method, which approximates the system dynamics using piece-wise quadratic functions.
+
+\begin{align}
+    x_{k+1} - x_k &= \frac{1}{2} (t_{k+1} - t_k) (v_{k+1} + v_k) \\
+    v_{k+1} - v_k &= \frac{1}{2} (t_{k+1} - t_k) (u_{k+1} + u_k) \\
+\end{align}
+
+These constraints are known as \emph{collocation constraints} and are applied to each pair of collocation points. Finally the objective function can then be approximated using quadrature by converting it to a summation of piece-wise functions between each collocation point. Using trapezoidal quadrature yields,
+
+\begin{equation}
+    \underset{u(t)}{\text{minimize}} \int_{0}^{1}  u^2(\tau)\ d\tau
+    \quad\approx\quad
+    \underset{u_0\dots u_N}{\text{minimize}}\sum_{k=0}^{N-1}\frac{1}{2} (t_{k+1} - t_k) (u_{k+1}^2 + u_k^2)
+\end{equation}
+
+As result all continues functions have been replaced by constraints and the decision variables $x(t)$, $v(t)$ and $u(t)$ have been replaced by the finite sets of decision variables, $x_0\dots x_N$, $v_0\dots v_N$ and $u_0\dots u_N$.
 
 
 
