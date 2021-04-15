@@ -13,9 +13,11 @@ In itself trajectory optimization is class of methods used to compute solutions 
 
 Closed-loop solutions provide the optimal controls for the entire state space, $u(x)$, thus advantages of these solutions include the possibility to compute the global optimal solution and the ability to apply the solution directly into real systems. The drawback is that these solutions are difficult to compute, specially when applied to higher dimensional problems. \acrlong{dp} and the main topic of thesis, \acrlong{rl} work by finding an optimal policy. This is a deterministic function or probability distribution mapping states to actions and thus provide closed-loop solutions to optimal control problems \cite{kelly2017introduction}. Chapter~\ref{ch:rl} continues further with these methods.
 
-On the other hand, trajectory optimization computes open-loop solutions consistent of an initial state and a sequence of controls defined as a function of time, $u(t)$. Together these define one single trajectory the system takes through the state space. The advantage of these solutions is that they are easier to compute, and thus more practical for higher dimensional problems. The disadvantage is that these solutions do not necessarily converge to the global optimal and require a stabilizing controller in order to keep the system on the predefined trajectory when applied to real systems \cite{kelly2017introduction}.
+On the other hand, trajectory optimization computes open-loop solutions consistent of an initial state and a sequence of controls defined as a function of time, $u(t)$. Together these define a single trajectory the system takes through the state space. The advantage of these solutions is that they are easier to compute, and thus more practical for higher dimensional problems. 
 
-\subsection{Trajectory optimization problem}
+The disadvantage is that since these solutions are based on computations in the local state space they do not necessarily converge to the global optimal and are sensitive to the initial guess. Another disadvantage is that these solutions require a stabilizing controller in order to keep the system on the predefined trajectory when applied to real systems \cite{kelly2017introduction}.
+
+\subsection{Trajectory optimization problem definition}
 There are many ways to define trajectory optimization problems \cite{rao2009survey}, but assuming the problem consists of a single-phase and is continues in time, the problem can be described with an objective function and a set of constraints as shown is Equation~\ref{eq:to_objective} \cite{kelly2017introduction}. 
 
 \begin{equation}
@@ -43,7 +45,7 @@ The system dynamics constraint is typically non-linear and describes how the sys
 \subsection{Transcription}
 The goal of trajectory optimization is to minimize an objective function in the form of $J(f(t))$, where the decision variable $f(t)$ is an arbitrary vector function. In contrast, \emph{parameter optimization} minimizes objective functions in the form of $J(x)$, where the decision variables in vector $x$ are a finite set of real numbers. This makes trajectory optimization a more difficult problem since having a function as decision variable is the equivalent of having an infinite set of real numbered decision variables \cite{kelly2017introduction}.
 
-Transcription is the process of converting a trajectory optimization problem into a constrained parameter optimization problem. Thus the goal of transcription is to convert a infinite-dimensional problem into a finite-dimensional approximation, which can then be solved using existing numerical methods \cite{betts2010practical}. The three fundamental steps of the transcription method are:
+Transcription is the process of converting a trajectory optimization problem into a constrained parameter optimization problem. Thus the goal of transcription is to convert a infinite-dimensional problem into a finite-dimensional approximation, which can then be solved using parameter optimization methods \cite{betts2010practical}. The three fundamental steps of the transcription method are:
 
 \begin{enumerate}
     \item Convert the dynamic system into a problem with a finite set of variables.
@@ -52,15 +54,16 @@ Transcription is the process of converting a trajectory optimization problem int
 \end{enumerate}
 
 \subsubsection{Direct and indirect methods}
-Transcription methods can be split into two categories, direct and indirect methods. 
+Transcription methods can be split into two categories, direct and indirect methods.
 
-Indirect methods work by analytically deriving the necessary conditions for optimal control as found in \emph{J. Betts} \cite{betts2010practical}, discretizing them and solving them numerically. In essence, indirect methods find the minimum of the objective functions by computing the derivative, search for stationary points using root finding methods and then selecting the minimum using the second derivative \cite{kelly2017introduction, betts2010practical}.
+Indirect methods minimize the objective function by deriving the necessary conditions for optimal control as found in \emph{J. Betts} \cite{betts2010practical} and then defining a new multi-point boundary value problem. The new problem is then solved using \emph{calculus of
+variations} by analytically deriving the first and second variations of the new objective function with respect to the controls and using these to find the minimum with numerical root finding methods \cite{betts2010practical, von1992direct, kelly2017introduction}.
 
 In contrast direct methods work by constructing a sequence of points, $x_0, x_1,...,x^*$, such that the objective function is minimized with each subsequent point. Unlike indirect methods, direct methods only need to compare values for the objective function.
 
 The advantage of indirect methods is the higher accuracy and a better measure for the accuracy of the solution. However these methods require prior knowledge of the system and even if this knowledge is available the required analytical derivations may be too difficult or not possible. 
 
-Furthermore indirect methods are not robust. The region of convergence tends to be smaller, thus better initialization is required. Initializing indirect methods require the initialization of the adjoint variables, which since they have no physical representation, are more difficult to initialize \cite{kelly2017introduction, betts2010practical}.
+Furthermore indirect methods are not robust. The region of convergence tends to be smaller, thus better initialization is required. Initializing indirect methods require the initialization of the \emph{adjoint variables}, which since they have no physical representation, are more difficult to initialize \cite{kelly2017introduction, betts2010practical}.
 
 \subsubsection{Direct shooting}
 In direct single shooting methods the trajectory is approximated using a simulation. The decision variables in the parameter optimization problem are the initial state and an open-loop parametrization of the controls along the trajectory.
@@ -110,7 +113,5 @@ These constraints are known as \emph{collocation constraints} and are applied to
 
 As result all continues functions have been replaced by constraints and the decision variables $x(t)$, $v(t)$ and $u(t)$ have been replaced by the finite sets of decision variables, $x_0\dots x_N$, $v_0\dots v_N$ and $u_0\dots u_N$.
 
-
-
-
-
+\subsubsection{Indirect shooting and collocation}
+Shooting and collocation methods for discretization can be used by indirect methods as well by applying them to the boundary value problem.
