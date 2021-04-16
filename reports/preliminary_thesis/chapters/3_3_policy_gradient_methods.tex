@@ -146,7 +146,7 @@ This objective function is then constrained by the KL-divergence of the new and 
   \end{aligned}
   \label{eq:trpo_constraint}
   \end{equation}
-  
+  x sc
 The theory justifying \acrshort{trpo} actually suggests using a penalty instead of a constraint as shown in Equation~\ref{eq:trpo_penalty}. In this case the objective function computes the maximum KL-divergence over the states and subtracts it from the expected advantage estimate,forming a lower or pessimistic bound on the performance of the new policy, $\pi$. This lower bound function can then be used to optimize the policy for maximum rewards using the \acrfull{mm} algorithm shown in Figure~\ref{fig:mma}. \acrshort{mm} works by iteratively maximizing a lower bound function which locally approximates the target function.
 
 \begin{equation}

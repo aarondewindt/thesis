@@ -37,11 +37,17 @@
 
 
 % Introduction
-\acrfull{rl} is a method of machine learning different from other machine learning methods such as supervised learning which uses a set of labeled examples from a knowledgeable supervisor, and unsupervised learning which is typically used to find hidden patterns in unlabeled data. In \gls{rl} the learner is not told what action to take to achieve its goal, but instead it maps situations and actions by trying them out and discovering the most valuable. It does this by not only looking at the reward it received by its latest action, but it also takes into account any future rewards it could receive in the future by taking that action.
+So far the methods discussed for solving the orbital ascent optimal control problem only yield open-loop solutions. These are solutions for a single trajectory defined by an initial state and the controls as a function of time. In contrast methods such as \acrfull{dp} and \acrfull{rl} produce closed-loop solutions consistent of mappings known as policies that map the controls, also known as actions, with the set of possible states instead of time.
 
-% Configure spell checker Markov.
+\acrshort{dp} was originally developed in the 1950's as a set of methods used to solve optimal control problems and are widely considered the only feasible way to solve a class of discrete stochastic optimal control problems known as \acrfullpl{mdp}. However \acrshort{dp} suffer from what its author called ``\emph{the curse of dimensionality}'', meaning the computational requirements grow exponentially with the number of state variables. The main reasons are because \acrshort{dp} methods require tables large enough to hold values for the full state set and also require repeated sweeps of the entire state set. 
+
+\acrshort{rl} extends \acrshort{dp} by adding the ability to learn directly from raw experience. Learners use this ability to learn policies by trying out different actions and discovering the most valuable. It does this by not only looking at the reward it received by its latest action, but it also takes into account any future rewards it could receive by taking that action. This learning method coupled with the use of function approximation methods such as \acrfull{ann} allows learners to learn useful policies without visiting the entire state set by generalizing between visited states and actions.
+
+This opens up the possibility to compute closed-loop solutions for the high-dimensional orbital ascent trajectory problem that are able to represent a range of optimal or close to optimal trajectories for a wide range of initial states.
+
+The first few sections cover the basic theories behind \acrlong{rl}, followed by a description of the more advanced methods to be used during this thesis.
+
 \section{Finite Markov Decision Process}
-
 \begin{comment}
 
   process that gives a mathematical framework that can be used to describe problems where learners learn from their actions to reach a goal.
@@ -176,7 +182,4 @@ Since the agent is trying out new actions while following \eps-greedy policies, 
 \end{figure}
 
 As it can be seen when using \eps-greedy policies the agents learn faster and are thus able to receive higher rewards sooner. On the other hand, while following the greedy policy, the agents will quickly choose the first action they find with a reward higher than the initial action value and then perform that action on all episodes. As a results many of the agents are not able to find the optimal policy.
-
-
-
 
