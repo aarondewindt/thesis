@@ -98,6 +98,8 @@ def clip(min, max, value):
         return min
     elif value > max:
         return max
+    else:
+        return value
 
 
 @jitclass(sim_spec)
@@ -280,7 +282,6 @@ class Simulation:
 
         s.longitude = atan2(s.xii[1], s.xii[0])
         s.gamma_e = hpi + s.gamma_i - s.longitude
-
         s.theta_e = hpi + s.theta_i - s.longitude
 
         if (self.action_autopilot_mode == AP_FLIGHT_PATH_CONTROL) and (vsquared > 0.1):
@@ -288,12 +289,14 @@ class Simulation:
             self.ap_comm_theta_e = s.theta_e + self.gamma_controller.step(s.t, s.ap_comm_gamma_e, s.gamma_e)
             self.theta_i_dot = clip(self.controller_theta_dot_min, self.controller_theta_dot_max,
                                     self.theta_controller.step(s.t, s.ap_comm_theta_e, s.theta_e))
+
         elif self.action_autopilot_mode == AP_PITCH_CONTROL:
             self.ap_comm_gamma_e = np.nan
             self.gamma_controller.reset()
             self.ap_comm_theta_e = self.action_autopilot_reference
             self.theta_i_dot = clip(self.controller_theta_dot_min, self.controller_theta_dot_max,
                                     self.theta_controller.step(s.t, s.ap_comm_theta_e, s.theta_e))
+
         elif self.action_autopilot_mode == AP_PITCH_RATE_CONTROL:
             self.ap_comm_gamma_e = np.nan
             self.ap_comm_theta_e = np.nan
@@ -330,15 +333,18 @@ class Simulation:
         # Turn the engine off and go to the fired state if the engine has been
         # turned off or ran out of propellant.
         else:
+            if s.mass <= self.current_stage[0]:
+                s.stage_state = ST_NO_IGNITIONS
+                s.engine_on = False
+
             if not s.action_engine_on:
                 s.engine_on = False
-                if (s.stage_ignitions_left == 0) or (s.mass <= self.current_stage[0]):
+                if s.stage_ignitions_left == 0:
                     s.stage_state = ST_NO_IGNITIONS
                 else:
                     s.stage_state = ST_ENGINE_OFF
 
         if s.engine_on:
-            # 3: thrust, 2: specific impulse
             s.mass_dot = -self.current_stage[3] / self.current_stage[2] / g_earth
             s.fii_thrust = np.array([cos(s.theta_i) * self.current_stage[3],
                                      sin(s.theta_i) * self.current_stage[3]])

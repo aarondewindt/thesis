@@ -32,6 +32,10 @@ RUN apt-get update \
   && apt-get install -y -qq --no-install-recommends \
     vim \
     less \
+    rsync \
+    tmux \
+    openssh-client \
+    gnupg \
     libglvnd0 \
     libgl1 \
     libglx0 \
@@ -39,6 +43,9 @@ RUN apt-get update \
     libxext6 \
     libx11-6 \
     freeglut3-dev \
+    libz-dev \
+    zlib1g-dev \
+    libgl1-mesa-dev \
   && rm -rf /var/lib/apt/lists/*
 
 # Copy configuration files
@@ -52,15 +59,16 @@ COPY ./ $PROJECT_DIR
 # Change ownership to the jupyter user
 RUN chown -R $NB_UID:$NB_GID $PROJECT_DIR
 
+# Install packages that need to be installed through conda
+# RUN conda install conda-build
+# Slycot install is failing for some reason
+#RUN conda install -c conda-forge slycot
+
 # Switch to jupyter user
 USER $NB_UID
 
-# Install packages that need to be installed through conda
-# RUN conda install conda-build
-RUN conda install -c conda-forge slycot
-
 # Install development packages
-RUN pip install \
+RUN pip --no-cache-dir install \
     cmake \
     jupyterlab-lsp \
     'python-language-server[all]' \
@@ -69,10 +77,22 @@ RUN pip install \
     ipywidgets \
     aquirdturtle_collapsible_headings \
     jupyterlab-spellchecker \
-    ipympl
+    ipympl \
+    blist \
+    "six==1.13.0" \
+    "boto3==1.4.8"
+#    "google-api-python-client==1.7.8" \
+#    "google-oauth" \
+#    "kubernetes" \
+#    "azure-cli-core==2.22.0" \
+#    "azure-mgmt-compute==14.0.0" \
+#    "azure-mgmt-msi==1.0.0" \
+#    "azure-mgmt-network==10.2.0"
 
 # Install external packages as developer.
 RUN pip install -e $PROJECT_DIR/external/cw
 
 # Install topone as developer
 RUN pip install -e $PROJECT_DIR
+
+USER root
