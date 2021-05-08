@@ -14,7 +14,7 @@
 	%%% You should edit this part appropriately
 	\newcommand{\Title}{Progress Report A. de Windt}
 	\newcommand{\Author}{A. de Windt}
-	\newcommand{\Date}{30-03-2021}
+	\newcommand{\Date}{19-04-2021}
 	\newcommand{\Subject}{Orbit ascent trajectory optimization using reinforcement learning}
 	\newcommand{\Mentors}{Dr.ir. Erik-Jan van Kampen}
 	
@@ -51,25 +51,37 @@
 	\section*{Outcome of the previous meeting}
 	
 	\begin{itemize}
-		\item Finished simulation rewrite.
-	\end{itemize}
-	
-	\section*{Description of the results since last meeting}
-	\subsection*{Short version}
-	\begin{itemize}
 		\item Added section 3.9.4. $n$­-step Bootstrapping
 		\item Moved section 3.10.1. Stochastic Gradient Decent methods to it's current location and changed the text a bit.
 		\item Added to section 3.11. Policy Gradient Methods. Up to actor-critic methods.
 	\end{itemize}
 	
+	\section*{Description of the results since last meeting}
+	% \subsection*{Short version}
+	\begin{itemize}
+		\item Made changes to the introduction, objective, and research questions.
+		\item Rewrote introduction of Chapter 3 Reinforcement learning.
+		\item Added sections
+			\begin{itemize}
+				\item 2.2 Trajectory optimization
+				\item 2.3 Literature review
+				\item 3.10.3 Adam
+				\item 3.10.4 LSTM Neural Networks
+				\item 3.11.6 PPO
+				\item 3.12 Literature review
+				\item 3.13 State of the art
+			\end{itemize}
+	\end{itemize}
+	
 	\section*{Plans for next 2 weeks}
 	% Same as last week, since I haven't been able to progress.
 	\begin{enumerate}
-		\item Add more advanced RL methods, TRPO, PPO, SAC, etc.
-		\item Add some background theory needed for those.
-		\item Finish approximate solutions section.
-		\item High-throughput architectures (IMPALA).
-		\item Code agent using RLlib.
+		\item Mix information in the RL 3.12 Literature review section into the other sections of the chapter. Move some to the state of the art section and some to their respective section.
+		\item Significantly shorten Section  2.1 Analytical Solution.
+		\item Add basics of indirect trajectory optimization methods to Section 2.2.
+		\item Move section 3.13 State of the art into it's own chapter. Maybe move all literature review into this chapter.
+		\item Add examples to the report.
+		\item Add project plan to report.
 	\end{enumerate}
 	
 

@@ -1,7 +1,8 @@
-\section{Analytical solution}
+\chapter{Full analytical solution}
+\label{chp:full_analytical_solution}
 The analytical solution to the orbital ascent trajectory optimization problem as described in \emph{Introduction to space dynamics by William T. Thomson} \cite{thomson2012introduction} is shown in this section.
 
-\subsection{Single stage performance}
+\section{Single stage performance}
 A rocket is a variable mass vehicle which produces thrust by ejecting high speed particles. Neglecting atmospheric forces and assuming a uniform gravitational field during vertical flight results in the following equation for the vehicle's acceleration $\frac{dv}{dt}$, where $T$ is the thrust, $m$ the mass and $g_{0}$ the gravitational acceleration at the earth's surface.
 
 \begin{equation}
@@ -117,7 +118,7 @@ The change in burnout velocity is then defined by the following equation,
 The optimum burnout velocity will be at $dv_{b0}=0$, this defines the constraint on the three quantities.
 
 
-\subsection{Optimization of multistage rockets}
+\section{Optimization of multistage rockets}
 It can be shown using the equations from the previous section that with achievable mass ratios, thrust ratios and specific impulse, it is not possible to reach earth orbital velocities using single stage rockets. Thus multistage launchers are required for space travel.
 
 In a multistage rocket the burnout velocity of the previous stage is the initial velocity of the next. The maximum velocity by multistage rockets can then be computed as the sum of the single stage velocities given by Equation~\eqref{eq:vel_1}.
@@ -191,7 +192,7 @@ Substituting this into Equation~\eqref{eq:vel_vm} yields the following expressio
 With $\lambda$ known the mass ratios $\mu_i$ may be calculated using Equation~\eqref{eq:mu_lambda}.
 
 
-\subsection{Optimal thrust attitude angle policy}
+\section{Optimal thrust attitude angle policy}
 To simplify this problem the rocket is assumed to be rigid and the aerodynamics are neglected. In general the length of the powered flight path is short compared to the earth's radius, thus it's safe to replace the central gravitational field by a constant-plane parallel-force field.
 
 \begin{figure}[ht]			
@@ -311,7 +312,7 @@ Equation~\eqref{eq:optimal_theta_1} gives an expression for the thrust attitude 
 \end{equation}
 
 
-\subsection{Optimal propellant utilization policy}
+\section{Optimal propellant utilization policy}
 \begin{wrapfigure}{r}{0.3\textwidth}        
     \begin{center}        
         \input{figures/possible_variations_of_v.tex}		
@@ -411,7 +412,7 @@ It is possible for $\Phi$ to be always positive, always negative or vary from po
 \end{figure}
 
 \newpage
-\subsection{Gravity turn}
+\section{Gravity turn}
 \begin{wrapfigure}{r}{0.5\textwidth} 		
 	\centering
 	\input{figures/gravity_turn.tex}			

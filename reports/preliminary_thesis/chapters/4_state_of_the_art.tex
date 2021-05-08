@@ -1,0 +1,16 @@
+\chapter{State of the art}
+
+Research into the use of RL in spacecraft guidance is relatively young. The main characteristics of RL that are of special interest in space guidance is the ability to generalize and autonomously adapt to unknown situations and circumstances that are difficult to forsee or too cumbersome to take into account. This is specially useful for deep space missions due to the unavoidable communication lags which make it difficult for remote human operators to make adjustments in fast changing situations.
+
+An example the research by Gaudet and Furfaro \cite{gaudet2012robust} explore the use of RL as a control method for hovering in the non-uniform, rotating gravitational field commonly associated with asteroids. The ability to generalize resulted in robust agents that could accurately hover in environments that where unknown during the policy optimization process. An optical seeker based navigation approach using a single camera and laser range finder was used to accurately estimate the state of the spacecraft with respect to landmarks on the asteroid.
+
+Further development by Willis et al. \cite{willis2016reinforcement} managed to improve the accuracy by an order of magnitude and switched to a more general gravitation model allowing for a wider range of asteroids to be hovered. Additionally the visual sensory system was replaced by one based on optical flow which is better suitable for the future development of landing algorithms based on visual cues.
+
+More recently Hovell and Ulrich \cite{hovell2020deep, hovell2021deep} and Broida and Linares \cite{broida2019spacecraft} have been developing RL based control system for proximity operation guidance, such during autonomous rendezvous and docking operations. These could be applied in situations such on-orbit servicing, assembly, and debris capture, where the chaser spacecraft may be required to manoeuvre in the proximity of a potentially uncooperative target object while avoiding nearby obstacles in cluttered environments. 
+
+The results by Broida and Linares \cite{broida2019spacecraft} where promising and later results \cite{hovell2021deep} successfully demonstrated rendezvous operation around rotating targets with a nearby obstacle.
+
+Gaudet et al. \cite{gaudet2018deep} propose the use of a PPO RL agent for planetary powered decent and landing. Future space missions will require spacecraft to target specific locations on the surface. The aim of this research is to develop a landing system that can land within a few meters from its target.
+The agent was trained on a 6-DOF Mars landing simulation, and results demonstrated that the goal to achieve pin-point accuracy was reached.
+
+RL has also been successfully demonstrated to be a suitable tool for developing control systems for efficient orbital change manoeuvre with low-thrust spacecraft, including for interplanetary trajectories. \cite{kolosa2019reinforcement, zavoli2020reinforcement, miller2020low} 
