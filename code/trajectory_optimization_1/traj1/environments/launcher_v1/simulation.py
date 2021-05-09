@@ -1,4 +1,4 @@
-from math import pi, cos, sin, sqrt, atan2
+from math import pi, cos, sin, sqrt, atan2, fmod
 from typing import Sequence, Optional, Tuple
 
 from dataclasses import dataclass, fields
@@ -53,6 +53,7 @@ sim_spec = (
     ("controller_theta_dot_max", nb.float64),
 
     ("t", nb.float64),
+    ("i", nb.int32),
     ("action_engine_on", nb.boolean),
     ("action_drop_stage", nb.boolean),
     ("action_autopilot_mode", nb.int32),
@@ -102,6 +103,16 @@ def clip(min, max, value):
         return value
 
 
+@nb.jit(nopython=True, cache=True)
+def wrap_angle(angle):
+    """
+    Wrap angle between -pi and pi.
+    :param angle:
+    :return:
+    """
+    return np.fmod(angle + pi, 2 * pi) - pi
+
+
 @jitclass(sim_spec)
 class Simulation:
     def __init__(self,
@@ -141,6 +152,7 @@ class Simulation:
         self.end_at_ground = end_at_ground
 
         self.t: float = nan
+        self.i: int = 0
         self.action_engine_on: bool = False
         self.action_drop_stage: bool = False
         self.action_autopilot_mode: int = 0
@@ -211,6 +223,7 @@ class Simulation:
         self.theta_controller.reset()
 
         self.t = 0.0
+        self.i = 0
         self.action_engine_on: bool = False
         self.action_drop_stage: bool = False
         self.action_autopilot_mode: int = 0
@@ -264,6 +277,7 @@ class Simulation:
         self.set_t_y(t, y)
 
         self._update_states()
+        self.i += 1
 
     def _update_states(self):
         # The old code makes use of s. I decided to keep it
@@ -281,8 +295,9 @@ class Simulation:
             s.gamma_i = 0
 
         s.longitude = atan2(s.xii[1], s.xii[0])
-        s.gamma_e = hpi + s.gamma_i - s.longitude
-        s.theta_e = hpi + s.theta_i - s.longitude
+        s.gamma_e = wrap_angle(hpi + s.gamma_i - s.longitude)
+        s.theta_e = wrap_angle(hpi + s.theta_i - s.longitude)
+
 
         if (self.action_autopilot_mode == AP_FLIGHT_PATH_CONTROL) and (vsquared > 0.1):
             self.ap_comm_gamma_e = self.action_autopilot_reference
@@ -372,11 +387,11 @@ class Simulation:
         s.aii = s.gii + s.fii_thrust / s.mass
 
         if self.end_at_apogee:
-            if self.vie[1] <= 0.:
+            if self.vie[1] <= -0.1:
                 self.done = True
 
         if self.end_at_ground:
-            if self.h < 0.:
+            if self.h < -0.1:
                 self.done = True
 
 
