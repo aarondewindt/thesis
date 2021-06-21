@@ -1,0 +1,51 @@
+\section{Example: Quadrotor guidence law}
+\begin{wrapfigure}{r}{0.3\textwidth}        
+    \begin{center}        
+        \input{figures/qr_world.tex}		
+    \end{center}    
+    \caption{Example state and possible actions.}
+    \label{fig:qr_exaple_state}    
+\end{wrapfigure}
+
+The purpose of this example is to gain a better understanding of the basic workings of \acrlong{rl}. The problem based on J. Junell \cite{junell2015reinforcement} consists of a quadrotor agent within a grid world containing three collapsed buildings and an upload station. The goal of the agent is to visit the disaster sites to collect pictures and every once in a while upload its memory contents at the upload station.
+
+Each time the quadrotor visits a disaster site its memory state is increased by one and the agent is given a reward of 8. In total the agent has the memory capacity of 5. Whenever the agent visits the upload station it is given a reward equal to the square of the memory state and the memory state is reset back to zero. After each visit to either a disaster site or the upload station, the agent is moved to a random location in the grid world. If the agent leaves the grid world it's given a negative reward and is moved back to its last position on the grid. As possible actions the agent can choose to move to any adjacent grid location including diagonal movements.
+
+The agents use a simple \eps-greedy on-policy learning method using the update rule shown in Equation~\ref{fig:qr_learning_rule}. For each run a $1000$ agents are simulated and the mean rewards are plotted in Figure~\ref{fig:qr_mean_rewards}. As it can be seen decreasing the learning rate $\alpha$ reduces the convergence rate, but results in better learned policies in the long run.
+
+Having $\gamma=0$ results in poor learning performance, this is because each update is only dependent only on the reward the agent received after performing the action. It doesn't take future action-states into account. In contrast when setting $\gamma$ to a non-zero value, the update is dependent on the value of the following action-state. Thus giving the agent an indication of the value of future events.
+
+\begin{equation}
+    Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left [  R_{t+1} + \gamma Q(S_{t+1}, A_{t+1})- Q(S_t, A_t) \right ]
+    \label{fig:qr_learning_rule}
+\end{equation}
+
+\begin{figure}[ht]			
+	\centering
+	\input{figures/qr_rewards.tex}			
+	\caption{Learned policy at each memory state.}
+	\label{fig:qr_mean_rewards}
+\end{figure}
+
+Figure~\ref{fig:qr_learned_policy} shows a greedy policy at each memory state after the learning process. Being an \eps-greedy on-policy learning method it can be seen that the agents avoid traveling along the edges of the grid world, so as to avoid stepping outside during a random action.
+
+It can also been seen that at low memory the agents prefer to travel to the disaster sites and as the memory fills up it becomes more valuable to the agents to travel to the upload station. This is thanks to the increase in rewards the agents are able to get from the upload station as the memory fills up. Once full, the only place where the agents are able to get a reward is from the upload station, so in this case the policy always guides the agent towards the upload station.
+
+\begin{figure}[ht]			
+	\centering
+	\input{figures/qr_learned_policy.tex}			
+	\caption{Mean rewards with varying learning rate and discount factor.}
+	\label{fig:qr_learned_policy}
+\end{figure}
+
+
+\subsection{Example: Suborbital flight}
+The goal is to guide a single stage launch vehicle to a trajectory that maximizes the maximum altitude. 
+
+\begin{figure}[ht]			
+	\centering
+	\input{figures/to_ref_frames.tex}			
+	\caption{Simulation reference frames and states.}
+	\label{fig:to_refframes}
+\end{figure}
+

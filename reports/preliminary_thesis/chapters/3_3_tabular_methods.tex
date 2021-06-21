@@ -239,18 +239,19 @@ The following example is used to demonstrate the difference between on and off p
 
 \begin{figure}[ht]			
 	\centering
-	\includegraphics[width=0.5\textwidth]{figures/on_off_policy}			
-	\caption{Example reward distribution for a 5-armed bandit problem.}
+	\input{figures/on_off_policy.tex}	
+	\caption{Grid world with the safe and optimal paths learned by on-and off-policy methods, where the hashed area is the cliff.}
 	\label{fig:on_off_policy}
 \end{figure}
 
+
 200 agents are simulated for 500 episodes to demonstrate the difference between on and off policy learning methods. They all follow \eps-greedy policies with $\epsilon=0.1$, but half use Sarsa and the other half Q-learning. The Q-learning agents learn the optimal policy and thus travel right along the edge of the cliff. However since the agents may at any point take a step into any random direction, it is better to take the safer route further away from the edge. Since the Sarsa agents learn the roundabout policy, this is the path they learn to take. Figure~\ref{fig:on_off_policy_results} show the results of these simulations.
 
-However once the agents have been trained and \eps  is set to zero, the Q-learning agents outperform the Sarsa agents. With these new greedy policies the Q-learning agents will always receive a sum of rewards of $-12$ while the Sarsa agents receive $-16$ thanks to the longer path. If \eps  is gradually reduced to zero, then both methods converge to the optimal policy.
+However once the agents have been trained and \eps~ is set to zero, the Q-learning agents outperform the Sarsa agents. With these new greedy policies the Q-learning agents will always receive a sum of rewards of $-12$ while the Sarsa agents receive $-16$ thanks to the longer path. If \eps~ is gradually reduced to zero, then both methods converge to the optimal policy.
 
 \begin{figure}[ht]			
 	\centering
-	\includegraphics[width=0.6\textwidth]{figures/on_off_policy_results}			
+	\input{figures/on_off_policy_results.tex}			
 	\caption{Example reward distribution for a 5-armed bandit problem.}
 	\label{fig:on_off_policy_results}
 \end{figure}

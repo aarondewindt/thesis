@@ -1,0 +1,10 @@
+id,hidden,dropout,gamma,vf_clip,comment
+e522c,,None,0.995,10,"LW, NAN 27MINS"
+dcd00,"128, 128",None,,10,
+00861,"256, 256",None,0.995,10,"LW, NAN 15MINS, wierd KL coeff"
+49fa6,"64, 64",None,0.995,10,
+54b77,"64, 64",None,0.995,0.1,Clipping vf to 0.1 (default 10)
+7134c,"64, 64",None,0.995,1,
+1139e,,,0.993,,
+60644,"32, 32",,,,
+,,,,,

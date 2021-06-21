@@ -1,0 +1,9 @@
+name: quad_nav
+dependencies:
+  - python=3.8
+  - pandas
+  - numpy
+  - matplotlib
+  - pip
+  - pip:
+    - tikzplotlib

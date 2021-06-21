@@ -5,7 +5,7 @@
   </component>
   <component name="CMakeSettings">
     <configurations>
-      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" ENABLED="true" />
     </configurations>
   </component>
   <component name="CargoProjects">
@@ -13,8 +13,61 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c6c0688a-a69e-41fa-8585-38c97baf1738" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../pole/pole/.idea/pole.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../cliff_walking/.virtual_documents/Untitled.ipynb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../example_projects/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../example_projects/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../example_projects/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../example_projects/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../example_projects/line_world/example_projects.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../example_projects/requirements.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../line_world/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../line_world/.idea/other.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/csv-plugin.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/python/environment.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/python/plotting.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/python/test.tex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results_001_9.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results_01_00.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results_01_01.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results_01_05.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results_01_09.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results_01_10.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results_01_9.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results_10_9.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results_1_9.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/experiment_1.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../trajectory_optimization_1/work/max_altitude/results/ppo_basic/experiment_state-2021-05-15_01-19-12.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cliff_walking/Untitled.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../cliff_walking/Untitled.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cliff_walking/on_off_policy_results.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../cliff_walking/on_off_policy_results.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../line_world/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../example_projects/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../line_world/.idea/line_world.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../example_projects/.idea/example_projects.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../line_world/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../line_world/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../line_world/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../line_world/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../line_world/line_world/10_armed_bandit.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../example_projects/line_world/10_armed_bandit.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../line_world/line_world/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/../example_projects/line_world/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../line_world/line_world/cart_pole_example.py" beforeDir="false" afterPath="$PROJECT_DIR$/../example_projects/line_world/cart_pole_example.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../line_world/line_world/gym_exp.py" beforeDir="false" afterPath="$PROJECT_DIR$/../example_projects/line_world/gym_exp.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../line_world/line_world/k_armed_bandit.py" beforeDir="false" afterPath="$PROJECT_DIR$/../example_projects/line_world/k_armed_bandit.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../line_world/line_world/line_world.py" beforeDir="false" afterPath="$PROJECT_DIR$/../example_projects/line_world/line_world.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/quad_nav.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/quad_nav.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/agent.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/agent.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trajectory_optimization_1/docker-compose.dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../trajectory_optimization_1/docker-compose.dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trajectory_optimization_1/external/cw" beforeDir="false" afterPath="$PROJECT_DIR$/../trajectory_optimization_1/external/cw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trajectory_optimization_1/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../trajectory_optimization_1/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trajectory_optimization_1/traj1/environments/launcher_v1/launcher_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/../trajectory_optimization_1/traj1/environments/launcher_v1/launcher_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trajectory_optimization_1/traj1/environments/launcher_v1/simulation.py" beforeDir="false" afterPath="$PROJECT_DIR$/../trajectory_optimization_1/traj1/environments/launcher_v1/simulation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trajectory_optimization_1/work/max_altitude/0_base_environment.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../trajectory_optimization_1/work/max_altitude/0_base_environment.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trajectory_optimization_1/work/max_altitude/1_rl_flight_path_control.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../trajectory_optimization_1/work/max_altitude/environment.py" beforeDir="false" afterPath="$PROJECT_DIR$/../trajectory_optimization_1/work/max_altitude/environment.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../reports/preliminary_thesis/chapters/1_introduction.tex" beforeDir="false" afterPath="$PROJECT_DIR$/../../reports/preliminary_thesis/chapters/1_introduction.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../reports/preliminary_thesis/chapters/3_2_rl_basics.tex" beforeDir="false" afterPath="$PROJECT_DIR$/../../reports/preliminary_thesis/chapters/3_2_rl_basics.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../reports/preliminary_thesis/chapters/3_3_tabular_methods.tex" beforeDir="false" afterPath="$PROJECT_DIR$/../../reports/preliminary_thesis/chapters/3_3_tabular_methods.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../reports/preliminary_thesis/report.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../reports/preliminary_thesis/report.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../reports/preliminary_thesis/report.tex" beforeDir="false" afterPath="$PROJECT_DIR$/../../reports/preliminary_thesis/report.tex" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,6 +76,14 @@
   </component>
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Rust File" />
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
@@ -37,6 +98,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="cf.first.check.clang-format" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -46,25 +108,56 @@
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.plotting">
     <configuration name="Run quad_nav" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
-      <option name="channel" value="DEFAULT" />
       <option name="command" value="run --package quad_nav --bin quad_nav" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
       <option name="allFeatures" value="false" />
-      <option name="nocapture" value="false" />
       <option name="emulateTerminal" value="false" />
       <option name="backtrace" value="SHORT" />
-      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
       <envs />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
       <method v="2">
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="plotting" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="quad_nav" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/python" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/python/plotting.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Cargo Command.Run quad_nav" />
+        <item itemvalue="Python.plotting" />
+        <item itemvalue="Cargo.Run quad_nav" />
       </list>
     </recent_temporary>
   </component>
@@ -72,6 +165,7 @@
     <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
     <option name="version" value="2" />
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -85,11 +179,16 @@
       <workItem from="1566230247795" duration="1873000" />
       <workItem from="1583202299962" duration="616000" />
       <workItem from="1583353343834" duration="610000" />
+      <workItem from="1623411094872" duration="1316000" />
+      <workItem from="1623976256875" duration="3004000" />
+      <workItem from="1624113081142" duration="6669000" />
+      <workItem from="1624203868413" duration="6812000" />
+      <workItem from="1624261131103" duration="4618000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="2" />
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -101,5 +200,6 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>

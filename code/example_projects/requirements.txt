@@ -1,0 +1,11 @@
+numpy
+scipy
+tqdm
+matplotlib
+xarray
+sympy
+pandas
+numba
+tqdm
+gym
+tikzplotlib

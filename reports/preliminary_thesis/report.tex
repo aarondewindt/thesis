@@ -1,6 +1,7 @@
 \documentclass[whitelogo, parskip=full]{tudelft-report}
 \usepackage{natbib}
 \usepackage{changes}
+\usepackage[utf8]{inputenc}
 
 % My preamble
 \usepackage[]{todonotes}
@@ -13,6 +14,7 @@
 \usepackage[ruled,vlined]{algorithm2e}
 \usepackage[super]{nth}
 % \usepackage{comment}
+\usepackage{pgfplots}
 
 \usepackage{physics}
 % \usepackage{amsmath}
@@ -30,9 +32,11 @@
 \usepackage{booktabs}
 \usepackage{wrapfig}
 \usetikzlibrary{fadings}
-\usetikzlibrary{patterns}
+\usetikzlibrary{patterns,shapes.arrows}
 \usetikzlibrary{shadows.blur}
 \usetikzlibrary{shapes}
+\usepgfplotslibrary{groupplots,dateplot}
+\pgfplotsset{compat=newest}
 
 % Non-scalar symbols, N-dimensional
 \newcommand{\nd}[1]{\symbf{#1}}
@@ -125,6 +129,7 @@
 \input{chapters/3_3_tabular_methods}
 \input{chapters/3_4_approximate_solutions}
 \input{chapters/3_5_policy_gradient_methods}
+\input{chapters/3_6_examples}
 \input{chapters/4_state_of_the_art}
 \input{chapters/5_conclusion}
 \input{chapters/6_pot}

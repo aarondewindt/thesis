@@ -5,3 +5,4 @@ authors = ["Aaron M. de Windt <aaron.dewindt@gmail.com>"]
 
 [dependencies]
 rand = "0.5"
+csv = "1.1"

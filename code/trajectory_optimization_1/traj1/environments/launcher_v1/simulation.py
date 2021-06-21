@@ -49,9 +49,9 @@ sim_spec = (
     ("initial_theta_e", nb.float64),
     ("end_at_apogee", nb.boolean),
     ("end_at_ground", nb.boolean),
+    ("end_at_burnout", nb.boolean),
     ("controller_theta_dot_min", nb.float64),
     ("controller_theta_dot_max", nb.float64),
-
     ("t", nb.float64),
     ("i", nb.int32),
     ("action_engine_on", nb.boolean),
@@ -66,6 +66,7 @@ sim_spec = (
     ("aii", nb.types.Array(nb.float64, 1, "C")),
     ("tei", nb.types.Array(nb.float64, 2, "C")),
     ("vie", nb.types.Array(nb.float64, 1, "C")),
+    ("vie_hat", nb.types.Array(nb.float64, 1, "C")),
     ("fii_thrust", nb.types.Array(nb.float64, 1, "C")),
     ("theta_i", nb.float64),
     ("theta_i_dot", nb.float64),
@@ -110,7 +111,7 @@ def wrap_angle(angle):
     :param angle:
     :return:
     """
-    return np.fmod(angle + pi, 2 * pi) - pi
+    return np.fmod(angle + pi, 2 * pi) + (pi if angle < -pi else -pi)
 
 
 @jitclass(sim_spec)
@@ -127,7 +128,8 @@ class Simulation:
                  theta_controller_gains: Tuple[float, float, float],
                  controller_theta_dot_limits: Tuple[float, float],
                  end_at_apogee: bool,
-                 end_at_ground: bool):
+                 end_at_ground: bool,
+                 end_at_burnout: bool):
 
         self.integrator = AB3Integrator(dt, 7)
 
@@ -150,6 +152,7 @@ class Simulation:
 
         self.end_at_apogee = end_at_apogee
         self.end_at_ground = end_at_ground
+        self.end_at_burnout = end_at_burnout
 
         self.t: float = nan
         self.i: int = 0
@@ -167,6 +170,7 @@ class Simulation:
         self.aii: np.ndarray = nan2
         self.tei: np.ndarray = nan22
         self.vie: np.ndarray = nan2
+        self.vie_hat: np.ndarray = nan2
         self.fii_thrust: np.ndarray = nan2
         self.theta_i: float = nan
         self.theta_i_dot: float = nan
@@ -331,10 +335,17 @@ class Simulation:
         s.tei[1, 1] = sin(s.longitude)
 
         s.vie = s.tei @ s.vii
+        vie_norm = s.vie[0]**2 + s.vie[1]**2
+        if vie_norm > eps:
+            s.vie_hat = s.vie / sqrt(vie_norm)
+        else:
+            s.vie_hat = np.zeros((2,))
 
         # Keep the engine off if it's been fired already.
         if s.stage_state == ST_NO_IGNITIONS:
             s.engine_on = False
+            if self.end_at_burnout and (s.stage_idx == self.last_stage_idx):
+                self.done = True
 
         # Go to the firing state if we get the action to do so.
         # Remove one ignition

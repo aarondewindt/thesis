@@ -68,7 +68,7 @@ However not all tasks are episodic, it is possible an RL-agent needs to solve so
 \todo{Add missing figure referenced by this paragraph}
 It is possible to unify the expected return equations for the episodic and continuing tasks into a single one. For example, in the transition diagram for a continuos task shown below the environment transitions from states $s_0$ to $s_1$ and after its next action it ends up at a special absorbing state where all actions will result in the same state without any reward. This results in reward sequence $+1, +1, +1, 0, 0, \ldots$. By summing the whole infinite sequence we get the same result as summing the first $T$ rewards, where $T=3$ in this case. This is also true with discounting. 
 
-Thus Eq.~\ref{eq:exp_r_3} shows the unified equation for the (discounted) expected return for both episodic and continuing tasks. If the task at hand is continuing, then $T=\infty$, while for episodic tasks $T$ will be some finite integer. It is possible to have $\gamma=1$ for episodic tasks, but due to the reasons mentioned before the expected return must be discounted for continuing tasks, so $\gamma=1$ and $T=\infty$ cannot true at the same time.
+Thus Eq.~\ref{eq:exp_r_3} shows the unified equation for the (discounted) expected return for both episodic and continuing tasks. If the task at hand is continuing, then $T=\infty$, while for episodic tasks $T$ will be some finite integer. It is possible to have $\gamma=1$ for episodic tasks, but due to the reasons mentioned before the expected return must be discounted for continuing tasks, so $\gamma=1$ and $T=\infty$ cannot be true at the same time.
 
 \begin{equation}
   G_t \dot{=} \sum_{k=t+1}^{T}\gamma^{k-t-1}R_{k}
@@ -102,33 +102,46 @@ For some problems it might be more suitable to look at the value of state-action
   \label{eq:value_state_action_pair}
 \end{equation}
 
-\section{K-armed bandit problem}
-\label{sec:karmedbandit}
-K-armed bandit problems will be used as examples in the following sections. These are simple learning problems where the agent is given the option to take $k$ different action's. There is only one state and the episodes terminate after the agent has taken it's action. Furthermore the examples in this report use zero mean, unit variance normal distributions to select the true value $q_*(a)$ of the actions. The rewards given by the environment are then selected with $q_*(a)$ mean and unit variance normal distribution. Figure~\ref{fig:k_armed_bandit_vionlin} shows an example reward distribution for a 5-armed bandit.
-
-\begin{figure}[ht]			
-	\centering
-	\includegraphics{figures/k_armed_bandit_violin}			
-	\caption{Example reward distribution for a 5-armed bandit problem.}
-	\label{fig:k_armed_bandit_vionlin}
-\end{figure}
-
 % \eps
 \section{\texorpdfstring{\eps}---greedy policies}
+The main difference between \acrlong{rl} and other types of machine learning is that \gls{rl} uses training information that evaluates the actions taken by the agent instead of a set of correct actions. This means that to determine $Q_t(a)$ the agent needs to explore and try out as many actions as possible in order to find good behavior. To do this the agent can take random actions and learn from the rewards it gets back. This is called \emph{exploration}.
 
-
-The main difference between \acrlong{rl} and other types of machine learning is that \gls{rl} uses training information that evaluates the actions taken by the agent instead of a set of correct actions. This means that in order to determine $Q_t(a)$ the agent needs to explore and try out as many actions as possible in order to find good behavior. To do this the agent can take random actions and learn from the rewards it gets back. This is called \emph{exploration}.
-
-However, the main goal of the agent is to maximize the rewards it receives from the environment over time. To achieve this goal the agent can choose to take the greedy actions. These are the actions with the highest value in $Q_t(a)$. This process of choosing the greedy action is known as \emph{exploitation} since the agent is exploiting its knowledge to achieve its goal.
+However, the main goal of the agent is to maximize the rewards it receives from the environment over time. To achieve this goal the agent can choose to take greedy actions. These are the actions with the highest value in $Q_t(a)$. This process of choosing the greedy action is known as \emph{exploitation} since the agent is exploiting its knowledge to achieve its goal.
 
 Unfortunately exploration and exploitation conflict with each other since in the former the agent wants to try out all possible actions, but only wants to perform a specific action if it's following a greedy policy. Thus a possible compromise is to use what is known as an \eps-greedy policy. In these policies, the agent will choose a random action \eps\ percentage of the time and the greedy action the rest of the time. This allows the agent to explore and try out new actions or old actions whose value might have changed, while also trying to achieve it's goal.
 \todo{Rewrite this paragraph.}
 
-Since the agent is trying out new actions while following \eps-greedy policies, it is able to learn faster and more than if it was following a greedy policy. To demonstrate this 2000 10-armed bandit problems are run for 1000 episodes. The average reward of all bandits are stored after each episode. Figure ~\ref{fig:10_armed_bandit} shows the average reward and the percentage of agents that selected the optimal action for the greedy policy and two \eps-greedy policies ($\epsilon=0.01$ and $\epsilon=0.1$). A full explanation of the learning method used can be found in the section \ref{sec:epsgreedyexample}, but in short, the action value function $Q_t(a)$ is estimated by averaging the rewards received from the environment.
+Since the agent is trying out new actions while following \eps-greedy policies, it is able to learn faster and more than if it was following a greedy policy. To demonstrate this a k-armed bandit problem is used. 
+
+K-armed bandit problems are simple learning problems where the agent is given the option to take $k$ different action's. There is only one state and the episodes terminate after the agent has taken it's action. Furthermore the examples in this report use zero mean, unit variance normal distributions to select the true value $q_*(a)$ of the actions. The rewards given by the environment are then selected with $q_*(a)$ mean and unit variance normal distribution. Figure~\ref{fig:k_armed_bandit_vionlin} shows an example reward distribution for a 5-armed bandit.
 
 \begin{figure}[ht]			
 	\centering
-	\includegraphics{figures/10_armed_bandit}			
+	\input{figures/k_armed_bandit_violin.tex}		
+	\caption{Example reward distribution for a 5-armed bandit problem.}
+	\label{fig:k_armed_bandit_vionlin}
+\end{figure}
+
+The agents use the simple learning rule shown in Equation~\ref{eq:karmlearn}. Here is $Q$ a table with the action-value function. Results for a group of 2000 10-armed bandits can be found in Figure~\ref{fig:10_armed_bandit}.
+
+\begin{equation}
+    Q(A) \leftarrow Q(A) + \alpha \left[ R - Q(A) \right]
+    \label{eq:karmlearn}
+\end{equation}
+
+
+The average reward of all bandits are stored after each episode. Figure ~\ref{fig:10_armed_bandit} shows the average reward and the percentage of agents that selected the optimal action for the greedy policy and two \eps-greedy policies ($\epsilon=0.01$ and $\epsilon=0.1$). A full explanation of the learning method used can be found in the section \ref{sec:karmedbandit}, but in short, the action value function $Q_t(a)$ is estimated by averaging the rewards received from the environment.
+
+% \begin{figure}[ht]			
+% 	\centering
+% 	\includegraphics{figures/10_armed_bandit}			
+% 	\caption{Average reward of 2000 10-armed bandit problems for 1000 episodes when following the greedy and two \eps-greedy policies.}
+% 	\label{fig:10_armed_bandit}
+% \end{figure}
+
+\begin{figure}[ht]			
+	\centering
+	\input{figures/10_armed_bandit.tex}			
 	\caption{Average reward of 2000 10-armed bandit problems for 1000 episodes when following the greedy and two \eps-greedy policies.}
 	\label{fig:10_armed_bandit}
 \end{figure}

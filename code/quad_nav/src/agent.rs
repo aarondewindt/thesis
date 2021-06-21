@@ -16,25 +16,27 @@ pub struct Agent {
     pub env: Environment,
     pub eps: f64,
     pub gamma: f64,
+    pub alpha: f64,
     rng: ThreadRng,
 }
 
 impl Agent {
-    pub fn new(env: Environment, eps: f64, gamma: f64) -> Agent {
+    pub fn new(env: Environment, eps: f64, gamma: f64, alpha: f64) -> Agent {
         Agent {
             states_info: HashMap::new(),
             env,
             eps,
             gamma,
+            alpha,
             rng: thread_rng()
         }
     }
 
-    pub fn step(&mut self) {
+    pub fn step(&mut self) -> f64 {
         // Choose direction
         let mut direction = -1;
         let rnd_val: f64 = self.rng.gen();
-        if rnd_val < self.eps {
+        if rnd_val > self.eps {
             // Be greedy, look for the next state with the most value.
             let mut best_value = f64::NEG_INFINITY;
             for dir in 0 ..= 7 {
@@ -121,15 +123,17 @@ impl Agent {
         // So we skip this step in this case.
         if !value_0.is_nan() {
             let info_0 = self.states_info.get_mut(&state_0).unwrap();
-            let alpha = 1.0 / info_0.visit_count;
-            info_0.value += alpha * (reward_0 + self.gamma * value_1 - info_0.value);
+            // let alpha = 1.0 / info_0.visit_count;
+            info_0.value += self.alpha * (reward_0 + self.gamma * value_1 - info_0.value);
         }
 
-        // This will either move the agent back info the board if it's
+        // This will either move the agent back into the board if it's
         // out of bounds.
         // To a random location if at the station or building.
         // Nothing in any other case.
         self.env.finish(state_0);
+
+        return reward_1;
     }
 
     pub fn _print_values_for_memory(&mut self, memory: i8) {

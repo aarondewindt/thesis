@@ -1,0 +1,62 @@
+
+
+% Pattern Info
+ 
+\tikzset{
+pattern size/.store in=\mcSize, 
+pattern size = 5pt,
+pattern thickness/.store in=\mcThickness, 
+pattern thickness = 0.3pt,
+pattern radius/.store in=\mcRadius, 
+pattern radius = 1pt}
+\makeatletter
+\pgfutil@ifundefined{pgf@pattern@name@_3vqf53hbe}{
+\pgfdeclarepatternformonly[\mcThickness,\mcSize]{_3vqf53hbe}
+{\pgfqpoint{0pt}{0pt}}
+{\pgfpoint{\mcSize}{\mcSize}}
+{\pgfpoint{\mcSize}{\mcSize}}
+{
+\pgfsetcolor{\tikz@pattern@color}
+\pgfsetlinewidth{\mcThickness}
+\pgfpathmoveto{\pgfqpoint{0pt}{\mcSize}}
+\pgfpathlineto{\pgfpoint{\mcSize+\mcThickness}{-\mcThickness}}
+\pgfpathmoveto{\pgfqpoint{0pt}{0pt}}
+\pgfpathlineto{\pgfpoint{\mcSize+\mcThickness}{\mcSize+\mcThickness}}
+\pgfusepath{stroke}
+}}
+\makeatother
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,300); %set diagram left start at 0, and has height of 300
+
+%Shape: Grid [id:dp8354622631501973] 
+\draw  [draw opacity=0] (10,10) -- (250.25,10) -- (250.25,90.31) -- (10,90.31) -- cycle ; \draw   (10,10) -- (10,90.31)(30,10) -- (30,90.31)(50,10) -- (50,90.31)(70,10) -- (70,90.31)(90,10) -- (90,90.31)(110,10) -- (110,90.31)(130,10) -- (130,90.31)(150,10) -- (150,90.31)(170,10) -- (170,90.31)(190,10) -- (190,90.31)(210,10) -- (210,90.31)(230,10) -- (230,90.31)(250,10) -- (250,90.31) ; \draw   (10,10) -- (250.25,10)(10,30) -- (250.25,30)(10,50) -- (250.25,50)(10,70) -- (250.25,70)(10,90) -- (250.25,90) ; \draw    ;
+%Shape: Rectangle [id:dp622943625350086] 
+\draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (30,70) -- (230,70) -- (230,90) -- (30,90) -- cycle ;
+%Shape: Rectangle [id:dp8345894336328783] 
+\draw  [pattern=_3vqf53hbe,pattern size=6pt,pattern thickness=0.75pt,pattern radius=0pt, pattern color={rgb, 255:red, 0; green, 0; blue, 0}] (30,70) -- (230,70) -- (230,90) -- (30,90) -- cycle ;
+%Straight Lines [id:da4113467418836916] 
+\draw [line width=2.25]    (20,74) -- (20,25) ;
+\draw [shift={(20,20)}, rotate = 450] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (10.36,-4.98) -- (0,0) -- (10.36,4.98) -- (6.88,0) -- cycle    ;
+%Straight Lines [id:da3467655015741209] 
+\draw [line width=2.25]    (25,20) -- (235,20) ;
+\draw [shift={(240,20)}, rotate = 180] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (10.36,-4.98) -- (0,0) -- (10.36,4.98) -- (6.88,0) -- cycle    ;
+%Straight Lines [id:da3314704988848196] 
+\draw [line width=2.25]    (240,25) -- (240,69) ;
+\draw [shift={(240,74)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (10.36,-4.98) -- (0,0) -- (10.36,4.98) -- (6.88,0) -- cycle    ;
+%Straight Lines [id:da18327636679124737] 
+\draw [line width=2.25]    (25,60) -- (230,60) ;
+\draw [shift={(235,60)}, rotate = 180] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (10.36,-4.98) -- (0,0) -- (10.36,4.98) -- (6.88,0) -- cycle    ;
+
+% Text Node
+\draw (13.73,73.64) node [anchor=north west][inner sep=0.75pt]   [align=left] {S};
+% Text Node
+\draw (233,73.82) node [anchor=north west][inner sep=0.75pt]   [align=left] {G};
+% Text Node
+\draw (256,13) node [anchor=north west][inner sep=0.75pt]   [align=left] {Safe path};
+% Text Node
+\draw (256,54) node [anchor=north west][inner sep=0.75pt]   [align=left] {Optimal path};
+
+
+\end{tikzpicture}
