@@ -302,7 +302,6 @@ class Simulation:
         s.gamma_e = wrap_angle(hpi + s.gamma_i - s.longitude)
         s.theta_e = wrap_angle(hpi + s.theta_i - s.longitude)
 
-
         if (self.action_autopilot_mode == AP_FLIGHT_PATH_CONTROL) and (vsquared > 0.1):
             self.ap_comm_gamma_e = self.action_autopilot_reference
             self.ap_comm_theta_e = s.theta_e + self.gamma_controller.step(s.t, s.ap_comm_gamma_e, s.gamma_e)
