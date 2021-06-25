@@ -27,4 +27,7 @@
 \glossaryentry{$V, V_t$?\glossentry{v_array}|setentrycounter[]{page}\glsnumberformat}{vi}
 \glossaryentry{$Q, Q_t$?\glossentry{q_array}|setentrycounter[]{page}\glsnumberformat}{vi}
 \glossaryentry{$\overline {\text {VE}}$?\glossentry{sqve}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{$m_{dry}$?\glossentry{mass_dry}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{$m_{prop}$?\glossentry{mass_prop}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{$I_{sp}$?\glossentry{isp}|setentrycounter[]{page}\glsnumberformat}{vi}
 \glossaryentry{$v$?\glossentry{velocityS}|setentrycounter[]{page}\glsnumberformat}{vi}

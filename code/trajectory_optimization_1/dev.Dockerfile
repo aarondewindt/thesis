@@ -17,7 +17,7 @@
 #    https://medium.com/@benjamin.botto/opengl-and-cuda-applications-in-docker-af0eece000f1
 
 
-FROM jupyter/tensorflow-notebook
+FROM jupyter/tensorflow-notebook:python-3.8.8
 
 # Define project environment variables
 ENV PROJECT_NAME=trajectory_optimization_1
@@ -68,19 +68,19 @@ RUN chown -R $NB_UID:$NB_GID $PROJECT_DIR
 USER $NB_UID
 
 # Install development packages
-RUN pip --no-cache-dir install \
-    cmake \
-    jupyterlab-lsp \
-    'python-language-server[all]' \
-    pyls-mypy \
-    lckr-jupyterlab-variableinspector \
-    ipywidgets \
-    aquirdturtle_collapsible_headings \
-    jupyterlab-spellchecker \
-    ipympl \
-    blist \
-    "six==1.13.0" \
-    "boto3==1.4.8"
+#RUN pip --no-cache-dir install \
+#    cmake \
+#    jupyterlab-lsp \
+#    'python-language-server[all]' \
+#    pyls-mypy \
+#    ipywidgets \
+#    aquirdturtle_collapsible_headings \
+#    jupyterlab-spellchecker \
+#    ipympl \
+#    "six==1.15.0" \
+#    "boto3==1.4.8"
+#    blist \
+#    lckr-jupyterlab-variableinspector \
 #    "google-api-python-client==1.7.8" \
 #    "google-oauth" \
 #    "kubernetes" \

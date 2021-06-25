@@ -8,7 +8,7 @@
     \label{fig:qr_exaple_state}    
 \end{wrapfigure}
 
-The purpose of this example is to gain a better understanding of the basic workings of \acrlong{rl}. The problem, based on J. Junell \cite{junell2015reinforcement}, consists of a quadrotor agent within a grid world containing three collapsed buildings and an upload station. The goal of the agent is to visit the disaster sites to collect pictures and every once in a while upload its memory contents at the upload station.
+The purpose of this example is to gain a better understanding of the basic workings of \acrlong{rl} and how the learning process is affected by the hyperparameters $\alpha$ and $\gamma$. The problem, based on Junell et al. \cite{junell2015reinforcement}, consists of a quadrotor agent within a grid world containing three collapsed buildings and an upload station. The goal of the agent is to visit the disaster sites to collect pictures and every once in a while upload its memory contents at the upload station.
 
 Each time the quadrotor visits a disaster site its memory state is increased by one and the agent is given a reward of 8. In total the agent has the memory capacity of 5. Whenever the agent visits the upload station it is given a reward equal to the square of the memory state and the memory state is reset back to zero. After each visit to either a disaster site or the upload station, the agent is moved to a random location in the grid world. If the agent leaves the grid world it's given a negative reward and is moved back to its last position on the grid. As possible actions the agent can choose to move to any adjacent grid location including diagonal movements.
 
@@ -41,11 +41,19 @@ It can also been seen that at low memory the agents prefer to travel to the disa
 
 
 \section{Example: Suborbital flight}
-The goals of this example are to develop the simulation and to experiment with the learning methods and libraries that will be used throughout the thesis project. 
+The goals of this example are to develop the simulation and to experiment with the learning methods and libraries that will be used throughout the main thesis project. 
 
 
-\subsection{Simulation}
-The simulation takes place in a 2D world where the vehicle has 3 degrees of freedom, $x$ and $y$ position and a pitch angle $\theta$. The three different reference frames shown in Figure~\ref{fig:to_refframes} are used. The inertial frame, $I$, is at the center of a non-rotating circular celestial body. The vehicle-carried normal earth reference frame, $E$, has it's origin at the surface of the celestial body right under the location of the vehicle, with the y-axis being normal to the surface. The body frame, $B$, has its origin at the vehicle center of mass and is oriented with the vehicle structure. Furthermore it's assumed to be in vacuum, thus no aerodynamic forces nor moments are included.
+\subsection{Simulation program}
+The simulation is implemented in Python using Numba to optimize computation time. It takes place in a 2D world where the vehicle has 3 degrees of freedom, the $x$ and $y$ position and a pitch angle $\theta$. A non-rotating analog of the moon is chosen as the celestial body at which to simulate. The main reasons for this choice are:
+
+\begin{enumerate}
+	\item A smaller celestial body means shorter distances and thus shorter simulation times are needed to ascent to orbit. Thus the learning process should go faster.
+	\item There already are real world designs of single stage to lunar orbit spacecraft that can be used as examples during early learning runs.
+	\item No atmosphere.
+\end{enumerate}
+
+The reference frames used in the simulation are shown in Figure~\ref{fig:to_refframes}. The inertial frame, $I$, is located at the center of the moon.  The vehicle-carried normal lunar reference frame, $E$, has it's origin at the surface of the moon right under the location of the vehicle, with the y-axis being normal to the surface. The body frame, $B$, has its origin at the vehicle center of mass and is oriented with the vehicle structure. Furthermore it's assumed to be in vacuum, thus no aerodynamic forces nor moments are included. Later simulations may include an atmosphere.
 
 \begin{figure}[ht]			
 	\centering
@@ -54,7 +62,7 @@ The simulation takes place in a 2D world where the vehicle has 3 degrees of free
 	\label{fig:to_refframes}
 \end{figure}
 
-The set of differential equations are shown in Equations~\ref{eq:to_eom1}~to~\ref{eq:to_eom6}. These are solved using a third order \emph{Adams–Bashforth} integration method. This is an explicit, multi-step integration method that can approximate a third order solution using the results from previous integration steps. Since the previous steps need to be known, a forth order \emph{Runge–Kutta} integration method is used for the first four iterations. The main advantage of using an Adams–Bashforth integrator is that the derivatives only need to be evaluated once per integration step, while still yielding higher order results, thus improving computational efficiency while minimizing integration errors.
+The set of differential equations are shown in Equations~\ref{eq:to_eom1}~to~\ref{eq:to_eom6}. These are solved using a third order \emph{Adams–Bashforth} (AB3) integrator. This is an explicit, multi-step integration method that can approximate a third order solution using the results from previous integration steps. Since the previous steps need to be known, a forth order \emph{Runge–Kutta} integrator is used for the first four iterations. The main advantage of using an Adams–Bashforth integrator is that the derivatives only need to be evaluated once per integration step while still yielding higher order results, thus improving computational efficiency while minimizing integration errors.
 
 \begin{align}
 	\dot{x^I_x} &= v^I_x \\ \label{eq:to_eom1}
@@ -64,3 +72,41 @@ The set of differential equations are shown in Equations~\ref{eq:to_eom1}~to~\re
 	\dot{m} &= \frac{|F_T|}{gI_{sp}}\\
 	\dot{\theta^I} & \quad \text{(input)}\\ \label{eq:to_eom6}
 \end{align}
+
+The simulation support multi-stage launch vehicles. By default the main control input is the pitch angle rate, $\dot{\theta^I}$, but the simulation includes configurable PID controllers for controlling the pitch and flight path angles.
+
+\subsection{The environment}
+The vehicle used during this example is a small single stage vehicle incapable of reaching orbit. Instead the goal given to the agent is to maximize the apocynthion during a suborbital flight. The vehicle properties are shown in Table~\ref{tab:to_vehprop}.
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{c|c}
+		\hline
+		\hline
+		$m_{dry}$ & $1$ \si{kg} \\
+		$m_{prop}$ & $0.2$ \si{kg} \\
+		$I_{sp}$  & $80$ \si{s} \\
+		$F_T$ & $6.8$ \si{N}		
+	\end{tabular}
+	\caption{Suborbital launch vehicle properties.}
+	\label{tab:to_vehprop}
+\end{table}
+
+In this environment the simulation is configured to end if the vehicle contacts the lunar surface or at engine burnout. The reward is only given at the terminal state and is defined by the following equation.
+
+\begin{equation}
+	R_{t_{end}} = \left[ \frac{h + \frac{v^{E2}_y}{2g}}{4600} \right]^{21}
+\end{equation}
+
+The numerator of the outer division is the vehicle altitude plus the altitude it would be able to ascent with the remaining vertical kinetic energy. This gives an estimate of the apocynthion the vehicle can reach with its current state. This estimate is then divided by the maximum potential apocynthion the vehicle can reach in ideal conditions to get a normalized reward. The reward is then raised to the power of $21$ in order to lower the rewards given at low apocynthions, thus encouraging the agent to manoeuvre to higher apocynthions.
+
+The only action available to the agent is a continues pitch rate command between $-1$ and $1$ \si{rad.s^-1}. The observation is a tuple containing $\left(\gamma^E, \theta^E, \frac{h}{1200} \right)$. The altitude is normalized by dividing by $1200$ \si{rad.s^-1}.
+
+The reason why the reward and altitude are normalized is because machine learning libraries tend be optimized or their default hyperparameters are chosen with the assumption that the inputs and outputs are normalized.
+
+\subsection{The agent}
+The agent is implemented using RLib (Liang et al. \ref{liang2017rllib}). RLlib is designed to take advantage of parallel computing and provides a set of primitive abstractions around the different \acrshort{rl} components, thus allowing the use of different machine learning frameworks, learning algorithms, environment, etc. RLlib also prodives implementations for some common \acrshort{rl} algorithms which will be used as a basis during this thesis.
+
+The agent 
+
+

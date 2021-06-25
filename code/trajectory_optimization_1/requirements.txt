@@ -1,6 +1,6 @@
 cw
-tensorflow==2.4.1
-numpy==1.19
+tensorflow
+numpy
 scipy
 tqdm
 matplotlib
