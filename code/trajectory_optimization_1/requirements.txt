@@ -12,3 +12,4 @@ numba>=0.46.0
 gym
 ray[all]
 gputil
+tikzplotlib

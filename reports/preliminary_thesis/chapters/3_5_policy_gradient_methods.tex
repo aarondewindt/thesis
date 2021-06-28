@@ -124,6 +124,7 @@ Consider the one-step actor-critic methods. These methods replace the complete r
 
 
 \subsection{PPO}
+\label{sec:ppo_algo}
 A limitation of standard policy gradient methods is that it is hard to choose step sizes when updating the policy. This is in part because a bad update step is quite damaging since it may reduce the visitation distribution around the state. Stepping to far results in a bad policy, which leads to new data being collected under the bad policy, which can cause performance collapse. Another issue with standard policy gradient methods is that these methods have low sample efficiency, only one gradient step is performed per environment sample\cite{schulman2017proximal, schulman2015trust}.
 
 So, how can the biggest improvement step on the policy be taken without over stepping and causing performance collapse? This is the question that methods such as \acrfull{trpo}, and \acrfull{ppo} seek to answer.

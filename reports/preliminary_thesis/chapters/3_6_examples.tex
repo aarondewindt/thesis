@@ -39,19 +39,28 @@ It can also been seen that at low memory the agents prefer to travel to the disa
 	\label{fig:qr_learned_policy}
 \end{figure}
 
-
+\newpage
 \section{Example: Suborbital flight}
 The goals of this example are to develop the simulation and to experiment with the learning methods and libraries that will be used throughout the main thesis project. 
 
+\subsection{Simulator}
 
-\subsection{Simulation program}
-The simulation is implemented in Python using Numba to optimize computation time. It takes place in a 2D world where the vehicle has 3 degrees of freedom, the $x$ and $y$ position and a pitch angle $\theta$. A non-rotating analog of the moon is chosen as the celestial body at which to simulate. The main reasons for this choice are:
+The simulator is implemented in Python using Numba to optimize computation time. It takes place in a 2D world where the vehicle has 3 degrees of freedom, the $x$ and $y$ position and a pitch angle $\theta$. A non-rotating analog of the moon is chosen as the celestial body at which to simulate. The main reasons for this choice are:
 
 \begin{enumerate}
 	\item A smaller celestial body means shorter distances and thus shorter simulation times are needed to ascent to orbit. Thus the learning process should go faster.
 	\item There already are real world designs of single stage to lunar orbit spacecraft that can be used as examples during early learning runs.
 	\item No atmosphere.
 \end{enumerate}
+
+% \begin{wrapfigure}{l}{0.4\textwidth}        
+%     \begin{center}        
+%         \input{figures/to_ref_frames.tex}		
+%     \end{center}    
+%     \caption{Reference frames and states..}
+%     \label{fig:to_refframes}    
+% \end{wrapfigure}
+% \leavevmode 
 
 The reference frames used in the simulation are shown in Figure~\ref{fig:to_refframes}. The inertial frame, $I$, is located at the center of the moon.  The vehicle-carried normal lunar reference frame, $E$, has it's origin at the surface of the moon right under the location of the vehicle, with the y-axis being normal to the surface. The body frame, $B$, has its origin at the vehicle center of mass and is oriented with the vehicle structure. Furthermore it's assumed to be in vacuum, thus no aerodynamic forces nor moments are included. Later simulations may include an atmosphere.
 
@@ -62,18 +71,15 @@ The reference frames used in the simulation are shown in Figure~\ref{fig:to_reff
 	\label{fig:to_refframes}
 \end{figure}
 
-The set of differential equations are shown in Equations~\ref{eq:to_eom1}~to~\ref{eq:to_eom6}. These are solved using a third order \emph{Adams–Bashforth} (AB3) integrator. This is an explicit, multi-step integration method that can approximate a third order solution using the results from previous integration steps. Since the previous steps need to be known, a forth order \emph{Runge–Kutta} integrator is used for the first four iterations. The main advantage of using an Adams–Bashforth integrator is that the derivatives only need to be evaluated once per integration step while still yielding higher order results, thus improving computational efficiency while minimizing integration errors.
+The set of differential equations are shown in Equation~\ref{eq:to_eom}. These are solved using a third order \emph{Adams–Bashforth} (AB3) integrator. This is an explicit, multi-step integration method that can approximate a third order solution using the results from previous integration steps. Since the previous steps need to be known, a forth order \emph{Runge–Kutta} integrator is used for the first four iterations. The main advantage of using an Adams–Bashforth integrator is that the derivatives only need to be evaluated once per integration step while still yielding higher order results, thus improving computational efficiency while minimizing integration errors.
 
 \begin{align}
-	\dot{x^I_x} &= v^I_x \\ \label{eq:to_eom1}
-	\dot{x^I_y} &= v^I_y \\
-	\dot{v^I_x} &= a^I_x = \frac{F^I_{T_x}}{m}\\
-	\dot{v^I_y} &= a^I_y = \frac{F^I_{T_y}}{m}\\	
-	\dot{m} &= \frac{|F_T|}{gI_{sp}}\\
-	\dot{\theta^I} & \quad \text{(input)}\\ \label{eq:to_eom6}
+	\dot{x^I_x} &= v^I_x & \dot{v^I_x} &= a^I_x = \frac{F^I_{T_x}}{m} \nonumber \\ 
+	\dot{x^I_y} &= v^I_y & \dot{v^I_y} &= a^I_y = \frac{F^I_{T_y}}{m} \label{eq:to_eom} \\
+	\dot{m} &= \frac{|F_T|}{gI_{sp}} & \dot{\theta^I} & \quad \text{(input)} \nonumber		
 \end{align}
 
-The simulation support multi-stage launch vehicles. By default the main control input is the pitch angle rate, $\dot{\theta^I}$, but the simulation includes configurable PID controllers for controlling the pitch and flight path angles.
+The simulation supports multi-stage launch vehicles. By default the main control input is the pitch angle rate, $\dot{\theta^I}$, but the simulation includes configurable PID controllers for controlling the pitch and flight path angles.\newline
 
 \subsection{The environment}
 The vehicle used during this example is a small single stage vehicle incapable of reaching orbit. Instead the goal given to the agent is to maximize the apocynthion during a suborbital flight. The vehicle properties are shown in Table~\ref{tab:to_vehprop}.
@@ -98,15 +104,57 @@ In this environment the simulation is configured to end if the vehicle contacts 
 	R_{t_{end}} = \left[ \frac{h + \frac{v^{E2}_y}{2g}}{4600} \right]^{21}
 \end{equation}
 
-The numerator of the outer division is the vehicle altitude plus the altitude it would be able to ascent with the remaining vertical kinetic energy. This gives an estimate of the apocynthion the vehicle can reach with its current state. This estimate is then divided by the maximum potential apocynthion the vehicle can reach in ideal conditions to get a normalized reward. The reward is then raised to the power of $21$ in order to lower the rewards given at low apocynthions, thus encouraging the agent to manoeuvre to higher apocynthions.
+The numerator of the outer division is the vehicle altitude plus the altitude it would be able to ascent with the remaining vertical kinetic energy. This gives an estimate of the apocynthion the vehicle can reach with its current state. This estimate is then divided by the maximum apocynthion the vehicle can potentially reach in ideal conditions to get a normalized reward. The reward is then raised to the power of $21$ in order to lower the rewards given at low apocynthions, thus encouraging the agent to manoeuvre to higher apocynthions.
 
 The only action available to the agent is a continues pitch rate command between $-1$ and $1$ \si{rad.s^-1}. The observation is a tuple containing $\left(\gamma^E, \theta^E, \frac{h}{1200} \right)$. The altitude is normalized by dividing by $1200$ \si{rad.s^-1}.
 
 The reason why the reward and altitude are normalized is because machine learning libraries tend be optimized or their default hyperparameters are chosen with the assumption that the inputs and outputs are normalized.
 
-\subsection{The agent}
-The agent is implemented using RLib (Liang et al. \ref{liang2017rllib}). RLlib is designed to take advantage of parallel computing and provides a set of primitive abstractions around the different \acrshort{rl} components, thus allowing the use of different machine learning frameworks, learning algorithms, environment, etc. RLlib also prodives implementations for some common \acrshort{rl} algorithms which will be used as a basis during this thesis.
+Furthermore the vehicle's initial position is always on the north pole and the initial velocity is always zero. The initial pitch angle, $\theta^E$ is randomly selected between $[15\deg,165\deg)$.
 
-The agent 
+\subsection{The agent}
+The agent is implemented using RLlib (Liang et al. \cite{liang2017rllib}), a \acrlong{rl} Python library designed to take advantage of parallel computing. It provides a set of primitive abstractions around the different \acrshort{rl} components, thus allowing the use of different machine learning frameworks, learning algorithms, environment, etc. RLlib also contains implementations for common \acrshort{rl} algorithms which will be used as a basis during this thesis.
+
+An actor-critic agent is used in this example. The model consists of a \acrfull{ffnn} with two hidden layers, each containing $32$ neurons. All layers are shared between the policy and value functions and finally the agent is trained using a \acrshort{ppo} trainer following the methods described in Section~\ref{sec:ppo_algo}.
+
+As already mentioned RLlib allows the use of parallel computing to accelerate the training process. For the PPO trainer the setup consists of a central learner process and a set a worker processes that run episodes using the latest model while the central learner is updating the model. After the central learner is done updating the models, the workers are updated with the new model and then the simulation results are send to the central learner to repeat the learning process. 
+
+This allows the agent to learn from a varied set of episodes during each model update, thus increasing the number of visited states and actions, and prevent one "bad" episode to significantly influence the update.
+
+\subsection{PID controller}
+To have something to compare to a controller was developed consisting of a PID outer loop controlling the flight path angle, $\gamma^E$, and sending a reference signal to a PID inner loop controller controlling the pitch angle, $\theta^E$, by sending pitch rate commands to the environment. To maximize the apocynthion the controller is given a constant flight path angle command of $\gamma^E=90^\circ$.
+
+The training processes lasted for $3$ hours, $50$ minutes and $31$ seconds, and ended when the model started outputting $NaN$ values. 
+
+\begin{figure}[ht]			
+	\centering
+	\input{figures/to_pid.tex}			
+	\caption{PID controller.}
+	\label{fig:to_pid}
+\end{figure}
+
+\newpage
+\subsection{Results}
+In total the agent was trained for $2252$ batches, each with on average $12.1$ episodes. Figure~\ref{fig:to_rewards} shows the average reward in each batch and the rewards achieved by agents following the greedy policy after each batch at different initial pitch angles $\theta^E$. The figure also shows the rewards achieved by the PID controller.
+
+\begin{figure}[ht]			
+	\centering
+	\input{figures/model_reward.tex}			
+	\caption{Reward history during training.}
+	\label{fig:to_rewards}
+\end{figure}
+
+Figure~\ref{fig:to_losses} shows the KL-divergence, policy loss and value function loss during each update. As explained in Section~\ref{sec:ppo_algo} the KL-divergence is a measure of difference between two probability distributions, in this case the policies before and after training. The policy and value function losses are the terms corresponding to the policy and value function errors in the objective function being optimized. Together these three values give an indication for when the agent is learning and updating its model.
+
+\begin{figure}[ht]			
+	\centering
+	\input{figures/model_losses.tex}			
+	\caption{KL-divergence, policy and value function losses during training.}
+	\label{fig:to_losses}
+\end{figure}
+
+From the results it is clear that most of the learning happens within the first $500$ batches, after which it remains mostly stagnant. The agent is able to reach and occasionally exceed the reward achieved by the PID controller.
+
+Just after $900$ batches, the greedy agent reward dips down and the value function losses increase. This may be a sign of overfitting, which would also explain why the model returned $NaN$ values on it's last episode.
 
 
