@@ -1,4 +1,3 @@
-\newpage
 \section{Example: Quadrotor guidence law}
 \begin{wrapfigure}{r}{0.3\textwidth}        
     \begin{center}        
@@ -39,7 +38,7 @@ It can also been seen that at low memory the agents prefer to travel to the disa
 	\label{fig:qr_learned_policy}
 \end{figure}
 
-\newpage
+
 \section{Example: Suborbital flight}
 The goals of this example are to develop the simulation and to experiment with the learning methods and libraries that will be used throughout the main thesis project. 
 
@@ -133,7 +132,6 @@ The training processes lasted for $3$ hours, $50$ minutes and $31$ seconds, and 
 	\label{fig:to_pid}
 \end{figure}
 
-\newpage
 \subsection{Results}
 In total the agent was trained for $2252$ batches, each with on average $12.1$ episodes. Figure~\ref{fig:to_rewards} shows the average reward in each batch and the rewards achieved by agents following the greedy policy after each batch at different initial pitch angles $\theta^E$. The figure also shows the rewards achieved by the PID controller.
 
@@ -156,5 +154,3 @@ Figure~\ref{fig:to_losses} shows the KL-divergence, policy loss and value functi
 From the results it is clear that most of the learning happens within the first $500$ batches, after which it remains mostly stagnant. The agent is able to reach and occasionally exceed the reward achieved by the PID controller.
 
 Just after $900$ batches, the greedy agent reward dips down and the value function losses increase. This may be a sign of overfitting, which would also explain why the model returned $NaN$ values on it's last episode.
-
-

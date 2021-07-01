@@ -63,14 +63,13 @@ This thesis proposes the use of \acrfull{rl} as a method to compute closed-loop 
 
 Even if generating optimal trajectories using \acrshort{rl} ends up being unfeasible, it may still be able generate close to optimal trajectories, which may either be acceptable during the preliminary design phase, as a component of an \acrshort{mdo} project, or serve as an initial guess for a more refined optimization algorithm.
 
-The use of \acrshort{rl} in spacecraft guidance, navigation and control opens up the possibilities to solve future problems as space exploration becomes more prevalent. For example thanks to its abilities to generalize and adapt in real time, it may be used in situations that are difficult to forsee or too cumbersome to manually take into account, such as hovering and manoeuvering around the non-uniform, rotating gravitational field of an asteroid, \cite{gaudet2012robust, willis2016reinforcement}, or performing docking operations with non-cooperative target objects in cluttered environments, \cite{hovell2020deep, hovell2021deep, broida2019spacecraft}.
-
+Thus the main research objective and questions for this thesis are:
 
 \emph{“To develop a tool capable of computing large batches of orbital ascent trajectories for a wide range of initial conditions and launcher configurations, by taking advantage of Reinforcement Learning and investigate its effectiveness with respect to existing methods, using metrics such as the accuracy of the results and computational requirements.”}
 
-\textbf{How are orbital ascent trajectories currently optimized?}
+\textbf{How are orbital ascent trajectories currently computed?}
 \begin{itemize}
-  \item What are the challenges faced when optimizing an orbital ascent trajectory?
+  \item What are the challenges faced when computing an orbital ascent trajectory?
   \item What methods are currently used or being researched to solve this problem?
   \item What are the limitations of methods?
 \end{itemize}
@@ -87,6 +86,15 @@ The use of \acrshort{rl} in spacecraft guidance, navigation and control opens up
 \begin{itemize}
   \item What advantages do \acrshort{rl} methods have over existing methods?
   \item What properties of \acrshort{rl} can be used to circumvent the limitations of current orbital ascent trajectory optimization methods?
-  \item Are \acrshort{rl} based orbital ascent trajectory optimization methods capable of achieving the accuracy of existing methods?
+  \item Are \acrshort{rl} based orbital ascent trajectory computation methods capable of achieving the accuracy of existing methods?
+  \item How many times should a trained agent be used to make the use of \acrshort{rl} cost effective.
   \item May these \acrshort{rl} methods be used to compliment or improve the performance of existing methods?
 \end{itemize}
+
+Chapter~2 starts with the theory of behind trajectory optimization and is directly followed by a review of the state of the art methods used in orbital ascent trajectory optimization.
+
+Chapter~3 starts with a history on \acrshort{rl} and continuous with a literature review of latest developments in \acrshort{rl}. This is then followed by several sections explaining the theory behind \acrshort{rl} ending with the more advanced methods that will be used throughout the main thesis project. The chapter then concludes with two examples demonstrating the different methods.
+
+The next chapter contains a review of the state of the art research on \acrshort{rl} in spacecraft guidance, and finally the report is concluded with an overview of research questions and the proposed experiment to be conducted during the main thesis.
+
+The use of \acrshort{rl} in spacecraft guidance, navigation and control opens up the possibilities to solve future problems as space exploration becomes more prevalent. For example thanks to its abilities to generalize and adapt in real time, it may be used in situations that are difficult to forsee or too cumbersome to manually take into account, such as hovering and manoeuvering around the non-uniform, rotating gravitational field of an asteroid, \cite{gaudet2012robust, willis2016reinforcement}, or performing docking operations with non-cooperative target objects in cluttered environments, \cite{hovell2020deep, hovell2021deep, broida2019spacecraft}.

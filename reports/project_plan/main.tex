@@ -102,7 +102,7 @@ Experience replay allows agents to use a replay buffer to remember and reuse exp
 Another way to improve sample efficiency is by trying to apply the largest possible learning updates per experience sample without over stepping. Methods such as Trust Region Policy Optimization (TRPO) and Proximal Policy Optimization (PPO) allow for multiple updates to be performed per experienced sample, while limiting the amount of change within a certain trust region, thus limiting the risk of overstepping, \cite{schulman2015trust, schulman2017proximal}.
 
 Learning from Demonstrations (LfD) where the agents are trained using demonstrations from experts have been shown to be quite effective, specially during the initialization process. For example AlphaGo, \cite{silver2016mastering}, initializes the policy network using supervised learning on data from recorded human experts. Subsequent self-play was then able to improve and eventually achieve super human performance.
-
+% 
 Another approach is that taken by \cite{hester2018deep} to develop Deep Q-learning from Demonstrations (DQfD). DQfD augments the RL agent with a prioritized replay buffer and supervised learning losses to make effective use of the expert demonstrations, while still allowing the agent to learn based on it's own experiences 
 
 \subsection{Reinforcement Learning in spacecraft guidance}

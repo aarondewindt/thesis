@@ -47,7 +47,6 @@
 \gls{dp} refers to a collection of methods used to solve \gls{mdp} problems.
 The main idea of \gls{dp} and \gls{rl} is the use of value functions to organize and structure the search for good policies.
 The optimal policies can easily be found once the optimal value functions $v_*$ or $q_*$ which satisfy the Bellman optimality equations shown below are known.
-\todo{Add reference to the transition probability function explanation in previous chapter.}
 
 \begin{equation}
   \begin{aligned}
@@ -219,7 +218,6 @@ The first step is to learn an action-value function rather than a state-value fu
   Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left [  R_{t+1} + \gamma Q(S_{t+1}, A_{t+1})- Q(S_t, A_t) \right ]
 \end{equation}
 
-\todo{Fix the tuple}
 This update is done after every iteration from a non-terminal state $S_t$. If $S_{t+1}$ is a terminal state, then $Q(S_{t+1}, A_{t+1})$ is defined as zero. This rule uses every element of the quintuple of events, $(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1})$, that make up a transition from one state-action to another. This quintuple gives rise to the name Sarsa for the algorithm.
 
 
@@ -234,8 +232,6 @@ The advantage of this method is that it drastically simplifies the analysis of t
 The disadvantage is that since the action-value function learned is independent of the policy, the agent doesn't take into account the possibility of it taking a non-optimal action.
 
 The following example is used to demonstrate the difference between on and off policy methods. Figure~\ref{fig:on_off_policy} shows a grid world. The agent's task to go from the start (S) block to the goal (G). However if the agent steps on the cliff, the episode will end, it receives a $-100$ reward and is then send back to the start. A $-1$ reward is given to agent each step until it has reached the goal. 
-
-\todo{Update captions}
 
 \begin{figure}[ht]			
 	\centering

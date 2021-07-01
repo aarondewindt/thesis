@@ -4,7 +4,7 @@
 \definecolor{color0}{rgb}{0.886274509803922,0.290196078431373,0.2}
 \definecolor{color1}{rgb}{0.203921568627451,0.541176470588235,0.741176470588235}
 
-\begin{groupplot}[group style={group size=1 by 3}]
+\begin{groupplot}[group style={group size=1 by 3, vertical sep=2cm}]
 \nextgroupplot[
 axis background/.style={fill=white!89.8039215686275!black},
 axis line style={white},
@@ -27,22 +27,11 @@ x grid style={white},
 xmajorgrids,
 xmin=-112.5, xmax=2362.5,
 xtick style={color=white!33.3333333333333!black},
-xtick={-500,0,500,1000,1500,2000,2500},
-xticklabels={\ensuremath{-}500,0,500,1000,1500,2000,2500},
 y grid style={white},
 ymajorgrids,
 ymin=0.000219096788053753, ymax=13.5745207569934,
 ymode=log,
-ytick style={color=white!33.3333333333333!black},
-ytick={1e-06,0.0001,0.01,1,100,10000},
-yticklabels={
-  \(\displaystyle {10^{-6}}\),
-  \(\displaystyle {10^{-4}}\),
-  \(\displaystyle {10^{-2}}\),
-  \(\displaystyle {10^{0}}\),
-  \(\displaystyle {10^{2}}\),
-  \(\displaystyle {10^{4}}\)
-}
+ytick style={color=white!33.3333333333333!black}
 ]
 \addplot [semithick, color0]
 table {%
@@ -4570,8 +4559,6 @@ x grid style={white},
 xmajorgrids,
 xmin=-112.5, xmax=2362.5,
 xtick style={color=white!33.3333333333333!black},
-xtick={-500,0,500,1000,1500,2000,2500},
-xticklabels={\ensuremath{-}500,0,500,1000,1500,2000,2500},
 y grid style={white},
 ymajorgrids,
 ymin=0, ymax=0.025,
@@ -9101,8 +9088,6 @@ x grid style={white},
 xmajorgrids,
 xmin=-112.55, xmax=2363.55,
 xtick style={color=white!33.3333333333333!black},
-xtick={-500,0,500,1000,1500,2000,2500},
-xticklabels={\ensuremath{-}500,0,500,1000,1500,2000,2500},
 y grid style={white},
 ymajorgrids,
 ymin=0, ymax=0.005,
