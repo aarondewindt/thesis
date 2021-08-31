@@ -1,16 +1,154 @@
 \chapter{State of the art}
 
-Research into the use of RL in spacecraft guidance is relatively young. The main characteristics of RL that are of special interest in space guidance is the ability to generalize and autonomously adapt to unknown situations and circumstances that are difficult to forsee or too cumbersome to take into account. This is specially useful for deep space missions due to the unavoidable communication lags which make it difficult for remote human operators to make adjustments in fast changing situations.
+Research into the use of \acrshort{rl} in spacecraft guidance is relatively young. The main characteristics of \acrshort{rl} that are of special interest in space guidance is the ability to generalize and autonomously adapt to unknown situations that are difficult to forsee or too cumbersome to take into account. This is specially useful for deep space missions due to the unavoidable communication lag which make it difficult for remote human operators to make adjustments in fast changing situations.
 
-An example the research by Gaudet and Furfaro \cite{gaudet2012robust} explore the use of RL as a control method for hovering in the non-uniform, rotating gravitational field commonly associated with asteroids. The ability to generalize resulted in robust agents that could accurately hover in environments that where unknown during the policy optimization process. An optical seeker based navigation approach using a single camera and laser range finder was used to accurately estimate the state of the spacecraft with respect to landmarks on the asteroid.
+\section{Asteroid hovering}
+As an example the research by Gaudet and Furfaro \cite{gaudet2012robust} explores the use of RL as a control method for hovering in the non-uniform, rotating gravitational field commonly associated with asteroids. Current methods rely on prior knowledge which can be costly to acquire. The goal was to develop and train an \acrshort{rl} which can accurately hover in unknown environments.
 
-Further development by Willis et al. \cite{willis2016reinforcement} managed to improve the accuracy by an order of magnitude and switched to a more general gravitation model allowing for a wider range of asteroids to be hovered. Additionally the visual sensory system was replaced by one based on optical flow which is better suitable for the future development of landing algorithms based on visual cues.
+A 6-DOF simulation was used, with the asteroids assumed to be rotating tri-axial ellipsoids with varying semi-axes lengths and uniform density. A \acrshort{ann} was used to serve as an estimate of the policy function, with the weights being optimized using a gradient-less stochastic search algorithm. 
 
-More recently Hovell and Ulrich \cite{hovell2020deep, hovell2021deep} and Broida and Linares \cite{broida2019spacecraft} have been developing RL based control system for proximity operation guidance, such during autonomous rendezvous and docking operations. These could be applied in situations such on-orbit servicing, assembly, and debris capture, where the chaser spacecraft may be required to manoeuvre in the proximity of a potentially uncooperative target object while avoiding nearby obstacles in cluttered environments. 
+The ability to generalize resulted in robust agents that could accurately hover in environments that where unknown during the policy optimization process. Figure~\ref{fig:gaudet_hover_results} show a histogram of the maximum steady state error over 1000 simulations in randomly generated environments.
 
-The results by Broida and Linares \cite{broida2019spacecraft} where promising and later results \cite{hovell2021deep} successfully demonstrated rendezvous operation around rotating targets with a nearby obstacle.
+\begin{figure}[h]    
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/rl_hover_results}
+    \caption{Histogram of the maximum norm of the position error over 1000 simulations in meters.\cite{gaudet2012robust}}
+    \label{fig:gaudet_hover_results}
+\end{figure}
 
-Gaudet et al. \cite{gaudet2018deep} propose the use of a PPO RL agent for planetary powered decent and landing. Future space missions will require spacecraft to target specific locations on the surface. The aim of this research is to develop a landing system that can land within a few meters from its target.
-The agent was trained on a 6-DOF Mars landing simulation, and results demonstrated that the goal to achieve pin-point accuracy was reached.
+To further test the agent the worst result was simulated to a total simulation time of 10 hours. The maximum deviation from the target position remained unchanged during this longer simulation.
 
-RL has also been successfully demonstrated to be a suitable tool for developing control systems for efficient orbital change manoeuvre with low-thrust spacecraft, including for interplanetary trajectories. \cite{kolosa2019reinforcement, zavoli2020reinforcement, miller2020low} 
+Gaudet and Furfaro also implemented a linear proportional and derivative (PD) controller with adaptive gains produces by a trained \acrshort{rl} agent. The maximum steady state error increased from 0.345~\si{m} to 1.819~\si{m} and had the tendency to overshoot more often the pure \acrshort{rl} solution.
+
+For comparison a \acrfull{lqr} controller was implemented. The steady errors where similar to that of the \acrshort{rl} controller, but the transient response exhibited more oscillations. This is likely due tot he fact that the information about the environments dynamics was contained in the system matrix used to design the LQR.
+
+Finally A simulation batch was run using a polyhedron shape of the asteroid Itokawa while varying the initial distance from the target position. The RL controller performed better than with the randomly generated asteroids by showing a maximum steady state error of only 0.0310~\si{m}.
+
+Further development by Willis et al. \cite{willis2016reinforcement} managed to improve the accuracy by an order of magnitude by changing the optimization method to \acrfull{pso}. A more general gravitation model was also used allowing for a wider range of asteroids to be simulated. 
+
+\section{Proximity operation guidance}
+More recently Hovell and Ulrich \cite{hovell2020deep, hovell2021deep} and Broida and Linares \cite{broida2019spacecraft} have been developing RL based control system for proximity operation guidance, such as during autonomous rendezvous and docking operations. These could be applied in situations such in-orbit servicing, assembly, and debris capture, where the chaser spacecraft may be required to manoeuvre in the proximity of a potentially uncooperative target object while avoiding nearby obstacles in cluttered environments. 
+
+Broida and Linares simulated relative orbits using \acrfull{cw} dynamics to train the agent using \acrshort{ppo} in two canonical satellite docking scenarios, the R-bar and V-bar approaches. The environment also included a keep-out zone to protect against collisions, and during final testing stochastic disturbances where added to demonstrate the robustness of the trained policy. Figure~\ref{fig:pog_res1} shows the keep out zone and a set trajectories taken by the fully trained agent.
+
+\begin{figure}[h]    
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/pog_res1.png}
+    \caption{Plotted here are 100 fully trained trajectories for both the V-bar and R-bar approaches \cite{broida2019spacecraft}.}
+    \label{fig:pog_res1}
+\end{figure}
+
+
+% \begin{figure}[h]    
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{figures/pog_res2.png}
+%     \caption{ Plotted here are the translational state components of 100 trained trajectories from both approaches \cite{broida2019spacecraft}.}
+%     \label{fig:pog_res2}
+% \end{figure}
+
+During testing the agent managed to close the distance with a final state error in the order of a few centimeters. The agent also learned to avoid the keep-out zone and successfully avoided it all simulated test cases. Broida and Linares conclude that the results are promising, and that further research could continue towards more complex problems.
+
+Hovell and Ulrich \cite{hovell2020deep} simulate on a planar environment. The agent is tasked to first navigate the chaser spacecraft to a safe hold point, before approaching the target for docking. Figure~\ref{fig:pog_res3} shows a diagram with an example initial position and the target hold and docking points.
+
+\begin{figure}[h!]    
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/pog2_1.png}
+    \caption{Sample spacecraft pose tracking and docking task. \cite{hovell2020deep}.}
+    \label{fig:pog_res3}
+\end{figure}
+
+D4PG, an actor-critic \acrshort{rl} learning method, was used to train the agent to dock with both stationary and rotating targets. In both cases the trained agent managed to consistently complete its tasks accurately during final testing.
+
+To validate the results a practical experiment was also performed. In the experiment the environment was modelled by two air-bearing spacecraft platforms operating on a granite surface to reduce the friction to negligible levels and the spacecraft where actuated by small cold gas thrusters. The results of the experiment matched the simulated results, thus demonstrating the proposed technique on real world system.
+
+During further research, Hovell and Ulrich \cite{hovell2021deep} repeated the same simulated and practical experiments but included a stationary obstacle the agent would have to avoid. In all cases the agent was able to successfully rendezvous with the target spacecraft without colliding with the obstacle.
+
+\section{Precision planetary powered landing}
+Gaudet et al. \cite{gaudet2018deep} propose the use of a \acrshort{ppo} \acrshort{rl} agent for planetary powered decent and landing. Future interplanetary space missions will require spacecraft to target specific locations on the surface. The aim of this research is to develop a landing system that can land within a few meters from its target.
+The agent was trained on a 6-DOF Mars landing simulation, and results demonstrated that the goal to achieve pin-point accuracy was reached. Figure~\ref{fig:rl_ip_results} shows the touchdown statistics for 10000 episodes with the trained agent.
+
+\begin{figure}[h]    
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/rl_ip_results.png}
+    \caption{Touchdown statistics \cite{gaudet2018deep}}
+    \label{fig:rl_ip_results}
+\end{figure}
+
+\section{Low-thrust spacecraft orbital change manoeuvre}
+Ion thrusters are capable of achieving specific impulses an order of magnitude higher than chemical thrusters, thus resulting in much more efficient propulsion systems ideal for performing orbital change maneuvers. However the thrust force produced by ion thrusters are several orders of magnitude lower. This means that maneuvers using ion thrusters consist of long continues burn and control times which cannot be approximated by instantaneous changes in the velocity as its done with chemical thrusters. This problem is further complicated when including multi-body dynamics, such as while flying through the solar system.
+
+Several researchers have successfully demonstrated the use of \acrshort{rl} as a suitable tool for developing control systems for efficient orbital change maneuvers with low-thrust spacecraft, including interplanetary trajectories \cite{kolosa2019reinforcement, zavoli2020reinforcement, miller2020low}. 
+
+Zavoli and Federici \cite{zavoli2020reinforcement} 
+
+
+Miller~\cite{miller2020low} starts with a Earth-Mars Mass-Optimal transfer with the dynamics being modeled by a two body problem in the sun-centered inertial frame. Each episode was split in 22 time steps in which the agent is given the chance to adjust the controls. The first case used a fixed time step, while the second case used variable time steps controlled by the \acrshort{rl} agent.
+
+As a reference the trajectory was also optimized using the \acrfull{emtg} high-fidelity \acrfull{psfb} mode. The initial conditions for the \acrshort{rl} simulations where also taken from the \acrshort{emtg} results.
+
+Figures~\ref{fig:emt_1_1}~end~\ref{fig:emt_1_2} show the results for the fixed time-step case. In this case the agent is able to reach the destination, but it ends up consuming more propellant than the reference trajectory. However if the agent is allowed to vary the timestep it is able to prioritize the moments in time in which to make more adjustments, and improve it's efficiency beyond that achieved with \acrshort{emtg} as shown in Figures~\ref{fig:emt_2_1}~and~\ref{fig:emt_2_2}.
+
+\begin{figure}[h]    
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/lt_1_1.png}
+    \caption{Earth-Mars trajectory with fixed timestep \cite{miller2020low}}
+    \label{fig:emt_1_1}
+\end{figure}
+
+\begin{figure}[h]    
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/lt_1_3.png}
+    \caption{Earth-Mars mission mass history with fixed timestep \cite{miller2020low}}
+    \label{fig:emt_1_2}
+\end{figure}
+
+\begin{figure}[h]    
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/lt_1_4.png}
+    \caption{Earth-Mars trajectory with variable timestep \cite{miller2020low}}
+    \label{fig:emt_2_1}
+\end{figure}
+
+\begin{figure}[h]    
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/lt_1_6.png}
+    \caption{Earth-Mars mission mass history with variable timestep \cite{miller2020low}}
+    \label{fig:emt_2_2}
+\end{figure}
+
+The following experiment by Miller~\cite{miller2020low} consisted of an agent who's goal was to correct perturbations during transfers between lunar Lyapunov orbits using precalculated reference trajectories. To do this the system was modeled using a planar \acrfull{cr3bp} and the agent was trained using a reference transfer trajectory from $L_1$ to $L_2$ on a path that remained far from the moon. 
+
+The performance was then evaluated using new trajectories that the agent had not seen before: an $L_1$ to $L_2$ transfer with a close pass of the moon, a $L_2$ to $L_1$ remaining far from the moon and a $L_2$ to $L_1$ with a close lunar pass. This was to determine the agent's ability to generalize the solution to many variants of the same problem. The reference trajectories are showed in Figure~\ref{fig:llt_1}.
+
+The error levels were defined to be 10x, 100x and 1000x than what can be reasonably expected according to Guzzetti \emph{et. al.} \cite{guzzetti2017stationkeeping}. Table\ref{tab:mcrqpwkd} shows the results of Monte Carlo simulation batches, each consisting of $10000$ episodes.
+
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/llt_1.png}
+    \caption{Reference trajectories \cite{miller2020low}}
+    \label{fig:llt_1}
+\end{figure}
+
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{| c | c | c | c | c |} 
+        \hline
+        Error Level & Reference 1 & Reference 2 & Reference 3 & Reference 4 \\ \hline
+        10x & 99.83\% & 99.15\% & 90.61\% & 99.22\% \\ \hline
+        100x & 99.72\% & 99.07\% & 89.68\% & 99.20\% \\ \hline
+        1000x & 99.09\% & 97.49\% & 87.65\% & 99.02\% \\ \hline      
+    \end{tabular}
+    \caption{Monte Carlo Results \cite{miller2020low}}
+    \label{tab:mcrqpwkd}
+\end{table}
+
+The agent performed nearly perfect for simulations following the Reference~1 trajectory, by completing the transfer successfully on more than $99\%$ of episodes. Simulations following the close lunar pass showed a slight decrease in performance, but where also able to complete the task in the vast majority of cases, only having a $97.49\%$ success rate at the largest error level.
+
+The agent was less successful in following the reverse trajectories Reference~3~and~4. The agent applied higher thrust levels compared to the Reference~1~and~2 trajectories, which is a sign that the agent may not have mastered these transfers. However the agent was still consistently completing the transfers successful, showing a nearly perfect success rate for Reference~4 trajectories.
+
+
+
+
+

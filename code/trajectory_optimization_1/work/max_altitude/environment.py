@@ -17,7 +17,7 @@ default_config = {
     "surface_diameter": 1737.4e3,
     "mu": 4.9048695e12,
     "stages": (
-        Stage(
+        Stage( 
             dry_mass=1,
             propellant_mass=0.2,
             specific_impulse=80,
