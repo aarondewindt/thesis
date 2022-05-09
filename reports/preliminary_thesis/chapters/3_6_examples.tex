@@ -38,7 +38,7 @@ It can also been seen that at low memory the agents prefer to travel to the disa
 	\label{fig:qr_learned_policy}
 \end{figure}
 
-
+\newpage
 \section{Example: Suborbital flight}
 The goals of this example are to develop the simulation and to experiment with the learning methods and libraries that will be used throughout the main thesis project. 
 
@@ -121,9 +121,7 @@ As already mentioned RLlib allows the use of parallel computing to accelerate th
 This allows the agent to learn from a varied set of episodes during each model update, thus increasing the number of visited states and actions, and prevent one "bad" episode to significantly influence the update.
 
 \subsection{PID controller}
-To have something to compare to a controller was developed consisting of a PID outer loop controlling the flight path angle, $\gamma^E$, and sending a reference signal to a PID inner loop controller controlling the pitch angle, $\theta^E$, by sending pitch rate commands to the environment. To maximize the apocynthion the controller is given a constant flight path angle command of $\gamma^E=90^\circ$.
-
-The training processes lasted for $3$ hours, $50$ minutes and $31$ seconds, and ended when the model started outputting $NaN$ values. 
+To have something to compare to a controller was developed consisting of a PID outer loop controlling the flight path angle, $\gamma^E$, and sending a reference signal to a PID inner loop controller controlling the pitch angle, $\theta^E$, by sending pitch rate commands to the environment. To maximize the apocynthion the controller is given a constant flight path angle reference of $\gamma^E=90^\circ$.
 
 \begin{figure}[ht]			
 	\centering
@@ -133,7 +131,7 @@ The training processes lasted for $3$ hours, $50$ minutes and $31$ seconds, and 
 \end{figure}
 
 \subsection{Results}
-In total the agent was trained for $2252$ batches, each with on average $12.1$ episodes. Figure~\ref{fig:to_rewards} shows the average reward in each batch and the rewards achieved by agents following the greedy policy after each batch at different initial pitch angles $\theta^E$. The figure also shows the rewards achieved by the PID controller.
+The training processes lasted for $3$ hours, $50$ minutes and $31$ seconds, and ended when the model started outputting $NaN$ values. In total the agent was trained for $2252$ batches, each with on average $12.1$ episodes. Figure~\ref{fig:to_rewards} shows the average reward in each batch and the rewards achieved by agents following the greedy policy after each batch at different initial pitch angles $\theta^E$. The figure also shows the rewards achieved by the PID controller.
 
 \begin{figure}[ht]			
 	\centering
@@ -154,3 +152,16 @@ Figure~\ref{fig:to_losses} shows the KL-divergence, policy loss and value functi
 From the results it is clear that most of the learning happens within the first $500$ batches, after which it remains mostly stagnant. The agent is able to reach and occasionally exceed the reward achieved by the PID controller.
 
 Just after $900$ batches, the greedy agent reward dips down and the value function losses increase. This may be a sign of overfitting, which would also explain why the model returned $NaN$ values on it's last episode.
+
+
+\subsection{Conclusion}
+During the development of this experiment is became clear that the main challenges are the tuning of hyperparameters, reward function selection and limited computational resources. Thanks to the use of \acrshort{ppo} the number of hyperparameters requiring tuning is minimal and it is mainly the model structure that needs to be tuned. 
+
+Selecting an appropriate reward function is important. For both the problem in this example and the main thesis the performance of a specific episode is only known at the end of each episode. This makes it difficult for the agent to learn, since it only receives a positive reward if it achieves the desired end state by chance.
+
+In this example this issue was solved by giving the agent a small but positive reward to guide it towards the goal. Once close to the goal, the reward is increased by a few orders of magnitude, thus teaching the agent its main goal. This is a form of \emph{reward shaping}, where the agent is trained by learning intermediate goals leading towards the main goal using prior knowledge of the environment.
+
+This solution may not neccesarally be appropriate for the main thesis problem since this prior knowledge is not available when it comes to orbital ascent trajectories, thus a different solution for the sparse reward is required.
+
+
+ 

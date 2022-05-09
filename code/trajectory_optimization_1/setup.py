@@ -8,9 +8,6 @@ with open(ver_path) as ver_file:
     exec(ver_file.read(), ns)
     version = ns['version']
 
-with open('requirements.txt') as f:
-    required = f.read().splitlines()
-
 setup(
     name='traj1',
     version=ns['version'],
@@ -18,7 +15,7 @@ setup(
     author='Aaron de Windt',
     author_email='aaron.dewindt@gmail.com',
     url='https://github.com/aarondewindt/thesis',
-    install_requires=required,
+    install_requires=[],
     packages=find_packages('.'),
     package_data={},
     classifiers=[

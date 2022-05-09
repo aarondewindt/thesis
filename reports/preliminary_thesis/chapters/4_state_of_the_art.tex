@@ -1,9 +1,9 @@
-\chapter{State of the art}
+\chapter{State of the art Reinforcement Learning space applications}
 
 Research into the use of \acrshort{rl} in spacecraft guidance is relatively young. The main characteristics of \acrshort{rl} that are of special interest in space guidance is the ability to generalize and autonomously adapt to unknown situations that are difficult to forsee or too cumbersome to take into account. This is specially useful for deep space missions due to the unavoidable communication lag which make it difficult for remote human operators to make adjustments in fast changing situations.
 
 \section{Asteroid hovering}
-As an example the research by Gaudet and Furfaro \cite{gaudet2012robust} explores the use of RL as a control method for hovering in the non-uniform, rotating gravitational field commonly associated with asteroids. Current methods rely on prior knowledge which can be costly to acquire. The goal was to develop and train an \acrshort{rl} which can accurately hover in unknown environments.
+As an example the research by Gaudet and Furfaro \cite{gaudet2012robust} explores the use of RL as a control method for hovering in the non-uniform, rotating gravitational field commonly associated with asteroids. Current methods rely on prior knowledge which can be costly to acquire. The goal was to develop and train an \acrshort{rl} agent which can accurately hover in unknown environments.
 
 A 6-DOF simulation was used, with the asteroids assumed to be rotating tri-axial ellipsoids with varying semi-axes lengths and uniform density. A \acrshort{ann} was used to serve as an estimate of the policy function, with the weights being optimized using a gradient-less stochastic search algorithm. 
 
@@ -79,21 +79,24 @@ Ion thrusters are capable of achieving specific impulses an order of magnitude h
 
 Several researchers have successfully demonstrated the use of \acrshort{rl} as a suitable tool for developing control systems for efficient orbital change maneuvers with low-thrust spacecraft, including interplanetary trajectories \cite{kolosa2019reinforcement, zavoli2020reinforcement, miller2020low}. 
 
-Zavoli and Federici \cite{zavoli2020reinforcement} 
+Zavoli and Federici \cite{zavoli2020reinforcement} investigate the use of \acrshort{rl} as a method to design robust interplanetary trajectory guidance laws that can compensate for severe disturbances, observation noise, actuation errors, errors on thrust magnitude and direction and missed thrust events. To do this a \acrshort{ppo} agent to taught perform a Earth-Mars minimum-fuel transfer.
 
+When training the agent to solve a deterministic optimal trajectory two main issues arose. Terminal constraints cannot be explicitly accounted for, instead violations can only be introduced in the reward function. As a result, the agent may violate these constraints more often compared to traditional methods for solving optimal control problems. The second issue is that \acrshort{rl} is quite computationally intensive.  Despite these shortcomings the solution found by the \acrshort{rl} agent was in agreement to the optimal solution provided by an indirect method.
 
-Miller~\cite{miller2020low} starts with a Earth-Mars Mass-Optimal transfer with the dynamics being modeled by a two body problem in the sun-centered inertial frame. Each episode was split in 22 time steps in which the agent is given the chance to adjust the controls. The first case used a fixed time step, while the second case used variable time steps controlled by the \acrshort{rl} agent.
+Several stochastic scenarios where also considered by applying one type of disturbance in each scenario to train separate policies. The \acrshort{rl} agents where able to achieve high success rates in all scenarios. When the agent trained in the unperturbed deterministic scenario was tested in the stochastic scenarios, it failed to reach the target in all cases.
+
+Miller~\cite{miller2020low} starts with a Earth-Mars minimum-fuel transfer with the dynamics being modeled by a two body problem in the sun-centered inertial frame. Each episode was split in 22 time steps in which the agent is given the chance to adjust the controls. The first case used a fixed time step, while the second case used variable time steps controlled by the \acrshort{rl} agent.
 
 As a reference the trajectory was also optimized using the \acrfull{emtg} high-fidelity \acrfull{psfb} mode. The initial conditions for the \acrshort{rl} simulations where also taken from the \acrshort{emtg} results.
 
-Figures~\ref{fig:emt_1_1}~end~\ref{fig:emt_1_2} show the results for the fixed time-step case. In this case the agent is able to reach the destination, but it ends up consuming more propellant than the reference trajectory. However if the agent is allowed to vary the timestep it is able to prioritize the moments in time in which to make more adjustments, and improve it's efficiency beyond that achieved with \acrshort{emtg} as shown in Figures~\ref{fig:emt_2_1}~and~\ref{fig:emt_2_2}.
+Figure~\ref{fig:emt_1_2} shows the results for the fixed time-step case. In this case the agent is able to reach the destination, but it ends up consuming more propellant than the reference trajectory. However if the agent is allowed to vary the timestep it is able to prioritize the moments in time in which to make more adjustments, and improve it's efficiency beyond that achieved with \acrshort{emtg} as shown in Figure~\ref{fig:emt_2_2}.
 
-\begin{figure}[h]    
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/lt_1_1.png}
-    \caption{Earth-Mars trajectory with fixed timestep \cite{miller2020low}}
-    \label{fig:emt_1_1}
-\end{figure}
+% \begin{figure}[h]    
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{figures/lt_1_1.png}
+%     \caption{Earth-Mars trajectory with fixed timestep \cite{miller2020low}}
+%     \label{fig:emt_1_1}
+% \end{figure}
 
 \begin{figure}[h]    
     \centering
@@ -102,12 +105,12 @@ Figures~\ref{fig:emt_1_1}~end~\ref{fig:emt_1_2} show the results for the fixed t
     \label{fig:emt_1_2}
 \end{figure}
 
-\begin{figure}[h]    
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/lt_1_4.png}
-    \caption{Earth-Mars trajectory with variable timestep \cite{miller2020low}}
-    \label{fig:emt_2_1}
-\end{figure}
+% \begin{figure}[h]    
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{figures/lt_1_4.png}
+%     \caption{Earth-Mars trajectory with variable timestep \cite{miller2020low}}
+%     \label{fig:emt_2_1}
+% \end{figure}
 
 \begin{figure}[h]    
     \centering

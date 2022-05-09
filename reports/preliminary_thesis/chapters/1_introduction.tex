@@ -43,58 +43,54 @@
      - Thesis plan of attack
 
 \end{comment}
-Thanks to advancements in technology and an increasingly widespread use of satellite services, demand for space access has been steadily rising the past decades. This growth in the satellite launch services market has lead to the development of new launchers by both government agencies and an emerging private sector. 
+As we delve deeper into our solar system it becomes increasingly difficult to navigate and control in the new uncharted worlds we are sending our spacecraft to. The non-uniform gravitational fields of asteroids, unexplored atmospheres, unexpected obstacles, unknown disturbances and unforeseen problems will all pose a challenge as deep space exploration missions become more ambitious.
 
-One often overlooked, but crucial step during the design process of any product is the performance evaluation of proposed designs. This is the process of determining a products ability to meet the design requirements. Too low of a performance, and the product will not be able to fullfil its purpose. To high of a performance and the product may be over engineered or inefficient.
+If new, farther, more complex environments are to be explored in the future, spacecraft will need to become more autonomous and less reliant on ground personnel on Earth. Unknown problems requiring immediate solutions will need to be dealt with without human intervention because of the communication lags imposed by the physical limits of the speed of light. As an example this thesis investigates guidance and navigation of an orbital launch vehicle through an unfamiliar atmosphere.
 
-In the case of a launcher the performance may be measured by how much payload mass it can bring to it's target range of orbits. In other words, in order to maximize the performance of a launcher, the propellant mass fraction of the upper stage needs to be reduced.
+A successful orbital insertion requires the launcher to carefully follow an optimized trajectory. This trajectory has a massive effect on the performance of the launcher, but unfortunately finding the optimal trajectory is not trivial. This problem falls under what is known as optimal control, a class of problems where the goal is to design a controller that optimizes a performance measure of a dynamical system's behavior through time, \cite{sutton2018reinforcement, betts2010practical}. 
 
-A successful orbital insertion requires the launcher to carefully follow an optimized trajectory. This trajectory has a massive effect on the maximum performance of the launcher, but unfortunately finding the optimal trajectory is not a trivial. This problem falls under what is known as optimal control, a class of problems where the goal is to design a controller that optimizes a performance measure of a dynamical system's behavior over time, \cite{sutton2018reinforcement, betts2010practical}. 
+A commonly used class of methods to compute orbital ascent trajectories is trajectory optimization. This is a set of mathematical techniques used to find the desired behavior of a dynamic system by finding the inputs as a function of time, \cite{betts2010practical, kelly2017introduction}. 
 
-A commonly used class of methods to compute orbital ascent trajectories is trajectory optimization. This is a set of mathematical techniques used to find the desired behavior of a dynamic system by finding the inputs as a function of time, \cite{betts2010practical, kelly2017introduction}. Trajectory optimization can be split in two groups, indirect and direct methods.
+Using these methods to compute orbital ascent trajectories is computationally intensive and only yields open loop solutions for one particular trajectory. This is not an issue for normal launch operations on Earth, but it may not provide suitable solution when the flight conditions change, are different than unexpected or an unknown issue is encountered.
 
-Indirect methods are more commonly used when computing orbital ascent trajectories, \cite{von1992direct}, due to their higher accuracy, but some direct methods have also been proposed, \cite{roh2002trajectory, jamilnia2012simultaneous, coverstone1994optimal}. More recently heuristic optimization methods, such as \acrfull{pso} and \acrfull{ga}, have been proposed in order to circumvent the initialization issues associated with indirect methods, \cite{pontani2014simple, zheng2020ascent}.
-
-Using any of these methods to compute orbital ascent trajectories is computationally intensive and only yields open loop solutions for one particular trajectory. This is not an issue when calculating the trajectory for a launch during normal operations, but it is during the design process of a launch vehicle. 
-
-A fast method to get a large number of trajectories is desired during the design process in order to, for example perform a sensitivity analyses on the design parameters, incorporate the trajectory solver into a larger \acrfull{mdo} project, or continuously evaluate and monitor the feasibility of a changing design. 
-
-This thesis proposes the use of \acrfull{rl} as a method to compute closed-loop solutions for orbital ascent trajectory problems. With enough training an \acrshort{rl} agent is able to learn to solve complex and non-linear problems. Thus the goal is to develop an \acrshort{rl} agent that is able to compute optimal trajectories for a wide range of initial states and launcher configurations within a single simulation run.
-
-Even if generating optimal trajectories using \acrshort{rl} ends up being unfeasible, it may still be able generate close to optimal trajectories, which may either be acceptable during the preliminary design phase, as a component of an \acrshort{mdo} project, or serve as an initial guess for a more refined optimization algorithm.
+This thesis proposes the use of \acrfull{rl} as a method to compute closed-loop solutions for orbital ascent trajectory problems. With enough training an \acrshort{rl} agent is able to learn to solve complex and non-linear problems. Thus the goal is to develop an \acrshort{rl} agent that is able to compute orbital accent trajectories for a wide range of initial states, atmospheric conditions, launcher configurations and with the capability to generalize and successfully guide the launcher even through unknown environments.
 
 Thus the main research objective and questions for this thesis are:
 
-\emph{“To develop a tool capable of computing large batches of orbital ascent trajectories for a wide range of initial conditions and launcher configurations, by taking advantage of Reinforcement Learning and investigate its effectiveness with respect to existing methods, using metrics such as the accuracy of the results and computational requirements.”}
+% \emph{“To develop a tool capable of computing large batches of orbital ascent trajectories for a wide range of initial conditions and launcher configurations, by taking advantage of Reinforcement Learning and investigate its effectiveness with respect to existing methods, using metrics such as the accuracy of the results and computational requirements.”}
+
+% \emph{“To develop and train a Reinforcement Learning agent such that it provides a closed-loop orbital accent guidance law capable of generalizing beyond explored environments and compensate for unknown disturbances.”}
+
+\emph{“To obtain a closed-loop orbital accent guidance law capable of generalizing beyond explored environments and compensate for unknown disturbances using Reinforcement Learning .”}
+
 
 \textbf{How are orbital ascent trajectories currently computed?}
-\begin{itemize}
+\begin{enumerate}
   \item What are the challenges faced when computing an orbital ascent trajectory?
   \item What methods are currently used or being researched to solve this problem?
   \item What are the limitations of methods?
-\end{itemize}
+\end{enumerate}
 
 \textbf{What is \acrlong{rl}?}
-\begin{itemize}
+\begin{enumerate}
   \item How does \acrshort{rl} work?
   \item What is \acrshort{rl} capable of?
   \item How has \acrshort{rl} been used so far?
   \item What state of the art technological developments make use of \acrshort{rl}?
-\end{itemize}
+\end{enumerate}
 
 \textbf{How can \acrlong{rl} methods be used to solve the orbital ascent trajectory opti­mization problem?}
-\begin{itemize}
+\begin{enumerate}
   \item What advantages do \acrshort{rl} methods have over existing methods?
   \item What properties of \acrshort{rl} can be used to circumvent the limitations of current orbital ascent trajectory optimization methods?
   \item Are \acrshort{rl} based orbital ascent trajectory computation methods capable of achieving the accuracy of existing methods?
-  \item How many times should a trained agent be used to make the use of \acrshort{rl} cost effective.
-  \item May these \acrshort{rl} methods be used to compliment or improve the performance of existing methods?
-\end{itemize}
+  \item Is an \acrshort{rl} based closed-loop solution able to outperform a precomputed open-loop solution in case of unknown disturbances or errors in the training models.
+\end{enumerate}
 
 Chapter~2 starts with the theory of behind trajectory optimization and is directly followed by a review of the state of the art methods used in orbital ascent trajectory optimization.
 
-Chapter~3 starts with a history on \acrshort{rl} and continuous with a literature review of latest developments in \acrshort{rl}. This is then followed by several sections explaining the theory behind \acrshort{rl} ending with the more advanced methods that will be used throughout the main thesis project. The chapter then concludes with two examples demonstrating the different methods.
+Chapter~3 continuous with a history on \acrshort{rl} followed by a literature review of latest developments in \acrshort{rl}. This is then followed by several sections explaining the theory behind \acrshort{rl} ending with the more advanced methods that will be used throughout the main thesis project. The chapter then concludes with two examples demonstrating the different methods.
 
 The next chapter contains a review of the state of the art research on \acrshort{rl} in spacecraft guidance, and finally the report is concluded with an overview of research questions and the proposed experiment to be conducted during the main thesis.
 
-The use of \acrshort{rl} in spacecraft guidance, navigation and control opens up the possibilities to solve future problems as space exploration becomes more prevalent. For example thanks to its abilities to generalize and adapt in real time, it may be used in situations that are difficult to forsee or too cumbersome to manually take into account, such as hovering and manoeuvering around the non-uniform, rotating gravitational field of an asteroid, \cite{gaudet2012robust, willis2016reinforcement}, or performing docking operations with non-cooperative target objects in cluttered environments, \cite{hovell2020deep, hovell2021deep, broida2019spacecraft}.
+The use of \acrshort{rl} in spacecraft guidance, navigation and control opens up the possibilities to solve future problems as space exploration becomes more prevalent. For example thanks to its abilities to generalize and adapt in real time, it may be used in situations that are difficult to forsee or too cumbersome to manually take into account, such as hovering and manoeuvering around the non-uniform, rotating gravitational field of an asteroid, \cite{gaudet2012robust, willis2016reinforcement}, performing docking operations with non-cooperative target objects in cluttered environments, \cite{hovell2020deep, hovell2021deep, broida2019spacecraft}, or achieving precision planetary powered decent and landing on Earth, Mars and beyond \cite{gaudet2018deep}.

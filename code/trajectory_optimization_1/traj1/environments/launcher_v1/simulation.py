@@ -9,6 +9,7 @@ from numba.experimental import jitclass
 
 from cw.constants import g_earth
 from cw.control import PIDScalarNumba
+from cw.astrodynamics import cartesian_to_kepler_no_anomalies_2d
 from ..integrators import AB3Integrator
 
 
@@ -47,6 +48,7 @@ sim_spec = (
     ("initial_longitude", nb.float64),
     ("initial_altitude", nb.float64),
     ("initial_theta_e", nb.float64),
+    ("initial_vie", nb.types.Array(nb.float64, 1, "C")),
     ("end_at_apogee", nb.boolean),
     ("end_at_ground", nb.boolean),
     ("end_at_burnout", nb.boolean),
@@ -81,6 +83,8 @@ sim_spec = (
     ("gamma_i", nb.float64),
     ("gamma_e", nb.float64),
     ("longitude", nb.float64),
+    ("semi_major_axis", nb.float64),
+    ("eccentricity", nb.float64),
     ("reward", nb.float64),
     ("score", nb.float64),
     ("done", nb.boolean),
@@ -129,7 +133,8 @@ class Simulation:
                  controller_theta_dot_limits: Tuple[float, float],
                  end_at_apogee: bool,
                  end_at_ground: bool,
-                 end_at_burnout: bool):
+                 end_at_burnout: bool,
+                 initial_vie: Tuple[float, float]):
 
         self.integrator = AB3Integrator(dt, 7)
 
@@ -149,6 +154,7 @@ class Simulation:
         self.initial_longitude = initial_longitude
         self.initial_altitude = initial_altitude
         self.initial_theta_e = initial_theta_e
+        self.initial_vie = np.array(initial_vie, dtype=np.float64)
 
         self.end_at_apogee = end_at_apogee
         self.end_at_ground = end_at_ground
@@ -185,6 +191,9 @@ class Simulation:
         self.gamma_i: float = nan
         self.gamma_e: float = nan
         self.longitude: float = nan
+
+        self.semi_major_axis = nan
+        self.eccentricity = nan
 
         self.reward: float = nan
         self.score: float = nan
@@ -248,15 +257,18 @@ class Simulation:
         self.theta_i = -hpi + self.initial_longitude + self.initial_theta_e
         self.theta_i_dot = 0.0
 
+        self.tei = np.array(((-sin(self.initial_longitude), cos(self.initial_longitude)),
+                             (cos(self.initial_longitude), sin(self.initial_longitude))), dtype=np.float64)
+
+        self.vii = self.tei.T @ self.initial_vie
+
         initial_r = self.initial_altitude + self.surface_diameter
-        self.vii = np.array((0, 0), dtype=np.float64)
         self.xii = np.array([
             cos(self.initial_longitude) * initial_r,
             sin(self.initial_longitude) * initial_r
         ])
 
-        self.tei = np.array(((-sin(self.initial_longitude), cos(self.initial_longitude)),
-                             (cos(self.initial_longitude), sin(self.initial_longitude))), dtype=np.float64)
+        self.semi_major_axis, self.eccentricity = cartesian_to_kepler_no_anomalies_2d(self.xii, self.vii, self.mu)
 
         self.reward = 0
         self.score = 0
@@ -395,6 +407,8 @@ class Simulation:
                     s.stage_ignitions_left = self.current_stage[4]
 
         s.aii = s.gii + s.fii_thrust / s.mass
+
+        self.semi_major_axis, self.eccentricity = cartesian_to_kepler_no_anomalies_2d(self.xii, self.vii, self.mu)
 
         if self.end_at_apogee:
             if self.vie[1] <= -0.1:

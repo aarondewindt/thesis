@@ -63,7 +63,16 @@ class LauncherV1(gym.Env):
                  controller_theta_dot_limits: Tuple[float, float],
                  end_at_apogee: bool,
                  end_at_ground: bool,
-                 end_at_burnout: bool):
+                 end_at_burnout: bool,
+                 initial_vie: Sequence[float]):
+
+        if initial_vie is None:
+            initial_vie = (0, 0)
+        else:
+            initial_vie = tuple(initial_vie)
+
+        print(initial_vie)
+
         self.action_space = gym.spaces.Tuple((
             gym.spaces.Discrete(2),  # Engine command
             gym.spaces.Discrete(2),  # Drop stage command
@@ -88,6 +97,7 @@ class LauncherV1(gym.Env):
             end_at_apogee=end_at_apogee,
             end_at_ground=end_at_ground,
             end_at_burnout=end_at_burnout,
+            initial_vie=tuple(initial_vie)
         )
 
         self.reset()

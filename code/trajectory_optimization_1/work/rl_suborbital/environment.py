@@ -59,7 +59,8 @@ class LauncherV1SubOrbital(LauncherV1):
             controller_theta_dot_limits=self.config["controller_theta_dot_limits"],
             end_at_apogee=self.config["end_at_apogee"],
             end_at_ground=self.config["end_at_ground"],
-            end_at_burnout=self.config["end_at_burnout"]
+            end_at_burnout=self.config["end_at_burnout"],
+            initial_vie=[0, 0]
         )
 
         if self.config['autopilot_mode'] == AP_PITCH_RATE_CONTROL:

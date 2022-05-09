@@ -1,5 +1,3 @@
-% Encoding: UTF-8
-
 @Article{mnih2013playing,
   author   = {Mnih, Volodymyr and Kavukcuoglu, Koray and Silver, David and Graves, Alex and Antonoglou, Ioannis and Wierstra, Daan and Riedmiller, Martin},
   journal  = {arXiv preprint arXiv:1312.5602},
@@ -1881,48 +1879,4 @@ The contributors are leading researchers in the field},
 }
 
 @Article{kiran2021deep,
-  author    = {Kiran, B Ravi and Sobh, Ibrahim and Talpaert, Victor and Mannion, Patrick and Al Sallab, Ahmad A and Yogamani, Senthil and P{\'e}rez, Patrick},
-  journal   = {IEEE Transactions on Intelligent Transportation Systems},
-  title     = {Deep reinforcement learning for autonomous driving: A survey},
-  year      = {2021},
-  publisher = {IEEE},
-}
-
-@Article{liang2017rllib,
-  author  = {Liang, Eric and Liaw, Richard and Moritz, Philipp and Nishihara, Robert and Fox, Roy and Goldberg, Ken and Gonzalez, Joseph E and Jordan, Michael I and Stoica, Ion},
-  journal = {arXiv preprint arXiv:1712.09381},
-  title   = {RLlib: Abstractions for Distributed Reinforcement Learning. arXiv e-prints, page},
-  year    = {2017},
-}
-
-@InProceedings{guzzetti2017stationkeeping,
-  author       = {Guzzetti, Davide and Zimovan, Emily M and Howell, Kathleen C and Davis, Diane C},
-  booktitle    = {27th AAS/AIAA Space Flight Mechanics Meeting},
-  title        = {Stationkeeping analysis for spacecraft in lunar near rectilinear halo orbits},
-  year         = {2017},
-  organization = {American Astronautical Society San Antonio, Texas},
-  pages        = {1--20},
-}
-
-@Comment{jabref-meta: databaseType:bibtex;}
-
-@Comment{jabref-meta: grouping:
-0 AllEntriesGroup:;
-1 StaticGroup:AI (not RL)\;0\;1\;0x272b38ff\;\;\;;
-1 StaticGroup:General RL\;0\;0\;0xff9999ff\;\;\;;
-1 StaticGroup:Aerospace RL\;0\;1\;0x99cc99ff\;\;\;;
-1 StaticGroup:Quadcopter\;0\;1\;0x99ccccff\;\;\;;
-1 StaticGroup:Survey\;0\;1\;0x8a8a8aff\;\;\;;
-1 StaticGroup:Orbit ascent trajectory\;0\;1\;0x99b3ffff\;\;\;;
-1 StaticGroup:RL Trajectory\;0\;0\;0xff00ffff\;\;\;;
-1 StaticGroup:Transfer learning\;0\;1\;0x8a8a8aff\;\;\;;
-1 StaticGroup:Actor Critic\;0\;1\;0xffff80ff\;\;\;;
-1 StaticGroup:Function approximantion\;0\;0\;0x99ccccff\;\;\;;
-1 StaticGroup:Space trajectory AI\;0\;0\;0x9980e6ff\;\;\;;
-1 StaticGroup:Parallel training\;0\;1\;0x336633ff\;\;\;;
-1 StaticGroup:Supervised RL\;0\;1\;0xcc3333ff\;\;\;;
-1 StaticGroup:Implementation\;0\;0\;0x9980e6ff\;\;\;;
-1 StaticGroup:NASA\;0\;0\;0x000080ff\;\;\;;
-1 StaticGroup:PPO\;0\;1\;0xcccc33ff\;\;\;;
-1 StaticGroup:Trajectory Optimization\;0\;1\;0x00ff00ff\;\;\;;
-}
+  author    = {Kiran, B Ravi and Sobh, Ibrahim and Talpaert, Victor and Mannion, Patrick and Al Sallab, Ahmad A and Yogamani, Senthil and P{\'

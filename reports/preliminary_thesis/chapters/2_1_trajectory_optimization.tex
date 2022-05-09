@@ -26,14 +26,14 @@ There are many ways to define trajectory optimization problems \cite{rao2009surv
     & & J\left( t_0, t_F, x(t_0), x(t_F)\right)
         + \int_{t_0}^{t_F} w(\tau, x(\tau), u(\tau)) d\tau \\
     & \text{subject to}
-    & & \dot x(t) = f(t, x(t), u(t)) \qquad \text{(system dynamics)} \\
-    & & & h(t, x(t), u(t)) \leq 0 \qquad \text{(non-linear path constraints)} \\
-    & & & g(t_0, t_F, x(t_0), x(t_F)) \leq 0 \qquad \text{(non-linear boundary constraints)} \\
-    & & & x_{low} \leq x(t) \leq x_{upp} \qquad \text{(path bounds on state)} \\
-    & & & u_{low} \leq u(t) \leq u_{upp} \qquad \text{(path bounds on control)} \\
-    & & & t_{low} \leq t_0 < t_F \leq t_{upp} \qquad \text{(bounds on initial and final time)} \\
-    & & & x_{0,low} \leq x(t_0) \leq x_{0,upp} \qquad \text{(bounds on initial state)} \\
-    & & & x_{F,low} \leq x(t_F) \leq x_{F,upp} \qquad \text{(bounds on final state)} \\
+    & & \dot x(t) = f(t, x(t), u(t)) & \text{(system dynamics)} \\
+    & & & h(t, x(t), u(t)) \leq 0 & \text{(non-linear path constraints)} \\
+    & & & g(t_0, t_F, x(t_0), x(t_F)) \leq 0 & \text{(non-linear boundary constraints)} \\
+    & & & x_{low} \leq x(t) \leq x_{upp} & \text{(path bounds on state)} \\
+    & & & u_{low} \leq u(t) \leq u_{upp} & \text{(path bounds on control)} \\
+    & & & t_{low} \leq t_0 < t_F \leq t_{upp} & \text{(bounds on initial and final time)} \\
+    & & & x_{0,low} \leq x(t_0) \leq x_{0,upp} & \text{(bounds on initial state)} \\
+    & & & x_{F,low} \leq x(t_F) \leq x_{F,upp} & \text{(bounds on final state)} \\
 \end{aligned}
 \label{eq:to_objective}
 \end{equation}
