@@ -71,8 +71,6 @@ class LauncherV1(gym.Env):
         else:
             initial_vie = tuple(initial_vie)
 
-        print(initial_vie)
-
         self.action_space = gym.spaces.Tuple((
             gym.spaces.Discrete(2),  # Engine command
             gym.spaces.Discrete(2),  # Drop stage command
