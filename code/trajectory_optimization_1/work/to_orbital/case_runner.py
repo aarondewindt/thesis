@@ -8,7 +8,7 @@ from traj1.logger import Logger
 from environment import LauncherV1Orbital
 
 
-class Optimizer:
+class CaseRunner:
     def __init__(self, env: LauncherV1Orbital, max_time: float):
         self.env = env
         self.max_time = max_time
@@ -27,29 +27,38 @@ class Optimizer:
 
         self.last_result = None
 
-    def run_case(self, x: Sequence[float]):
-        engine_cutoff_time = x[0]
-        n_checkpoints = (len(x) - 1) // 2
-        times = x[:n_checkpoints]
-        pitches = x[n_checkpoints:n_checkpoints+n_checkpoints]
+    def __call__(self, x: Sequence[float]):
+        engine_timing = x[:3]
+        n_checkpoints = (len(x) - 3) // 2
+        times = x[3:n_checkpoints+3]
+        pitches = x[n_checkpoints+3:]
+        
+        result = self.run_case_interpolation(engine_timing, times, pitches)
 
+        final_h = result.env_h.values[-1]
+        final_eccentricity = result.env_eccentricity.values[-1]
+        cost = abs(self.env.target_h - final_h) / self.env.target_h + final_eccentricity
+
+        self.last_result = result
+        return cost
+
+    def run_case_interpolation(self, engine_timing, times, pitches):
         pitch_interpolator = interp1d(times, pitches, fill_value="extrapolate")
         
         observation = self.env.reset()
         for i in range(int(self.max_time / self.env.sim.integrator.h)):
             time = self.env.sim.t
             pitch_angle = pitch_interpolator(time)
-            is_engine_running = time <= engine_cutoff_time
+
+            is_engine_running = (time <= engine_timing[0]) | (engine_timing[1] < time < engine_timing[2])
             observation, reward, done, info = self.env.step((pitch_angle, is_engine_running))
             self.logger.step()
             if done:
                 break
-        result = self.logger.episode_finish()
-        self.last_result = result
 
-        reward_sum = sum(result.env_reward.values)
+        return self.logger.episode_finish()
 
-        return -reward_sum
+
 
 
 

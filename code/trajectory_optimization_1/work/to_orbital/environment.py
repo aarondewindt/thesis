@@ -144,7 +144,7 @@ class LauncherV1Orbital(LauncherV1):
         return self.observation()
 
     def step(self, action: Tuple[float, bool]):
-        if not np.isfinite(action):
+        if not all(np.isfinite(action)):
             raise ValueError("Action is not finite")
 
         self.sim.step((
