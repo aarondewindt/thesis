@@ -19,10 +19,10 @@ default_config = {
     "mu": 4.9048695e12,
     "stages": (
         Stage( 
-            dry_mass=1,
-            propellant_mass=0.2,
-            specific_impulse=80,
-            thrust=4*1.7),
+            dry_mass=2150,
+            propellant_mass=2353,
+            specific_impulse=311,
+            thrust=16_000),
     ),
     "initial_altitude": 1,
     "initial_theta_e": radians(90),
@@ -34,17 +34,39 @@ default_config = {
     "controller_theta_dot_limits": (-1, 1),
     "end_at_apogee": False,
     "end_at_ground": True,
-    "end_at_burnout": True,
+    "end_at_burnout": False,
     "autopilot_mode": AP_PITCH_CONTROL,
-    "theta_e_random_window": radians(150)
+    "theta_e_random_window": radians(150),
+    
+    "target_orbit": {
+        "e": 0.0,
+        "a": 1837.4e3
+    }
 }
 
 
-class LauncherV1SubOrbital(LauncherV1):
+class LauncherV1Orbital(LauncherV1):
     def __init__(self, env_config=None):
         self.config = default_config.copy()
         self.config.update(env_config or {})
-
+        
+        self.target_e = 0.0
+        self.target_a = self.config['target_orbit']['a']
+        self.target_h = self.target_a - self.config["surface_diameter"]
+        
+        # Calculate target orbital velocity
+        _, target_vii = kepler_to_cartesian(
+            a=self.target_a,
+            e=self.target_e,
+            i=0.,
+            raan=0.,
+            omega=0.,
+            true_anomaly=0.,
+            mu=self.config["mu"]
+        )
+        
+        self.target_v = np.linalg.norm(target_vii)
+        
         self._theta_e_random_window = self.config['theta_e_random_window']
         self._initial_theta_e = self.config['initial_theta_e']
         self.autopilot_mode = self.config["autopilot_mode"]
@@ -95,12 +117,19 @@ class LauncherV1SubOrbital(LauncherV1):
         else:
             self.action_space = gym.spaces.Box(low=-pi, high=pi, shape=(1,))
 
-        self.observation_space = gym.spaces.Box(low=np.array([-pi-0.01, -pi-0.01, 0.], dtype=np.float32),
-                                                high=np.array([pi+0.01, pi+0.01, 1.], dtype=np.float32),
-                                                shape=(3,))
+        self.observation_space = gym.spaces.Box(low=np.array([-pi-0.01, -pi-0.01, -1, -np.inf, -np.inf, -1], dtype=np.float32),
+                                                high=np.array([pi+0.01, pi+0.01, 2, np.inf, np.inf, 2], dtype=np.float32),
+                                                shape=(6,))
 
     def observation(self):
-        return np.array([wrap_angle(self.sim.gamma_e), wrap_angle(self.sim.theta_e), clip(0., 1., self.sim.h / 1200)])
+        return np.array([
+            wrap_angle(self.sim.gamma_e), 
+            wrap_angle(self.sim.theta_e),
+            (self.target_h - self.sim.h) / self.target_h,
+            self.sim.vie[0],
+            self.sim.vie[1],
+            self.sim.eccentricity
+        ], dtype=np.float32)
 
     def reset(self):
         # Randomize initial pitch angle
@@ -114,28 +143,23 @@ class LauncherV1SubOrbital(LauncherV1):
         self.sim.reset()
         return self.observation()
 
-    def step(self, action: float):
+    def step(self, action: Tuple[float, bool]):
         if not np.isfinite(action):
             raise ValueError("Action is not finite")
 
         self.sim.step((
-            False,  # action_engine_on
+            action[1],  # action_engine_on
             False,  # action_drop_stage
             nb.int32(self.autopilot_mode),  # action_autopilot_mode
-            nb.float64(action)  # action_autopilot_reference
+            nb.float64(action[0])  # action_autopilot_reference
         ))
 
         # In some very rare cases the simulation might return nan. It's 1 in billions.
         if all(np.isfinite(self.sim.vie)):
-            # The reward is zero until the terminal state, at which point it's between 0 and 1.
-            # The reward is based on the maximum altitude the launcher can reach with the current
-            # vertical velocity. It is scaled such that the maximum potential altitude is just under 1.
-            if self.sim.done:
-                self.sim.reward = ((self.sim.h + self.sim.vie[1]**2 / (2 * np.linalg.norm(self.sim.gii))) / 4600)**21
-                # self.sim.reward = (self.sim.h + self.sim.vie[1]**2 / (2 * np.linalg.norm(self.sim.gii)))
-            else:
-                self.sim.reward = 0
-
+            self.sim.reward = (
+                (1 - abs(self.target_h - self.sim.h) / self.target_h) + (1 - self.sim.eccentricity)               
+            )
+            
             return self.observation(), \
                    self.sim.reward, \
                    self.sim.done, \
@@ -150,6 +174,3 @@ class LauncherV1SubOrbital(LauncherV1):
             "action_space": self.action_space,
             "observation_space": self.observation_space,
         }).to_html()
-
-
-
