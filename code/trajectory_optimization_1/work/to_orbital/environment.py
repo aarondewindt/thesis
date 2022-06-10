@@ -65,6 +65,7 @@ class LauncherV1Orbital(LauncherV1):
             mu=self.config["mu"]
         )
         
+        self.mu = self.config["mu"]
         self.target_v = np.linalg.norm(target_vii)
         
         self._theta_e_random_window = self.config['theta_e_random_window']

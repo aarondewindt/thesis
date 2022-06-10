@@ -22,17 +22,18 @@ class CaseRunner:
             "action_autopilot_mode", "action_autopilot_reference",
             "vii", "xii", "fii_thrust", "mass", "mass_dot",
             "end_at_apogee", "end_at_ground",
-            "semi_major_axis", "eccentricity"
+            "semi_major_axis", "eccentricity",
+            "action_engine_on"
         ])
 
         self.last_result = None
 
     def __call__(self, x: Sequence[float]):
         engine_timing = x[:3]
-        n_checkpoints = (len(x) - 3) // 2
-        times = x[3:n_checkpoints+3]
-        pitches = x[n_checkpoints+3:]
-        
+        n_checkpoints = ((len(x) - 3) + 2) // 2
+        times = (0, *x[3:n_checkpoints+1], self.max_time)
+        pitches = x[n_checkpoints+1:]
+
         result = self.run_case_interpolation(engine_timing, times, pitches)
 
         final_h = result.env_h.values[-1]
@@ -40,6 +41,7 @@ class CaseRunner:
         cost = abs(self.env.target_h - final_h) / self.env.target_h + final_eccentricity
 
         self.last_result = result
+        print(cost, x)
         return cost
 
     def run_case_interpolation(self, engine_timing, times, pitches):
