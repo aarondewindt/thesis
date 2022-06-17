@@ -1,4 +1,3 @@
-from time import pthread_getcpuclockid
 from typing import Sequence
 from math import pi
 

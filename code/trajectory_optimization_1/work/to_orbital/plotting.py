@@ -10,7 +10,7 @@ from matplotlib.collections import LineCollection
 
 from environment import LauncherV1Orbital
 from cw.astrodynamics import kepler_to_cartesian, cartesian_to_kepler
-
+from cw.conversions import angle_to_rot_2d
 
 class Plotter:
     def __init__(self, env: LauncherV1Orbital, results: xr.Dataset) -> None:
@@ -28,7 +28,7 @@ class Plotter:
         # Diameter is radius here.
         radius = self.env.sim.surface_diameter
 
-        lim_size = radius + 200e3
+        lim_size = radius + 800e3
 
         moon = plt.Circle((0, 0), radius, color='r')
         ax = plt.gca()
@@ -42,8 +42,8 @@ class Plotter:
         ax = plt.gca()
         ax.add_patch(moon)
 
-        # orbit = self.orbit(30)
-        # plt.plot(orbit[:, 0], orbit[:, 1], "g--")
+        orbit = self.orbit(30)
+        plt.plot(orbit[:, 0], orbit[:, 1], "g--")
 
         ax.set_aspect('equal')
         plt.xlim([-lim_size, lim_size])
@@ -93,15 +93,15 @@ class Plotter:
                 ],
                 mu=self.env.mu
             )
-        print(a, e, i, raan, omega)
+        print(a, e, i, raan, (omega + 0.5*pi)/pi)
         coordinates = []
 
-        omega += 0.5*pi
+        transformation = angle_to_rot_2d(omega + 0.5*pi)
+
+        transformation = angle_to_rot_2d(1.5*pi)
 
         for anomaly in np.linspace(0, 2*pi, n):
             xii, _ = kepler_to_cartesian(a, e, i, raan, omega, eccentric_anomaly=anomaly, mu=self.env.mu)
-            coordinates.append([xii[0] + cos(omega+0.5*pi) * e * a, xii[1] + sin(omega) * e * a])
-
-        return np.array(coordinates)
+            coordinates.append(transformation @ [xii[0], xii[1]])
         
-
+        return np.array(coordinates)
