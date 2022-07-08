@@ -40,7 +40,6 @@ class CaseRunner:
         cost = abs(self.env.target_h - final_h) / self.env.target_h + final_eccentricity
 
         self.last_result = result
-        print(cost, x)
         return cost
 
     def run_case_interpolation(self, engine_timing, times, pitches):

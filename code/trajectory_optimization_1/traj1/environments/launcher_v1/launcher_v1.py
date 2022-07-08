@@ -7,7 +7,7 @@ import gym
 import numpy as np
 import numba as nb
 
-from .simulation import Simulation
+from .simulation import new_simulation
 from cw.vdom import hyr
 from cw.constants import g_earth
 
@@ -81,7 +81,7 @@ class LauncherV1(gym.Env):
         self.random = np.random.Generator(np.random.PCG64())
         self.stages = stages
 
-        self.sim = Simulation(
+        self.sim = new_simulation(
             dt=dt,
             surface_diameter=surface_diameter,
             mu=mu,

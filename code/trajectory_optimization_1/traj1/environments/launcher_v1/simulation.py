@@ -118,6 +118,43 @@ def wrap_angle(angle):
     return np.fmod(angle + pi, 2 * pi) + (pi if angle < -pi else -pi)
 
 
+@nb.jit(nopython=True, cache=True)
+def new_simulation(dt: float,
+                   surface_diameter: float,
+                   mu: float,
+                   stages: Sequence[Tuple[float, float, float, float, int]],
+                   initial_longitude: float,
+                   initial_altitude: float,
+                   initial_theta_e: float,
+                   gamma_controller_gains: Tuple[float, float, float],
+                   theta_controller_gains: Tuple[float, float, float],
+                   controller_theta_dot_limits: Tuple[float, float],
+                   end_at_apogee: bool,
+                   end_at_ground: bool,
+                   end_at_burnout: bool,
+                   initial_vie: Tuple[float, float]):
+    """
+    Simulation factory function to allow caching the Simulation jitclass.
+    """
+    # @jitclass's don't support caching yet. It seems like a workaround is to create
+    # a cached factory function. Not sure it actually works though.
+    return Simulation(
+        dt,
+        surface_diameter,
+        mu,
+        stages,
+        initial_longitude,
+        initial_altitude,
+        initial_theta_e,
+        gamma_controller_gains,
+        theta_controller_gains,
+        controller_theta_dot_limits,
+        end_at_apogee,
+        end_at_ground,
+        end_at_burnout,
+        initial_vie,
+    )
+
 @jitclass(sim_spec)
 class Simulation:
     def __init__(self,
@@ -143,7 +180,7 @@ class Simulation:
 
         self.controller_theta_dot_min = controller_theta_dot_limits[0]
         self.controller_theta_dot_max = controller_theta_dot_limits[1]
-
+        
         self.surface_diameter = surface_diameter
         self.mu = mu
         self.stages = stages

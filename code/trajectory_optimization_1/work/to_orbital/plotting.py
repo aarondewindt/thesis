@@ -79,7 +79,11 @@ class Plotter:
 
 
     def orbit(self, n: int):
-        a, e, i, raan, omega, true_anomaly, eccentric_anomaly, mean_anomaly = \
+        """
+        Calculate the orbit trajectories based on the orbital parameters of the
+        state at the end of the simulation.
+        """
+        a, e, i, raan, omega, _, __, ___ = \
             cartesian_to_kepler(
                 r=[
                     self.results.env_xii.values[-1, 0],
@@ -93,11 +97,7 @@ class Plotter:
                 ],
                 mu=self.env.mu
             )
-        print(a, e, i, raan, (omega + 0.5*pi)/pi)
         coordinates = []
-
-        transformation = angle_to_rot_2d(omega + 0.5*pi)
-
         transformation = angle_to_rot_2d(1.5*pi)
 
         for anomaly in np.linspace(0, 2*pi, n):
