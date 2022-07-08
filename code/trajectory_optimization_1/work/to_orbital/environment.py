@@ -4,6 +4,7 @@ from typing import Sequence, Tuple
 import gym
 import numba as nb
 import numpy as np
+import gym.spaces as gs
 
 from traj1.environments.launcher_v1 import LauncherV1, Stage, AP_NONE, AP_FLIGHT_PATH_CONTROL, AP_PITCH_CONTROL, AP_PITCH_RATE_CONTROL
 from traj1.environments.launcher_v1.simulation import wrap_angle, clip
@@ -114,13 +115,18 @@ class LauncherV1Orbital(LauncherV1):
         )
 
         if self.config['autopilot_mode'] == AP_PITCH_RATE_CONTROL:
-            self.action_space = gym.spaces.Box(low=-1, high=1, shape=(1,))
+            autopilot_range = 1
         else:
-            self.action_space = gym.spaces.Box(low=-pi, high=pi, shape=(1,))
-
-        self.observation_space = gym.spaces.Box(low=np.array([-pi-0.01, -pi-0.01, -1, -np.inf, -np.inf, -1], dtype=np.float32),
-                                                high=np.array([pi+0.01, pi+0.01, 2, np.inf, np.inf, 2], dtype=np.float32),
-                                                shape=(6,))
+            autopilot_range = 1
+            
+        self.action_space = gs.Tuple((
+            gs.Box(low=-autopilot_range, high=autopilot_range, shape=(1,)),
+            gs.Discrete(2)
+        ))
+        
+        self.observation_space = gs.Box(low=np.array([-pi-0.01, -pi-0.01, -1, -np.inf, -np.inf, -1], dtype=np.float32),
+                                        high=np.array([pi+0.01, pi+0.01, 2, np.inf, np.inf, 2], dtype=np.float32),
+                                        shape=(6,))
 
     def observation(self):
         return np.array([
@@ -149,13 +155,14 @@ class LauncherV1Orbital(LauncherV1):
             raise ValueError("Action is not finite")
 
         self.sim.step((
-            action[1],  # action_engine_on
+            bool(action[1]),  # action_engine_on
             False,  # action_drop_stage
             nb.int32(self.autopilot_mode),  # action_autopilot_mode
             nb.float64(action[0])  # action_autopilot_reference
         ))
 
         # In some very rare cases the simulation might return nan. It's 1 in billions.
+        # Future Aaron here, it not 1 in billions.
         if all(np.isfinite(self.sim.vie)):
             self.sim.reward = (
                 (1 - abs(self.target_h - self.sim.h) / self.target_h) + (1 - self.sim.eccentricity)               

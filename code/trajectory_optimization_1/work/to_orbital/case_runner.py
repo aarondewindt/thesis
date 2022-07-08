@@ -1,14 +1,19 @@
-from typing import Sequence
+from typing import Sequence, cast
 from math import pi
+from pyrsistent import s
 
 from scipy.interpolate import interp1d
+import gym.spaces as gs
+import numpy as np
 
 from traj1.logger import Logger
 from environment import LauncherV1Orbital
 
 
 class CaseRunner:
-    def __init__(self, env: LauncherV1Orbital, max_time: float):
+    def __init__(self, env: LauncherV1Orbital, max_time: float, n_checkpoints: int):
+        assert n_checkpoints >= 2, "Must have at least two checkpoints."
+
         self.env = env
         self.max_time = max_time
 
@@ -26,12 +31,27 @@ class CaseRunner:
         ])
 
         self.last_result = None
+        self.n_checkpoints = n_checkpoints
+
+        assert isinstance(env.action_space, gs.Tuple)
+        ap_command_action_space = env.action_space.spaces[0]
+
+        assert isinstance(ap_command_action_space, gs.Box)
+        ap_low_bound = ap_command_action_space.low[0]
+        ap_high_bound = ap_command_action_space.high[1]
+        
+        self.bounds = (
+            np.ndarray([0] * (1 + n_checkpoints) + [ap_low_bound] * n_checkpoints ),
+            np.ndarray([max_time] * (1 + n_checkpoints) + [ap_high_bound] * n_checkpoints),
+        )
+        
+        self.ndim = len(self.bounds[0])
 
     def __call__(self, x: Sequence[float]):
+        assert len(x) == 1 + 2 * self.n_checkpoints
         engine_timing = x[:3]
-        n_checkpoints = ((len(x) - 3) + 2) // 2
-        times = (0, *x[3:n_checkpoints+1], self.max_time)
-        pitches = x[n_checkpoints+1:]
+        times = (0, *x[3:self.n_checkpoints+1], self.max_time)
+        pitches = x[self.n_checkpoints+1:]
 
         result = self.run_case_interpolation(engine_timing, times, pitches)
 
