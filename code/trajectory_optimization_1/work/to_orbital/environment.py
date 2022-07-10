@@ -128,6 +128,9 @@ class LauncherV1Orbital(LauncherV1):
                                         high=np.array([pi+0.01, pi+0.01, 2, np.inf, np.inf, 2], dtype=np.float32),
                                         shape=(6,))
 
+    def __reduce__(self):
+        return LauncherV1Orbital, (self.config,)
+
     def observation(self):
         return np.array([
             wrap_angle(self.sim.gamma_e), 

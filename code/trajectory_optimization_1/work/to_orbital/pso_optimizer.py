@@ -9,14 +9,17 @@ class PSOOptimizer:
         pso_options = pso_options or {'c1': 0.5, 'c2': 0.3, 'w':0.9}
 
         self.case_runner = case_runner
-        self.optimizer = ps.single.GlobalBestPSO(n_particles=n_particles, dimensions=9, options=pso_options)
+        self.optimizer = ps.single.GlobalBestPSO(
+            n_particles=n_particles, 
+            dimensions=case_runner.ndim,
+            bounds=case_runner.bounds,
+            options=pso_options
+        )
 
-    def optimize(self, iters):
-        def cost_function(swarm_positions: np.ndarray):
-            costs = np.empty((swarm_positions.shape[0],))
-            for i, x in enumerate(swarm_positions):
-                costs[i] = self.case_runner(x)
-            return costs
-
+    def optimize(self, iters, n_processes=1):
         # Perform optimization
-        return self.optimizer.optimize(cost_function, iters=iters)
+        return self.optimizer.optimize(
+            self.case_runner, 
+            iters=iters, 
+            n_processes=n_processes
+        )

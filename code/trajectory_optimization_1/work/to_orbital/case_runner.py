@@ -12,6 +12,7 @@ from environment import LauncherV1Orbital
 
 class CaseRunner:
     def __init__(self, env: LauncherV1Orbital, max_time: float, n_checkpoints: int):
+        n_checkpoints = int(n_checkpoints)
         assert n_checkpoints >= 2, "Must have at least two checkpoints."
 
         self.env = env
@@ -38,29 +39,38 @@ class CaseRunner:
 
         assert isinstance(ap_command_action_space, gs.Box)
         ap_low_bound = ap_command_action_space.low[0]
-        ap_high_bound = ap_command_action_space.high[1]
-        
+        ap_high_bound = ap_command_action_space.high[0]
+
         self.bounds = (
-            np.ndarray([0] * (1 + n_checkpoints) + [ap_low_bound] * n_checkpoints ),
-            np.ndarray([max_time] * (1 + n_checkpoints) + [ap_high_bound] * n_checkpoints),
+            np.array([0.] * (1 + n_checkpoints) + ([ap_low_bound] * n_checkpoints)),
+            np.array([max_time] * (1 + n_checkpoints) + [ap_high_bound] * n_checkpoints),
         )
         
         self.ndim = len(self.bounds[0])
 
-    def __call__(self, x: Sequence[float]):
-        assert len(x) == 1 + 2 * self.n_checkpoints
-        engine_timing = x[:3]
-        times = (0, *x[3:self.n_checkpoints+1], self.max_time)
-        pitches = x[self.n_checkpoints+1:]
+    def __reduce__(self):
+        return CaseRunner, (self.env, self.max_time, self.n_checkpoints)
 
-        result = self.run_case_interpolation(engine_timing, times, pitches)
+    def __call__(self, case_inputs: np.ndarray):
+        def single_case(x: Sequence[float]):
+            assert len(x) == 1 + 2 * self.n_checkpoints
+            engine_timing = x[:3]
+            times = (0, *x[3:self.n_checkpoints+1], self.max_time)
+            pitches = x[self.n_checkpoints+1:]
 
-        final_h = result.env_h.values[-1]
-        final_eccentricity = result.env_eccentricity.values[-1]
-        cost = abs(self.env.target_h - final_h) / self.env.target_h + final_eccentricity
+            result = self.run_case_interpolation(engine_timing, times, pitches)
 
-        self.last_result = result
-        return cost
+            final_h = result.env_h.values[-1]
+            final_eccentricity = result.env_eccentricity.values[-1]
+            cost = abs(self.env.target_h - final_h) / self.env.target_h + final_eccentricity
+
+            self.last_result = result
+            return cost
+
+        costs = np.empty((case_inputs.shape[0],))
+        for i, x in enumerate(case_inputs):
+            costs[i] = single_case(x)
+        return costs
 
     def run_case_interpolation(self, engine_timing, times, pitches):
         pitch_interpolator = interp1d(times, pitches, fill_value="extrapolate")
