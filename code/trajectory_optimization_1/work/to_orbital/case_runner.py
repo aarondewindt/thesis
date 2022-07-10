@@ -1,6 +1,8 @@
-from typing import Sequence, cast
+from typing import Sequence, Optional
+from pathlib import Path
 from math import pi
 from pyrsistent import s
+import os
 
 from scipy.interpolate import interp1d
 import gym.spaces as gs
@@ -11,12 +13,17 @@ from environment import LauncherV1Orbital
 
 
 class CaseRunner:
-    def __init__(self, env: LauncherV1Orbital, max_time: float, n_checkpoints: int):
+    def __init__(self, 
+                 env: LauncherV1Orbital, 
+                 max_time: float, 
+                 n_checkpoints: int,
+                 results_path: Optional[Path]):
         n_checkpoints = int(n_checkpoints)
         assert n_checkpoints >= 2, "Must have at least two checkpoints."
 
         self.env = env
         self.max_time = max_time
+        self.results_path = results_path
 
         self.logger = Logger()
         self.logger.register_time_attribute(env.sim, "t")
@@ -49,7 +56,7 @@ class CaseRunner:
         self.ndim = len(self.bounds[0])
 
     def __reduce__(self):
-        return CaseRunner, (self.env, self.max_time, self.n_checkpoints)
+        return CaseRunner, (self.env, self.max_time, self.n_checkpoints, self.results_path)
 
     def __call__(self, case_inputs: np.ndarray):
         def single_case(x: Sequence[float]):
@@ -66,10 +73,21 @@ class CaseRunner:
 
             self.last_result = result
             return cost
-
+        
         costs = np.empty((case_inputs.shape[0],))
+        timestamps = np.empty((case_inputs.shape[0],), dtype=np.int64)
+        
         for i, x in enumerate(case_inputs):
             costs[i] = single_case(x)
+
+        if self.results_path is not None:
+            log_path = self.results_path / f"log_{os.getpid()}.json"
+            log = np.hstack((
+                costs.reshape((-1, 1)),
+                case_inputs
+            ))
+
+
         return costs
 
     def run_case_interpolation(self, engine_timing, times, pitches):
