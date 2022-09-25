@@ -22,7 +22,7 @@ class Plotter:
         self.results.env_h.plot.line(x="t")
         return fig
 
-    def orbit_view(self):
+    def orbit_view(self, n=100):
         fig = plt.figure()
 
         # Diameter is radius here.
@@ -42,7 +42,7 @@ class Plotter:
         ax = plt.gca()
         ax.add_patch(moon)
 
-        orbit = self.orbit(30)
+        orbit = self.orbit(n)
         plt.plot(orbit[:, 0], orbit[:, 1], "g--")
 
         ax.set_aspect('equal')
@@ -76,7 +76,6 @@ class Plotter:
         self.results.env_semi_major_axis.plot.line(x="t")
         plt.axhline(self.env.target_a, color='b', ls=":")
         return fig
-
 
     def orbit(self, n: int):
         """
