@@ -66,6 +66,13 @@ class Plotter:
         line = plt.gca().add_collection(lc)
         # fig.colorbar(line)
 
+    def print_errors(self):
+        e = self.results.env_eccentricity.values[-1]
+        print(f"e = {e} ({self.env.target_e - e})")
+
+        a = self.results.env_semi_major_axis.values[-1]
+        print(f"a = {a} ({(self.env.target_a - a) / 1e3})")
+
     def orbital_elements(self):
         fig = plt.figure()
         plt.subplot(2, 1, 1)

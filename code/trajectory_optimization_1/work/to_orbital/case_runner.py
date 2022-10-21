@@ -18,6 +18,12 @@ def sigmoid(x):
     return x / np.sqrt(1 + x * x)
 
 
+@nb.jit(nopython=True, cache=True)
+def cost_function(target_a, a, e):
+    a_error = abs(target_a - a) / target_a
+    return -1 / (1 + (a_error*100)**2 + (e * 5)**2) + 1
+
+
 class CaseRunner:
     def __init__(self, 
                  env: LauncherV1Orbital, 
@@ -41,7 +47,7 @@ class CaseRunner:
             "vii", "xii", "fii_thrust", "mass", "mass_dot",
             "end_at_apogee", "end_at_ground",
             "semi_major_axis", "eccentricity",
-            "action_engine_on"
+            "action_engine_on", "longitude", 
         ])
 
         self.last_result = None
@@ -72,13 +78,13 @@ class CaseRunner:
     #         + sigmoid(e*5)**2
     #     )
 
-    @staticmethod
-    def cost_function(target_a, a, e):
-        a_error = abs(target_a - a) / target_a
-        return (
-            sigmoid(a_error*1000)**2
-            + sigmoid(e * 50)**2
-        )
+    # @staticmethod
+    # def cost_function(target_a, a, e):
+    #     a_error = abs(target_a - a) / target_a
+    #     return (
+    #         sigmoid(a_error*100)**2
+    #         + sigmoid(e * 5)**2
+    #     )
 
     def __call__(self, case_inputs: np.ndarray):
         def single_case(x: Sequence[float]):
@@ -92,7 +98,7 @@ class CaseRunner:
             # final_h = result.env_h.values[-1]
             final_a = result.env_semi_major_axis.values[-1]
             final_eccentricity = result.env_eccentricity.values[-1]
-            cost = self.cost_function(self.env.target_a, final_a, final_eccentricity)
+            cost = cost_function(self.env.target_a, final_a, final_eccentricity)
             # cost = abs(self.env.target_h - final_h) / self.env.target_h + final_eccentricity
 
             self.last_result = result

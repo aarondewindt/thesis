@@ -1,5 +1,6 @@
 from math import pi, radians, atan2, sqrt, sin, cos
 from typing import Sequence, Tuple
+from random import randrange
 
 import gym
 import numba as nb
@@ -38,6 +39,7 @@ default_config = {
     "end_at_burnout": False,
     "autopilot_mode": AP_PITCH_CONTROL,
     "theta_e_random_window": radians(150),
+    "init_table": None,
     
     "target_orbit": {
         "e": 0.0,
@@ -97,6 +99,8 @@ class LauncherV1Orbital(LauncherV1):
             initial_altitude = self.config["initial_altitude"]
             initial_vie = self.config["initial_vie"]
         
+        self.init_table = self.config["init_table"]
+
         super().__init__(
             dt=self.config["dt"],
             surface_diameter=self.config["surface_diameter"],
@@ -142,12 +146,26 @@ class LauncherV1Orbital(LauncherV1):
         ], dtype=np.float32)
 
     def reset(self):
-        # Randomize initial pitch angle
-        if self._theta_e_random_window:
-            beta = (pi - self._theta_e_random_window) / 2
-            self.sim.initial_theta_e = self.random.uniform(beta, pi - beta)
+        if self.init_table is not None:
+            idx = self.random.integers(low=0, high=len(self.init_table['h']))
+            self.sim.initial_altitude = self.init_table['h'][idx]
+            self.sim.initial_longitude = self.init_table['longitude'][idx]
+            self.sim.initial_theta_e = self.init_table['theta_e'][idx]
+            self.sim.initial_vie = np.array(self.init_table['vie'][idx])
+            self.sim.stages[0] = (
+                self.sim.stages[0][0],
+                self.init_table['prop_mass'][idx],
+                self.sim.stages[0][2],
+                self.sim.stages[0][3],
+                self.sim.stages[0][4],
+            )
         else:
             self.sim.initial_theta_e = self._initial_theta_e
+
+        # Randomize initial pitch angle
+        if self._theta_e_random_window:
+            beta = self._theta_e_random_window / 2
+            self.sim.initial_theta_e += self.random.uniform(-beta, beta)
 
         # Reset simulation and return observation
         self.sim.reset()

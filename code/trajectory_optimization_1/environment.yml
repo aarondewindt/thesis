@@ -2,7 +2,8 @@ name: traj1
 channels:
   - conda-forge
 dependencies:
-  - python=3.9
+  - python=3.10
+  - pip
   - tensorflow
   - numpy
   - scipy

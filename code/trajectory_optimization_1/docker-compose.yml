@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  dev_trajectory_optimization_1:
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+      args:
+        NB_UID: ${UID}
+        NB_GID: ${GID}
+    ports:
+      - 8888:8888
+      - 8265:8265
+      - 8266:8266
+      - 8267:8267
+      - 8268:8268
+      - 8269:8269
+      - 8270:8270
+    environment:
+      - DISPLAY=$DISPLAY
+      - QT_X11_NO_MITSHM=1
+      - GRANT_SUDO=yes
+      - JUPYTER_ENABLE_LAB=1
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    volumes:
+      - ./:/home/jovyan/trajectory_optimization_1
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    runtime: nvidia
+    ipc: 'host'
+    tty: true
+    stdin_open: true
