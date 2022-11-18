@@ -48,6 +48,12 @@ default_config = {
 }
 
 
+@nb.jit(nopython=True, cache=True)
+def cost_function(target_a, a, e):
+    a_error = abs(target_a - a) / target_a
+    return -1 / (1 + (a_error*100)**2 + (e * 5)**2) + 1
+
+
 class LauncherV1Orbital(LauncherV1):
     def __init__(self, env_config=None):
         self.config = default_config.copy()
@@ -128,9 +134,11 @@ class LauncherV1Orbital(LauncherV1):
             gs.Discrete(2)
         ))
         
-        self.observation_space = gs.Box(low=np.array([-pi-0.01, -pi-0.01, -1, -np.inf, -np.inf, -1], dtype=np.float32),
-                                        high=np.array([pi+0.01, pi+0.01, 2, np.inf, np.inf, 2], dtype=np.float32),
+        self.observation_space = gs.Box(low=np.array([-pi-0.01, -pi-0.01, -np.inf, -np.inf, -np.inf, -1], dtype=np.float32),
+                                        high=np.array([pi+0.01, pi+0.01, np.inf, np.inf, np.inf, 2], dtype=np.float32),
                                         shape=(6,))
+
+        # self.spec.max_episode_steps = 
 
     def __reduce__(self):
         return LauncherV1Orbital, (self.config,)
@@ -163,16 +171,16 @@ class LauncherV1Orbital(LauncherV1):
             self.sim.initial_theta_e = self._initial_theta_e
 
         # Randomize initial pitch angle
-        if self._theta_e_random_window:
-            beta = self._theta_e_random_window / 2
-            self.sim.initial_theta_e += self.random.uniform(-beta, beta)
+        # if self._theta_e_random_window:
+        #     beta = self._theta_e_random_window / 2
+        #     self.sim.initial_theta_e += self.random.uniform(-beta, beta)
 
         # Reset simulation and return observation
         self.sim.reset()
         return self.observation()
 
     def step(self, action: Tuple[float, bool]):
-        if not all(np.isfinite(action)):
+        if not all(np.isfinite(action[0])):
             raise ValueError("Action is not finite")
 
         self.sim.step((
@@ -182,13 +190,14 @@ class LauncherV1Orbital(LauncherV1):
             nb.float64(action[0])  # action_autopilot_reference
         ))
 
-        # In some very rare cases the simulation might return nan. It's 1 in billions.
-        # Future Aaron here, it not 1 in billions.
+        if self.sim.t > 10:
+            self.sim.done = True
+
         if all(np.isfinite(self.sim.vie)):
-            self.sim.reward = (
-                (1 - abs(self.target_h - self.sim.h) / self.target_h) + (1 - self.sim.eccentricity)               
-            )
-            
+            cost = cost_function(self.target_a, self.sim.semi_major_axis, self.sim.eccentricity)
+
+            self.sim.reward = 1 - cost
+
             return self.observation(), \
                    self.sim.reward, \
                    self.sim.done, \
