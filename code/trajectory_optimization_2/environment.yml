@@ -1,0 +1,26 @@
+name: traj2
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - tensorflow
+  - numpy
+  - scipy
+  - tqdm
+  - matplotlib
+  - xarray
+  - sympy
+  - control
+  - pandas
+  - numba>=0.46.0
+  - gym
+  - gputil
+  - tikzplotlib
+  - jupyterlab
+  - ipympl
+  - pip:
+      - ray[all]
+      - "-e ./external/cw"
+      - "-e ./"
+      - pyswarms

@@ -2,17 +2,17 @@ from math import pi, radians, atan2, sqrt, sin, cos
 from typing import Sequence, Tuple
 from random import randrange
 
-import gym
+# import gym
 import numba as nb
 import numpy as np
-import gym.spaces as gs
+import gymnasium.spaces as gs
 
-from traj1.environments.launcher_v1 import LauncherV1, Stage, AP_NONE, AP_FLIGHT_PATH_CONTROL, AP_PITCH_CONTROL, AP_PITCH_RATE_CONTROL
-from traj1.environments.launcher_v1.simulation import wrap_angle, clip
+from traj2.environments.launcher_v1 import LauncherV1, Stage, AP_NONE, AP_FLIGHT_PATH_CONTROL, AP_PITCH_CONTROL, AP_PITCH_RATE_CONTROL
+from traj2.environments.launcher_v1.simulation import wrap_angle, clip
 from cw.vdom import hyr, safe
 from cw.astrodynamics import kepler_to_cartesian
 
-from ray.rllib.models.tf.fcnet import FullyConnectedNetwork
+# from ray.rllib.models.tf.fcnet import FullyConnectedNetwork
 
 
 surface_diameter = 1737.4e3
@@ -182,7 +182,7 @@ class LauncherV1Orbital(LauncherV1):
         return self.observation()
 
     def step(self, action: Tuple[float, bool]):
-        if not all(np.isfinite(action[0])):
+        if not np.isfinite(action[0]):
             raise ValueError("Action is not finite")
 
         self.sim.step((

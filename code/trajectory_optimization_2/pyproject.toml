@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "traj2"
+version = "0.0.0"
+description = "Trajectory optimization 2"
+readme = "README.md"
+requires-python = ">=3.11"
+keywords = []
+classifiers = [
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = []
+
+[tool.setuptools.packages.find]
+where = [""]
+include = ["traj2"]
+namespaces = false
+
+[tool.distutils.bdist_wheel]
+universal = true
