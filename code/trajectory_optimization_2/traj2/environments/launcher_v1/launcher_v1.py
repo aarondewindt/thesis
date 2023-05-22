@@ -66,7 +66,9 @@ class LauncherV1(gym.Env):
                  end_at_apogee: bool,
                  end_at_ground: bool,
                  end_at_burnout: bool,
-                 initial_vie: Sequence[float]):
+                 initial_vie: Sequence[float],
+                 random: np.random.Generator | None=None,
+                 ):
 
         if initial_vie is None:
             initial_vie = (0, 0)
@@ -80,7 +82,7 @@ class LauncherV1(gym.Env):
         ))
         self.observation_space = gym_spaces.Tuple(())
 
-        self.random = np.random.Generator(np.random.PCG64())
+        self.random = random or np.random.Generator(np.random.PCG64())
         self.stages = stages
 
         self.sim = new_simulation(

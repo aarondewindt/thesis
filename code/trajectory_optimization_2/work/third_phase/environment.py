@@ -1,53 +1,18 @@
-from math import pi, radians, atan2, sqrt, sin, cos
-from typing import Sequence, Tuple
-from random import randrange
+from math import pi
+from typing import Tuple, Any
 
 # import gym
 import numba as nb
 import numpy as np
 import gymnasium.spaces as gs
 
-from traj2.environments.launcher_v1 import LauncherV1, Stage, AP_NONE, AP_FLIGHT_PATH_CONTROL, AP_PITCH_CONTROL, AP_PITCH_RATE_CONTROL
-from traj2.environments.launcher_v1.simulation import wrap_angle, clip
-from cw.vdom import hyr, safe
-from cw.astrodynamics import kepler_to_cartesian
+from traj2.environments.launcher_v1 import LauncherV1, Stage, AP_NONE, AP_PITCH_CONTROL, AP_FLIGHT_PATH_CONTROL, AP_PITCH_RATE_CONTROL
+from traj2.environments.launcher_v1.simulation import wrap_angle
+from cw.vdom import hyr
+
+from env_config import EnvConfig
 
 # from ray.rllib.models.tf.fcnet import FullyConnectedNetwork
-
-
-surface_diameter = 1737.4e3
-
-default_config = {
-    "dt": 0.05,
-    "surface_diameter": surface_diameter,
-    "mu": 4.9048695e12,
-    "stages": (
-        Stage( 
-            dry_mass=2150,
-            propellant_mass=2353,
-            specific_impulse=311,
-            thrust=16_000),
-    ),
-    "initial_altitude": 1,
-    "initial_theta_e": radians(90),
-    "initial_longitude": radians(90),
-    "initial_vie": (0., 0.),
-    "initial_kepler": None,
-    "gamma_controller_gains": (4, 0, 0.2),
-    "theta_controller_gains": (10, 0, 0.0),
-    "controller_theta_dot_limits": (-1, 1),
-    "end_at_apogee": False,
-    "end_at_ground": True,
-    "end_at_burnout": False,
-    "autopilot_mode": AP_PITCH_CONTROL,
-    "theta_e_random_window": radians(150),
-    "init_table": None,
-    
-    "target_orbit": {
-        "e": 0.0,
-        "a": 1837.4e3
-    }
-}
 
 
 @nb.jit(nopython=True, cache=True)
@@ -57,76 +22,41 @@ def cost_function(target_a, a, e):
 
 
 class LauncherV1Orbital(LauncherV1):
-    def __init__(self, env_config=None):
-        self.config = default_config.copy()
-        self.config.update(env_config or {})
-        
-        self.target_e = 0.0
-        self.target_a = self.config['target_orbit']['a']
-        self.target_h = self.target_a - self.config["surface_diameter"]
-        
-        # Calculate target orbital velocity
-        _, target_vii = kepler_to_cartesian(
-            a=self.target_a,
-            e=self.target_e,
-            i=0.,
-            raan=0.,
-            omega=0.,
-            true_anomaly=0.,
-            mu=self.config["mu"]
-        )
-        
-        self.mu = self.config["mu"]
-        self.target_v = np.linalg.norm(target_vii)
-        
-        self._theta_e_random_window = self.config['theta_e_random_window']
-        self._initial_theta_e = self.config['initial_theta_e']
-        self.autopilot_mode = self.config["autopilot_mode"]
-        
-        if (initial_kepler := self.config['initial_kepler']) is not None:
-            xii, vii = kepler_to_cartesian(
-                a=initial_kepler['a'],
-                e=initial_kepler['e'],
-                i=0.,
-                raan=0.,
-                omega=0.,
-                true_anomaly=initial_kepler['true_anomaly'],
-                mu=self.config["mu"]
-            )
-
-            initial_longitude = atan2(xii[1], xii[0])
-            initial_altitude = sqrt(xii[0]*xii[0]+xii[1]*xii[1]) - self.config["surface_diameter"]
-            tei = np.array(((-sin(initial_longitude), cos(initial_longitude)),
-                            (cos(initial_longitude), sin(initial_longitude))), dtype=np.float64)
-
-            vii = (vii[0], vii[1])
-            initial_vie = tei @ vii
-
+    def __init__(self, env_config: dict[str, Any] | None=None):
+        if env_config is None:
+            self.config = EnvConfig()
         else:
-            initial_longitude = self.config["initial_longitude"]
-            initial_altitude = self.config["initial_altitude"]
-            initial_vie = self.config["initial_vie"]
+            self.config = EnvConfig.validate(env_config)
         
-        self.init_table = self.config["init_table"]
+        random = np.random.Generator(np.random.PCG64())
+        initial_condition = self.config.get_init_conditions(random)
 
+        self.target_e = 0.0
+        self.target_a = initial_condition.target_a
+        self.target_h = initial_condition.target_h
+        self.target_v = initial_condition.target_v
+        self.mu = initial_condition.mu
+        self.autopilot_mode = AP_PITCH_RATE_CONTROL
+        
         super().__init__(
-            dt=self.config["dt"],
-            surface_diameter=self.config["surface_diameter"],
-            mu=self.config["mu"],
-            stages=self.config["stages"],
-            initial_longitude=initial_longitude,
-            initial_altitude=initial_altitude,
-            initial_theta_e=self.config["initial_theta_e"],
-            gamma_controller_gains=self.config["gamma_controller_gains"],
-            theta_controller_gains=self.config["theta_controller_gains"],
-            controller_theta_dot_limits=self.config["controller_theta_dot_limits"],
-            end_at_apogee=self.config["end_at_apogee"],
-            end_at_ground=self.config["end_at_ground"],
-            end_at_burnout=self.config["end_at_burnout"],
-            initial_vie=initial_vie
+            dt=self.config.dt,
+            surface_diameter=self.config.surface_diameter,
+            mu=self.config.mu,
+            stages=self.config.stages,
+            initial_longitude=initial_condition.longitude,
+            initial_altitude=initial_condition.altitude,
+            initial_theta_e=initial_condition.theta_e,
+            gamma_controller_gains=self.config.gamma_controller_gains,
+            theta_controller_gains=self.config.theta_controller_gains,
+            controller_theta_dot_limits=self.config.controller_theta_dot_limits,
+            end_at_apogee=self.config.end_at_apogee,
+            end_at_ground=self.config.end_at_ground,
+            end_at_burnout=self.config.end_at_burnout,
+            initial_vie=initial_condition.vie,
+            random=random
         )
 
-        if self.config['autopilot_mode'] == AP_PITCH_RATE_CONTROL:
+        if self.autopilot_mode == AP_PITCH_RATE_CONTROL:
             autopilot_range = 1
         else:
             autopilot_range = 1
@@ -136,11 +66,9 @@ class LauncherV1Orbital(LauncherV1):
             gs.Discrete(2)
         ))
         
-        self.observation_space = gs.Box(low=np.array([-pi-0.01, -pi-0.01, -np.inf, -np.inf, -np.inf, -1], dtype=np.float32),
-                                        high=np.array([pi+0.01, pi+0.01, np.inf, np.inf, np.inf, 2], dtype=np.float32),
-                                        shape=(6,))
-
-        # self.spec.max_episode_steps = 
+        self.observation_space = gs.Box(low=np.array([-pi-0.01, -pi-0.01, -np.inf, -np.inf, -np.inf, -1, -np.inf, -np.inf], dtype=np.float32),
+                                        high=np.array([pi+0.01, pi+0.01, np.inf, np.inf, np.inf, 2, np.inf, np.inf], dtype=np.float32),
+                                        shape=(8,))
 
     def __reduce__(self):
         return LauncherV1Orbital, (self.config,)
@@ -152,32 +80,26 @@ class LauncherV1Orbital(LauncherV1):
             (self.target_h - self.sim.h) / self.target_h,
             self.sim.vie[0],
             self.sim.vie[1],
-            self.sim.eccentricity
+            self.sim.eccentricity,
+            self.sim.mass - self.config.stages[0].dry_mass,
+            self.sim.mass_dot,            
         ], dtype=np.float32)
 
     def reset(self):
-        if self.init_table is not None:
-            idx = self.random.integers(low=0, high=len(self.init_table['h']))
-            self.sim.initial_altitude = self.init_table['h'][idx]
-            self.sim.initial_longitude = self.init_table['longitude'][idx]
-            self.sim.initial_theta_e = self.init_table['theta_e'][idx]
-            self.sim.initial_vie = np.array(self.init_table['vie'][idx])
-            self.sim.stages[0] = (
-                self.sim.stages[0][0],
-                self.init_table['prop_mass'][idx],
-                self.sim.stages[0][2],
-                self.sim.stages[0][3],
-                self.sim.stages[0][4],
-            )
-        else:
-            self.sim.initial_theta_e = self._initial_theta_e
+        initial_condition = self.config.get_init_conditions(self.random)
 
-        # Randomize initial pitch angle
-        # if self._theta_e_random_window:
-        #     beta = self._theta_e_random_window / 2
-        #     self.sim.initial_theta_e += self.random.uniform(-beta, beta)
+        self.sim.initial_altitude = initial_condition.altitude
+        self.sim.initial_longitude = initial_condition.longitude
+        self.sim.initial_theta_e = initial_condition.theta_e
+        self.sim.initial_vie = np.array(initial_condition.vie)
+        self.sim.stages[0] = (
+            self.sim.stages[0][0],
+            initial_condition.prop_mass,
+            self.sim.stages[0][2],
+            self.sim.stages[0][3],
+            self.sim.stages[0][4],
+        )
 
-        # Reset simulation and return observation
         self.sim.reset()
         return self.observation()
 
@@ -185,22 +107,27 @@ class LauncherV1Orbital(LauncherV1):
         if not np.isfinite(action[0]):
             raise ValueError("Action is not finite")
 
+        autopilot_reference = nb.float64(action[0])        
+        engine_on = self.sim.engine_on and bool(action[1])
+
         self.sim.step((
-            bool(action[1]),  # action_engine_on
+            engine_on,  # action_engine_on
             False,  # action_drop_stage
             nb.int32(self.autopilot_mode),  # action_autopilot_mode
-            nb.float64(action[0])  # action_autopilot_reference
+            autopilot_reference  # action_autopilot_reference
         ))
 
-        if self.sim.t > 10:
+        if self.sim.t > 60:
             self.sim.done = True
         
         observation = self.observation()
         
         if all(np.isfinite(self.sim.vie)) and all(np.isfinite(observation)):
-            cost = cost_function(self.target_a, self.sim.semi_major_axis, self.sim.eccentricity)
-
-            self.sim.reward = 1 - cost
+            if self.sim.done:
+                cost = cost_function(self.target_a, self.sim.semi_major_axis, self.sim.eccentricity)
+                self.sim.reward = 1 - cost
+            else:
+                self.sim.reward = 0 
 
             if not np.isfinite(self.sim.reward):
                 raise ValueError("Reward is not finite.")
@@ -215,7 +142,7 @@ class LauncherV1Orbital(LauncherV1):
 
     def _repr_html_(self):
         return hyr({
-            "config": self.config,
+            "config": self.config.dict(),
             "action_space": self.action_space,
             "observation_space": self.observation_space,
         }).to_html()
