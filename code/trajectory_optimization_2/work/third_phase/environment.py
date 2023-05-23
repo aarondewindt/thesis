@@ -66,9 +66,9 @@ class LauncherV1Orbital(LauncherV1):
             gs.Discrete(2)
         ))
         
-        self.observation_space = gs.Box(low=np.array([-pi-0.01, -pi-0.01, -np.inf, -np.inf, -np.inf, -1, -np.inf, -np.inf], dtype=np.float32),
-                                        high=np.array([pi+0.01, pi+0.01, np.inf, np.inf, np.inf, 2, np.inf, np.inf], dtype=np.float32),
-                                        shape=(8,))
+        self.observation_space = gs.Box(low=np.array([-pi-0.01, -pi-0.01, -np.inf, -np.inf, -np.inf, -1, -1, -np.inf, -np.inf], dtype=np.float32),
+                                        high=np.array([pi+0.01, pi+0.01, np.inf, np.inf, np.inf, 2, np.inf, np.inf, np.inf], dtype=np.float32),
+                                        shape=(9,))
 
     def __reduce__(self):
         return LauncherV1Orbital, (self.config,)
@@ -81,6 +81,7 @@ class LauncherV1Orbital(LauncherV1):
             self.sim.vie[0],
             self.sim.vie[1],
             self.sim.eccentricity,
+            self.sim.semi_major_axis,
             self.sim.mass - self.config.stages[0].dry_mass,
             self.sim.mass_dot,            
         ], dtype=np.float32)
@@ -117,8 +118,8 @@ class LauncherV1Orbital(LauncherV1):
             autopilot_reference  # action_autopilot_reference
         ))
 
-        if self.sim.t > 60:
-            self.sim.done = True
+        # if self.sim.t > 60:
+        #     self.sim.done = True
         
         observation = self.observation()
         

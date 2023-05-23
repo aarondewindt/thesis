@@ -30,7 +30,11 @@ class InitialCondition(BaseModel):
         return self.target_a - self.surface_diameter
 
 
-class BasicInit(BaseModel):
+class ConfiguredBaseModel(BaseModel):
+    extra = "forbid"
+
+
+class BasicInit(ConfiguredBaseModel):
     longitude: float
     altitude: float
     theta_e: float
@@ -38,22 +42,22 @@ class BasicInit(BaseModel):
     target_a: float    
 
 
-class KeplerInit(BaseModel):
+class KeplerInit(ConfiguredBaseModel):
     a: float
     e: float
     mean_anomaly: float
     theta_e: float
 
 
-class TimeToApoapsisInit(BaseModel):
-    a: tuple[float, float]
+class TimeToApoapsisInit(ConfiguredBaseModel):
+    target_h: tuple[float, float]
     e: tuple[float, float]
     t: tuple[float, float]
     theta_e: tuple[float, float]
 
 
 
-class EnvConfig(BaseModel):
+class EnvConfig(ConfiguredBaseModel):
     dt: float = 0.05
     surface_diameter: float = 1737.4e3  #: Diameter means radius, I'm to scared to rename it.
     mu: float = 4.9048695e12
@@ -118,10 +122,12 @@ class EnvConfig(BaseModel):
                 )
             
             case TimeToApoapsisInit():
-                a = random.uniform(*self.init.a)
+                target_h = random.uniform(*self.init.target_h)
                 e = random.uniform(*self.init.e)
                 t = random.uniform(*self.init.t)
                 theta_e = random.uniform(*self.init.theta_e)
+
+                a = (target_h + self.surface_diameter) / (1 + e)
 
                 mean_anomaly = pi - t * sqrt(self.mu / (a*a*a))
 
@@ -145,7 +151,7 @@ class EnvConfig(BaseModel):
                     altitude=initial_altitude,
                     theta_e=theta_e,
                     vie=initial_vie,
-                    target_a=a,
+                    target_a=target_h + self.surface_diameter,
                     prop_mass=prop_mass,
                     mu=self.mu,
                     surface_diameter=self.surface_diameter
