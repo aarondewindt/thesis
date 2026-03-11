@@ -1,0 +1,38 @@
+[project]
+name = "toy_multiphase"
+version = "0.0.1"
+description = ""
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Aaron de Windt" }]
+dependencies = [
+  "ray[rllib]>=2.9.0",
+  "gymnasium>=0.29.1",
+  "numpy>=1.26",
+  "pyyaml>=6.0.1",
+  "pydantic>=2.7",
+  "scipy",
+  "tqdm",
+  "matplotlib",
+  "xarray",
+  "sympy",
+  "pandas",
+  "tikzplotlib",
+  "jupyterlab",
+  "ipympl",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.5",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-select = ["I"]  # import sorting
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

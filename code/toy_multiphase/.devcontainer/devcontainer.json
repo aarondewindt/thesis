@@ -1,0 +1,57 @@
+{
+  "name": "toy_multiphase (ROCm)",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "workspaceFolder": "/workspaces/thesis/code/toy_multiphase",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/opt/venv/bin/python",
+        "python.testing.pytestEnabled": true,
+        "python.testing.pytestArgs": [
+          "tests"
+        ],
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "zsh": { "path": "/usr/bin/zsh" }
+        }
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-azuretools.vscode-docker",
+        "ms-toolsai.jupyter",
+				"ms-toolsai.jupyter-renderers",
+				"tamasfe.even-better-toml",
+				"GitHub.copilot",
+				"GitHub.copilot-chat",
+				"eamodio.gitlens",
+				"ms-python.isort",
+				"DavidAnson.vscode-markdownlint",
+				"unifiedjs.vscode-mdx",
+				"mohsen1.prettify-json",
+				"ms-python.pylint",
+				"donjayamanne.python-environment-manager",
+				"marclipovsky.string-manipulation",
+				"adamhartford.vscode-base64",
+				"redhat.vscode-xml",
+				"DotJoshJohnson.xml",
+        "openai.chatgpt"
+      ]
+    }
+  },
+  "runArgs": [
+    "--device=/dev/kfd",
+    "--device=/dev/dri",
+    "--ipc=host",
+    "--shm-size=8g"
+  ],
+  "containerEnv": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONUNBUFFERED": "1"
+  },
+  "remoteUser": "vscode",
+  "containerUser": "vscode",
+  "postCreateCommand": "bash .devcontainer/postCreateCommand.sh"
+}
