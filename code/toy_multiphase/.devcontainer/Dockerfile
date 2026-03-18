@@ -9,8 +9,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     build-essential \
     zsh \
+    openssh-client \
     && rm -rf /var/lib/apt/lists/*
-
+    
 ARG USERNAME=vscode
 ARG USER_UID=1000
 ARG USER_GID=1000
