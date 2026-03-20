@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 authors = [{ name = "Aaron de Windt" }]
 dependencies = [
-  "ray[rllib]>=2.9.0",
+  "ray[default,rllib]>=2.9.0",
   "gymnasium>=0.29.1",
   "numpy>=1.26",
   "pyyaml>=6.0.1",
@@ -36,3 +36,36 @@ extend-select = ["I"]  # import sorting
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+
+[tool.pyright]
+include = ["src"]
+exclude = ["**/__pycache__"]
+typeCheckingMode = "basic"
+reportMissingImports = true
+reportMissingTypeStubs = false
+reportUnknownMemberType = false
+reportUnknownArgumentType = false
+reportUnknownVariableType = false
+reportUnknownParameterType = false
+reportMissingModuleSource = false
+reportUnknownLambdaType = false
+reportUntypedFunctionDecorator = false
+reportUntypedClassDecorator = false
+reportUntypedBaseClass = false
+reportUntypedNamedTuple = false
+reportPrivateUsage = false
+reportConstantRedefinition = false
+reportIncompatibleMethodOverride = true
+reportIncompatibleVariableOverride = true
+reportOverlappingOverloads = true
+pythonVersion = "3.10"
+pythonPlatform = "Linux"
+
+[tool.pylint.messages_control]
+disable = [
+    "C0116",  # missing-function-docstring
+    "C0115",  # missing-class-docstring
+    "C0410",
+    "C0411",
+    "C0413",
+]

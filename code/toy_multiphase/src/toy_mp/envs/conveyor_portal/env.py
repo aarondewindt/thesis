@@ -27,26 +27,26 @@ class ConveyorPortalEnv(gym.Env):
 
     metadata = {"render_modes": ["ansi"], "render_fps": 10}
 
-    def __init__(self, spec: MapSpec):
+    def __init__(self, map_spec: MapSpec):
         super().__init__()
-        self.spec = spec
+        self.map_spec = map_spec
 
-        self.portal_map = build_portal_map(spec)
-        self.belt_at, self.belt_next = build_belt_maps(spec)
+        self.portal_map = build_portal_map(map_spec)
+        self.belt_at, self.belt_next = build_belt_maps(map_spec)
 
-        self.max_steps = spec.max_steps
-        self.wait_n_max = spec.wait_n_max
+        self.max_steps = map_spec.max_steps
+        self.wait_n_max = map_spec.wait_n_max
 
         self.observation_space = spaces.Dict(
             {
                 "tiles": spaces.Box(
-                    low=0, high=int(Tile.GOAL), shape=(spec.height, spec.width), dtype=np.int8
+                    low=0, high=int(Tile.GOAL), shape=(map_spec.height, map_spec.width), dtype=np.int8
                 ),
                 "agent_xy": spaces.Box(
-                    low=0, high=max(spec.width, spec.height), shape=(2,), dtype=np.int16
+                    low=0, high=max(map_spec.width, map_spec.height), shape=(2,), dtype=np.int16
                 ),
-                "phase": spaces.Discrete(4),  # 1..3 used
-                "step": spaces.Box(low=0, high=spec.max_steps, shape=(), dtype=np.int32),
+                "phase": spaces.Box(low=1, high=3, shape=(1,), dtype=np.int32),  # 1..3 used
+                "step": spaces.Box(low=0, high=map_spec.max_steps, shape=(), dtype=np.int32),
             }
         )
 
@@ -54,8 +54,8 @@ class ConveyorPortalEnv(gym.Env):
         # 0..7 moves (8-directional), 8 noop, 9..(9+wait_n_max) wait_n
         self.action_space = spaces.Discrete(9 + (self.wait_n_max + 1))
 
-        self._tiles = self._build_tilemap(spec)
-        self._agent: Coord = spec.start
+        self._tiles = self._build_tilemap(map_spec)
+        self._agent: Coord = map_spec.start
         self._phase: int = 1
         self._steps: int = 0
         self._terminated: bool = False
@@ -89,13 +89,13 @@ class ConveyorPortalEnv(gym.Env):
         return {
             "tiles": self._tiles.copy(),
             "agent_xy": np.array(self._agent, dtype=np.int16),
-            "phase": int(self._phase),
+            "phase": np.array([self._phase], dtype=np.int32),
             "step": np.int32(self._steps),
         }
 
     def reset(self, *, seed: Optional[int] = None, options: Optional[dict] = None):
         super().reset(seed=seed)
-        self._agent = self.spec.start
+        self._agent = self.map_spec.start
         self._phase = 1
         self._steps = 0
         self._terminated = False
@@ -122,7 +122,7 @@ class ConveyorPortalEnv(gym.Env):
         if self._steps >= self.max_steps and not self._terminated:
             self._truncated = True
 
-        reward = 1.0 if self._terminated and self._agent == self.spec.goal else 0.0
+        reward = 1.0 if self._terminated and self._agent == self.map_spec.goal else 0.0
         return self._obs(), reward, self._terminated, self._truncated, info
 
     def _tile_at(self, c: Coord) -> Tile:
@@ -131,7 +131,7 @@ class ConveyorPortalEnv(gym.Env):
 
     def _in_bounds(self, c: Coord) -> bool:
         x, y = c
-        return 0 <= x < self.spec.width and 0 <= y < self.spec.height
+        return 0 <= x < self.map_spec.width and 0 <= y < self.map_spec.height
 
     def _try_move(self, dir_idx: int) -> None:
         nxt = add_xy(self._agent, DIRS_8[dir_idx])
@@ -149,7 +149,7 @@ class ConveyorPortalEnv(gym.Env):
             info["event"] = "death"
             return
 
-        if self._agent == self.spec.goal:
+        if self._agent == self.map_spec.goal:
             self._terminated = True
             info["event"] = "goal"
             return
@@ -169,7 +169,7 @@ class ConveyorPortalEnv(gym.Env):
             if t2 == Tile.DEATH:
                 self._terminated = True
                 info["event_after_portal"] = "death"
-            elif self._agent == self.spec.goal:
+            elif self._agent == self.map_spec.goal:
                 self._terminated = True
                 info["event_after_portal"] = "goal"
             return
@@ -204,14 +204,14 @@ class ConveyorPortalEnv(gym.Env):
             key = (self._active_belt_id, self._agent)
             if key not in self.belt_next:
                 self._terminated = True
-                info["event"] = "belt_falloff_death" if self.spec.belt_falloff_is_death else "belt_falloff_terminal"
+                info["event"] = "belt_falloff_death" if self.map_spec.belt_falloff_is_death else "belt_falloff_terminal"
                 return
             self._agent = self.belt_next[key]
             if self._tile_at(self._agent) == Tile.DEATH:
                 self._terminated = True
                 info["event"] = "death_on_belt"
                 return
-            if self._agent == self.spec.goal:
+            if self._agent == self.map_spec.goal:
                 self._terminated = True
                 info["event"] = "goal_on_belt"
                 return
@@ -255,9 +255,9 @@ class ConveyorPortalEnv(gym.Env):
             Tile.GOAL: "G",
         }
         lines = []
-        for y in range(self.spec.height):
+        for y in range(self.map_spec.height):
             row = []
-            for x in range(self.spec.width):
+            for x in range(self.map_spec.width):
                 if (x, y) == self._agent:
                     row.append("A")
                 else:
