@@ -66,14 +66,15 @@ class SequentialPhaseMAEnv(MultiAgentEnv):
         if terminated or truncated:
             self.agents = []
             obs_dict = {}
+            info_dict = {}  # No info when no observations
         else:
             self.agents = [next_agent]
             obs_dict = {next_agent: obs}
+            info_dict = {next_agent: info}  # Info only for the active agent
 
         rew_dict = {agent_id: float(reward)}
         term_dict = {"__all__": bool(terminated)}
         trunc_dict = {"__all__": bool(truncated)}
-        info_dict = {agent_id: info}
         return obs_dict, rew_dict, term_dict, trunc_dict, info_dict
 
     def render(self) -> None:
