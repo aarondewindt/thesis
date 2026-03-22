@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Tuple
 
 from ray.rllib.env.multi_agent_env import MultiAgentEnv
+from ray.rllib.utils.typing import MultiAgentDict
 
 from toy_mp.envs.conveyor_portal.env import ConveyorPortalEnv
 
@@ -22,20 +23,35 @@ class SequentialPhaseMAEnv(MultiAgentEnv):
         self._last_info: Dict[str, Any] = {}
         self.spec = None
 
-        self.observation_space = env.observation_space
-        self.action_space = env.action_space
+        # Define all possible agents that can appear in episodes
+        self.possible_agents = ["phase1", "phase2", "phase3"]
+        
+        # Initially only phase1 is active, will be updated during episodes
+        self.agents = ["phase1"]
+        
+        # Each agent has the same observation and action spaces as the underlying env
+        self.observation_spaces = {
+            agent_id: env.observation_space for agent_id in self.possible_agents
+        }
+        self.action_spaces = {
+            agent_id: env.action_space for agent_id in self.possible_agents
+        }
 
     def _active_agent(self) -> str:
         phase = int(self._env._phase)  # noqa: SLF001
         return PHASE_TO_AGENT_ID.get(phase, "phase1")
 
-    def reset(self, *, seed: Optional[int] = None, options: Optional[dict] = None):
+    def reset(self, *, seed: Optional[int] = None, options: Optional[dict] = None) -> Tuple[MultiAgentDict, MultiAgentDict]:
         obs, info = self._env.reset(seed=seed, options=options)
         agent_id = self._active_agent()
+        
+        # Update self.agents to reflect the currently active agent
+        self.agents = [agent_id]
+        
         self._last_info = info
         return {agent_id: obs}, {agent_id: info}
 
-    def step(self, action_dict: Dict[str, int]):
+    def step(self, action_dict: MultiAgentDict) -> Tuple[MultiAgentDict, MultiAgentDict, MultiAgentDict, MultiAgentDict, MultiAgentDict]:
         if len(action_dict) != 1:
             raise ValueError(f"Expected exactly one acting agent, got {list(action_dict.keys())}")
 
@@ -44,7 +60,15 @@ class SequentialPhaseMAEnv(MultiAgentEnv):
         self._last_info = info
 
         next_agent = self._active_agent()
-        obs_dict = {next_agent: obs} if not (terminated or truncated) else {}
+        
+        # Update self.agents to reflect which agent should act next
+        # If episode is done, no agents are active; otherwise the next agent is active
+        if terminated or truncated:
+            self.agents = []
+            obs_dict = {}
+        else:
+            self.agents = [next_agent]
+            obs_dict = {next_agent: obs}
 
         rew_dict = {agent_id: float(reward)}
         term_dict = {"__all__": bool(terminated)}
@@ -52,5 +76,6 @@ class SequentialPhaseMAEnv(MultiAgentEnv):
         info_dict = {agent_id: info}
         return obs_dict, rew_dict, term_dict, trunc_dict, info_dict
 
-    def render(self):
-        return self._env.render()
+    def render(self) -> None:
+        self._env.render()
+        return None

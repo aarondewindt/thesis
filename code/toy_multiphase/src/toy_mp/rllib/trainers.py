@@ -106,6 +106,7 @@ def build_multiagent_config_three_actors_shared_critic(
     framework: str,
     num_gpus: int = 0,
     num_workers: int = 0,
+    critic_id: str = "shared_critic_v1",
 ) -> PPOConfig:
     register_env("toy_phase_ma", lambda cfg: make_multi_agent_env(cfg))
 
@@ -113,7 +114,49 @@ def build_multiagent_config_three_actors_shared_critic(
     obs_space = dummy.observation_space
     act_space = dummy.action_space
 
-    model_cfg = {"custom_model": PhaseActorSharedCriticTFModel}
+    # Create policy specs using PhaseActorSharedCriticTFModel
+    # All phases will use the same critic_id for shared critic
+    shared_critic_policies = {
+        "pi_phase1": (
+            None,  # Use default policy class (PPO)
+            obs_space,
+            act_space,
+            {
+                "model": {
+                    "custom_model": PhaseActorSharedCriticTFModel,
+                    "custom_model_config": {
+                        "critic_id": critic_id,
+                    },
+                }
+            }
+        ),
+        "pi_phase2": (
+            None,
+            obs_space,
+            act_space,
+            {
+                "model": {
+                    "custom_model": PhaseActorSharedCriticTFModel,
+                    "custom_model_config": {
+                        "critic_id": critic_id,
+                    },
+                }
+            }
+        ),
+        "pi_phase3": (
+            None,
+            obs_space,
+            act_space,
+            {
+                "model": {
+                    "custom_model": PhaseActorSharedCriticTFModel,
+                    "custom_model_config": {
+                        "critic_id": critic_id,
+                    },
+                }
+            }
+        ),
+    }
 
     return (
         PPOConfig()
@@ -127,11 +170,7 @@ def build_multiagent_config_three_actors_shared_critic(
         .callbacks(ToyMetricsCallback)
         .training(train_batch_size=4000)
         .multi_agent(
-            policies={
-                "pi_phase1": (None, obs_space, act_space, {"model": model_cfg}),
-                "pi_phase2": (None, obs_space, act_space, {"model": model_cfg}),
-                "pi_phase3": (None, obs_space, act_space, {"model": model_cfg}),
-            },
+            policies=shared_critic_policies,
             policy_mapping_fn=phase_policy_mapping_shared_critic,
             policies_to_train=["pi_phase1", "pi_phase2", "pi_phase3"],
         )
